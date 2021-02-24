@@ -77,12 +77,11 @@ class SelectStatement extends BaseStatement
 
     /**
      * @param string $table
-     * @param string|null $database
      * @return self
      */
-    public function into(string $table, string $database = null): self
+    public function into(string $table): self
     {
-        $this->queryStatement->setInto($table, $database);
+        $this->queryStatement->setInto($table);
 
         return $this;
     }

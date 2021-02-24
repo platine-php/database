@@ -1143,17 +1143,15 @@ class Driver
      * Handle into the table
      *
      * @param string|null $table
-     * @param string|null $database
      *
      * @return string
      */
-    protected function getInto(?string $table, ?string $database = null): string
+    protected function getInto(?string $table): string
     {
         if ($table === null) {
             return '';
         }
-        return ' INTO ' . $this->quoteIdentifier($table)
-                . ($database === null ? '' : $this->quoteIdentifier($database));
+        return ' INTO ' . $this->quoteIdentifier($table);
     }
 
     /**

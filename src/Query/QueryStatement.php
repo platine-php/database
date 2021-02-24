@@ -135,12 +135,6 @@ class QueryStatement
     protected string $intoTable = '';
 
     /**
-     * The insert database
-     * @var string|null
-     */
-    protected ?string $intoDatabase = null;
-
-    /**
      * @param Closure $callback
      * @param string $separator
      */
@@ -491,12 +485,10 @@ class QueryStatement
 
     /**
      * @param string $table
-     * @param string|null $database
      */
-    public function setInto(string $table, ?string $database = null): void
+    public function setInto(string $table): void
     {
         $this->intoTable = $table;
-        $this->intoDatabase = $database;
     }
 
     /**
@@ -601,14 +593,6 @@ class QueryStatement
     public function getIntoTable(): string
     {
         return $this->intoTable;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getIntoDatabase(): ?string
-    {
-        return $this->intoDatabase;
     }
 
     /**

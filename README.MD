@@ -18,7 +18,13 @@
 ```bash
 composer require platine-php/database
 ```
+### Current supported drivers
 
+- MySQL/MariaDB
+- SQLite
+- PostgreSQL
+- Oracle
+- Microsoft SQL Server
 
 ### License
 MIT License See [LICENSE.MD](LICENSE.MD)

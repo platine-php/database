@@ -141,7 +141,7 @@ class Driver
     {
         $sql = $select->getDistinct() ? 'SELECT DISTINCT ' : 'SELECT ';
         $sql .= $this->getColumnList($select->getColumns());
-        $sql .= $this->getInto($select->getIntoTable(), $select->getIntoDatabase());
+        $sql .= $this->getInto($select->getIntoTable());
         $sql .= ' FROM ';
         $sql .= $this->getTableList($select->getTables());
         $sql .= $this->getJoins($select->getJoins());

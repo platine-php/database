@@ -57,8 +57,8 @@ use Platine\Database\Driver\SQLite;
 use Platine\Database\Driver\SQLServer;
 use Platine\Database\Exception\ConnectionException;
 use Platine\Database\Exception\QueryException;
-use Platine\Logger\FileLogger;
 use Platine\Logger\Logger;
+use Platine\Logger\NullLogger;
 
 /**
  * Class Connection
@@ -128,212 +128,149 @@ class Connection
     /**
      * Connection constructor.
      * @param array $config
+     * @param Logger $logger
      * @throws ConnectionException
      */
-    public function __construct(array $config)
+    public function __construct(array $config = [], ?Logger $logger = null)
     {
-        if (isset($config['logger'])) {
-            if (!$config['logger'] instanceof Logger) {
-                throw new InvalidArgumentException(sprintf(
-                    'Invalid logger option [%s] must be an instance of [%s]',
-                    print_r($config['logger'], true),
-                    Logger::class
-                ));
-            }
-            $this->logger = $config['logger'];
-        } else {
-            $this->logger = new Logger(new FileLogger(sys_get_temp_dir(), __CLASS__));
-        }
-
-        if (isset($config['driver']) && is_string($config['driver'])) {
-            $this->driverName = strtolower($config['driver']);
-            if ($this->driverName === 'mariadb') {
-                $this->driverName = 'mysql';
-            }
+        $this->logger = $logger ? $logger : new Logger(new NullLogger());
+        
+        $defaultConfig = [
+            'driver' => 'mysql',
+            'charset' => 'UTF8', //only for some drivers, 
+            'appname' => '', //only for MSSQL, DBLIB, 
+            'hostname' => 'localhost',
+            'username' => '',
+            'password' => '',
+            'port' => null,
+            'database' => '',
+            'collation' => 'utf8_general_ci', //only for MySQL
+            'socket' => '', //only for MySQL
+            'options' => [],
+            'commands' => [],
+        ];
+        
+        $dbConfig = array_merge($defaultConfig, $config);
+        
+        if (is_string($dbConfig['driver'])) {
+            $this->driverName = strtolower($dbConfig['driver']);
         }
 
         $options = $this->options;
-        if (isset($config['options'])) {
-            $options = array_merge($options, $config['options']);
+        if (is_array($dbConfig['options'])) {
+            $options = array_merge($options, $dbConfig['options']);
         }
 
         $commands = $this->commands;
-        if (isset($config['commands'])) {
-            $commands = array_merge($commands, $config['commands']);
-        }
-
-
-        switch ($this->driverName) {
-            case 'mysql':
-                //Make MySQL using standard quoted identifier
-                $commands[] = 'SET SQL_MODE=ANSI_QUOTES';
-                break;
-            case 'mssql':
-                //Keep MSSQL QUOTED_IDENTIFIER is ON for standard quoting
-                $commands[] = 'SET QUOTED_IDENTIFIER ON';
-
-                //Make ANSI_NULLS is ON for NULL value
-                $commands[] = 'SET ANSI_NULLS ON';
-                break;
-        }
-
-        if (isset($config['pdo'])) {
-            if (!$config['pdo'] instanceof PDO) {
-                throw new InvalidArgumentException(sprintf(
-                    'Invalid PDO object supplied [%s] must be an instance of [%s]',
-                    print_r($config['pdo'], true),
-                    PDO::class
-                ));
-            }
-            $this->pdo = $config['pdo'];
-
-            foreach ($commands as $command) {
-                $this->pdo->exec($command);
-            }
-            $this->commands = $commands;
-            $this->driverName = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
-
-            return;
+        if (is_array($dbConfig['commands'])) {
+            $commands = array_merge($commands, $dbConfig['commands']);
         }
 
         $port = null;
         $attr = [];
 
-        if (isset($config['dsn'])) {
-            if (is_array($config['dsn']) && isset($config['dsn']['driver'])) {
-                $attr['driver'] = $config['dsn'];
-            } else {
-                throw new InvalidArgumentException(sprintf(
-                    'Invalid DSN option supplied [%s]',
-                    print_r($config['dsn'], true)
-                ));
-            }
-        } else {
-            if (isset($config['port']) && is_int($config['port'])) {
-                $port = $config['port'];
-            }
-
-            switch ($this->driverName) {
-                case 'mysql':
-                    $attr = [
-                        'driver' => 'mysql',
-                        'dbname' => isset($config['database']) ? $config['database'] : ''
-                    ];
-                    if (isset($config['socket'])) {
-                        $attr['unix_socket'] = $config['socket'];
-                    } else {
-                        $attr['host'] = isset($config['hostname']) ? $config['hostname'] : '';
-                        if ($port) {
-                            $attr['port'] = $port;
-                        }
-                    }
-                    break;
-                case 'pgsql':
-                    $attr = [
-                        'driver' => 'pgsql',
-                        'host' => isset($config['hostname']) ? $config['hostname'] : '',
-                        'dbname' => isset($config['database']) ? $config['database'] : ''
-                    ];
-                    if ($port) {
-                        $attr['port'] = $port;
-                    }
-                    break;
-                case 'dblib':
-                case 'sqlsrv':
-                case 'sybase':
-                    $attr = [
-                        'driver' => 'dblib',
-                        'host' => isset($config['hostname']) ? $config['hostname'] : '',
-                        'dbname' => isset($config['database']) ? $config['database'] : ''
-                    ];
-                    if ($port) {
-                        $attr['port'] = $port;
-                    }
-                    break;
-                case 'mssql':
-                    if (isset($config['driver']) && $config['driver'] === 'dblib') {
-                        $attr = [
-                            'driver' => 'dblib',
-                            'host' => isset($config['hostname']) ? ($config['hostname']
-                            . ($port ? ':' . $port : '')) : '',
-                            'dbname' => isset($config['database']) ? $config['database'] : ''
-                        ];
-
-                        if (isset($config['appname'])) {
-                            $attr['appname'] = $config['appname'];
-                        }
-
-                        if (isset($config['charset'])) {
-                            $attr['charset'] = $config['charset'];
-                        }
-                    } else {
-                        $attr = [
-                            'driver' => 'sqlsrv',
-                            'Server' => isset($config['hostname']) ? ($config['hostname']
-                            . ($port ? ':' . $port : '')) : '',
-                            'Database' => isset($config['database']) ? $config['database'] : ''
-                        ];
-
-                        if (isset($config['appname'])) {
-                            $attr['APP'] = $config['appname'];
-                        }
-
-                        $attributes = [
-                            'ApplicationIntent',
-                            'AttachDBFileName',
-                            'Authentication',
-                            'ColumnEncryption',
-                            'ConnectionPooling',
-                            'Encrypt',
-                            'Failover_Partner',
-                            'KeyStoreAuthentication',
-                            'KeyStorePrincipalId',
-                            'KeyStoreSecret',
-                            'LoginTimeout',
-                            'MultipleActiveResultSets',
-                            'MultiSubnetFailover',
-                            'Scrollable',
-                            'TraceFile',
-                            'TraceOn',
-                            'TransactionIsolation',
-                            'TransparentNetworkIPResolution',
-                            'TrustServerCertificate',
-                            'WSID',
-                        ];
-
-                        foreach ($attributes as $attribute) {
-                            $keyname = strtolower(preg_replace(
-                                ['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'],
-                                '$1_$2',
-                                $attribute
-                            ));
-
-                            if (isset($config[$keyname])) {
-                                $attr[$attribute] = $config[$keyname];
-                            }
-                        }
-                    }
-                    break;
-                case 'oci':
-                case 'oracle':
-                    $database = isset($config['database']) ? $config['database'] : '';
-                    $attr = [
-                        'driver' => 'oci',
-                        'dbname' => isset($config['hostname']) ? ('//' . $config['hostname']
-                        . ($port ? ':' . $port : ':1521') . '/' . $database) : $database
-                    ];
-                    if (isset($config['charset'])) {
-                        $attr['charset'] = $config['charset'];
-                    }
-                    break;
-                case 'sqlite':
-                    $attr = [
-                        'driver' => 'sqlite',
-                        isset($config['database']) ? $config['database'] : ''
-                    ];
-                    break;
-            }
+        if (is_int($dbConfig['port'])) {
+            $port = $dbConfig['port'];
         }
+        
+        $driverName = $this->driverName;
+        switch ($driverName) {
+            case 'mysql':
+            case 'pgsql':
+                $attr = [
+                    'driver' => $driverName,
+                    'dbname' => $dbConfig['database'],
+                    'host' => $dbConfig['hostname'],
+                ];
+                
+                if ($port > 0) {
+                    $attr['port'] = $port;
+                }
+                
+                if ($driverName === 'mysql'){
+                    //Make MySQL using standard quoted identifier
+                    $commands[] = 'SET SQL_MODE=ANSI_QUOTES';
+                    
+                    if (!empty($dbConfig['socket'])) {
+                        $attr['unix_socket'] = $dbConfig['socket'];
+                        
+                        unset($attr['host']);
+                        unset($attr['port']);
+                    } 
+                }
+                break;
+            case 'sqlsrv':
+                //Keep MSSQL QUOTED_IDENTIFIER is ON for standard quoting
+                $commands[] = 'SET QUOTED_IDENTIFIER ON';
+
+                //Make ANSI_NULLS is ON for NULL value
+                $commands[] = 'SET ANSI_NULLS ON';
+                
+                $attr = [
+                    'driver' => 'sqlsrv',
+                    'Server' => $dbConfig['hostname'] 
+                        . ($port > 0 ? ':' . $port : ''),
+                    'Database' => $dbConfig['database']
+                ];
+
+                if (!empty($dbConfig['appname'])) {
+                    $attr['APP'] = $dbConfig['appname'];
+                }
+
+                $attributes = [
+                    'ApplicationIntent',
+                    'AttachDBFileName',
+                    'Authentication',
+                    'ColumnEncryption',
+                    'ConnectionPooling',
+                    'Encrypt',
+                    'Failover_Partner',
+                    'KeyStoreAuthentication',
+                    'KeyStorePrincipalId',
+                    'KeyStoreSecret',
+                    'LoginTimeout',
+                    'MultipleActiveResultSets',
+                    'MultiSubnetFailover',
+                    'Scrollable',
+                    'TraceFile',
+                    'TraceOn',
+                    'TransactionIsolation',
+                    'TransparentNetworkIPResolution',
+                    'TrustServerCertificate',
+                    'WSID',
+                ];
+
+                foreach ($attributes as $attribute) {
+                    $keyname = strtolower(preg_replace(
+                        ['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'],
+                        '$1_$2',
+                        $attribute
+                    ));
+
+                    if (isset($dbConfig[$keyname])) {
+                        $attr[$attribute] = $dbConfig[$keyname];
+                    }
+                }
+                break;
+            case 'oci':
+            case 'oracle':
+                $database = $dbConfig['database'];
+                $attr = [
+                    'driver' => 'oci',
+                    'dbname' => '//' . $dbConfig['hostname']
+                    . ($port > 0 ? ':' . $port : ':1521') . '/' . $database
+                ];
+                
+                $attr['charset'] = $dbConfig['charset'];
+                break;
+            case 'sqlite':
+                $attr = [
+                    'driver' => 'sqlite',
+                    $dbConfig['database']
+                ];
+                break;
+        }
+        
 
         if (empty($attr)) {
             throw new InvalidArgumentException('Invalid database options supplied');
@@ -356,10 +293,11 @@ class Connection
         }
 
         $dsn = $driver . ':' . implode(';', $params);
-        if (in_array($driver, ['mysql', 'pgsql', 'mssql', 'sybase']) && isset($config['charset'])) {
-            $commands[] = 'SET NAMES "' . $config['charset'] . '"' . (
-                    $this->driverName === 'mysql' && isset($config['collation']) ?
-                    ' COLLATE "' . $config['collation'] . '"' : ''
+        if (in_array($driver, ['mysql', 'pgsql', 'sqlsrv'])) {
+            $commands[] = 'SET NAMES "' . $dbConfig['charset'] . '"' . (
+                    $this->driverName === 'mysql' 
+                            ? ' COLLATE "' . $dbConfig['collation'] . '"' 
+                            : ''
                     );
         }
 
@@ -378,24 +316,13 @@ class Connection
             foreach ($commands as $command) {
                 $this->pdo->exec($command);
             }
-        } catch (PDOException $exp) {
+        } catch (PDOException $exception) {
             $this->logger->emergency('Can not connect to database. Error message: {error}', [
-                'exception' => $exp,
-                'error' => $exp->getMessage()
+                'exception' => $exception,
+                'error' => $exception->getMessage()
             ]);
-            throw new ConnectionException($exp->getMessage());
+            throw new ConnectionException($exception->getMessage());
         }
-    }
-
-    /**
-     * Create new instance from PDO object
-     * @param PDO $pdo
-     * @return static
-     * @throws ConnectionException
-     */
-    public static function fromPDO(PDO $pdo): self
-    {
-        return new static(['pdo' => $pdo]);
     }
 
     /**

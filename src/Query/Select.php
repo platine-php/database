@@ -167,7 +167,7 @@ class Select extends SelectStatement
     protected function getColumnResultSet()
     {
         $driver = $this->connection->getDriver();
-        
+
         return $this->connection->column(
             $driver->select($this->queryStatement),
             $driver->getParams()

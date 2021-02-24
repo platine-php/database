@@ -39,4 +39,14 @@ namespace Platine\Database\Exception;
 class ConnectionException extends \Exception
 {
 
+    /**
+     * Throw when connection is not established
+     * @return self
+     */
+    public static function connectionNotEstablished(): self
+    {
+        return new self(
+            'Connection not yet established please connect first'
+        );
+    }
 }

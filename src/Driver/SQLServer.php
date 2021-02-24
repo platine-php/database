@@ -97,7 +97,7 @@ class SQLServer extends Driver
             $sql = $select->getDistinct() ? 'SELECT DISTINCT ' : 'SELECT ';
             $sql .= 'TOP ' . $limit;
             $sql .= $this->getColumns($select->getColumns());
-            $sql .= $this->getInto($select->getInt);
+            $sql .= $this->getInto($select->getIntoTable());
             $sql .= ' FROM ';
             $sql .= $this->getTables($select->getTables());
             $sql .= $this->getJoins($select->getJoins());

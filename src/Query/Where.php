@@ -228,7 +228,7 @@ class Where
      */
     public function in($value): WhereStatement
     {
-        $this->addInCondition($value, false);
+        return $this->addInCondition($value, false);
     }
 
     /**
@@ -237,7 +237,7 @@ class Where
      */
     public function notIn($value): WhereStatement
     {
-        $this->addInCondition($value, true);
+        return $this->addInCondition($value, true);
     }
 
     /**

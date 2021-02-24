@@ -130,9 +130,9 @@ class QueryStatement
 
     /**
      * The insert table
-     * @var string
+     * @var string|null
      */
-    protected string $intoTable = '';
+    protected ?string $intoTable = null;
 
     /**
      * @param Closure $callback
@@ -588,9 +588,9 @@ class QueryStatement
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getIntoTable(): string
+    public function getIntoTable(): ?string
     {
         return $this->intoTable;
     }

@@ -1329,11 +1329,11 @@ class Driver
             return '';
         }
 
-        $sql[] = $this->{$values[0]['type']}($values(0));
+        $sql[] = $this->{$values[0]['type']}($values[0]);
         $count = count($values);
 
         for ($i = 1; $i < $count; $i++) {
-            $sql[] = $values[$i]['separator'] . ' ' . $this->{$values[$i]['type']}($values($i));
+            $sql[] = $values[$i]['separator'] . ' ' . $this->{$values[$i]['type']}($values[$i]);
         }
         return implode(' ', $sql);
     }
@@ -1355,7 +1355,7 @@ class Driver
      */
     protected function getOffset(int $offset): string
     {
-        return ($offset === 0) ? '' : ' OFFSET ' . $this->param($offset);
+        return ($offset < 0) ? '' : ' OFFSET ' . $this->param($offset);
     }
 
     /**

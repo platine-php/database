@@ -71,7 +71,7 @@ class Connection
      * The PDO instance
      * @var PDO|null
      */
-    protected ?PDO $pdo;
+    protected ?PDO $pdo = null;
 
     /**
      * The database driver name to use
@@ -119,6 +119,18 @@ class Connection
      * @var array
      */
     protected array $driverOptions = [];
+    
+    /**
+     * The connection configurations
+     * @var array
+     */
+    protected array $config = [];
+    
+    /**
+     * The connection parameters
+     * @var array
+     */
+    protected array $params = [];
 
     /**
      * @var Logger|null
@@ -144,6 +156,7 @@ class Connection
             'password' => '',
             'port' => null,
             'database' => '',
+            'auto_connect' => false,
             'collation' => 'utf8_general_ci', //only for MySQL
             'socket' => '', //only for MySQL
             'options' => [],
@@ -151,21 +164,14 @@ class Connection
         ];
         
         $dbConfig = array_merge($defaultConfig, $config);
+        $this->config = $dbConfig;
         
-        if (is_string($dbConfig['driver'])) {
-            $this->driverName = strtolower($dbConfig['driver']);
-        }
+        $this->driverName = strtolower((string) $dbConfig['driver']);
 
-        $options = $this->options;
-        if (is_array($dbConfig['options'])) {
-            $options = array_merge($options, $dbConfig['options']);
-        }
-
-        $commands = $this->commands;
-        if (is_array($dbConfig['commands'])) {
-            $commands = array_merge($commands, $dbConfig['commands']);
-        }
-
+        $options = array_replace($this->options, (array) $dbConfig['options']);
+        
+        $commands = array_merge($this->commands, $dbConfig['commands']);
+        
         $port = null;
         $attr = [];
 
@@ -276,6 +282,8 @@ class Connection
             throw new InvalidArgumentException('Invalid database options supplied');
         }
 
+        $this->params = $attr;
+        
         $driver = $attr['driver'];
         if (!in_array($driver, PDO::getAvailableDrivers())) {
             throw new InvalidArgumentException(sprintf(
@@ -304,16 +312,27 @@ class Connection
         $this->dsn = $dsn;
         $this->commands = $commands;
         $this->options = $options;
-
+        
+        if($dbConfig['auto_connect'] === true){
+            $this->connect();
+        }
+        
+    }
+    
+    /**
+     * Connect to the database
+     * @return bool
+     */
+    public function connect():bool{
         try {
             $this->pdo = new PDO(
-                $dsn,
-                isset($config['username']) ? $config['username'] : '',
-                isset($config['password']) ? $config['password'] : '',
-                $options
+                $this->dsn,
+                $this->config['username'],
+                $this->config['password'],
+                $this->options
             );
 
-            foreach ($commands as $command) {
+            foreach ($this->commands as $command) {
                 $this->pdo->exec($command);
             }
         } catch (PDOException $exception) {
@@ -323,6 +342,8 @@ class Connection
             ]);
             throw new ConnectionException($exception->getMessage());
         }
+        
+        return $this->pdo !== null;
     }
 
     /**
@@ -416,7 +437,7 @@ class Connection
      */
     public function persistent(bool $value = true): self
     {
-        $this->pdo->setAttribute(PDO::ATTR_PERSISTENT, $value);
+        $this->options[PDO::ATTR_PERSISTENT] = $value;
 
         return $this;
     }
@@ -468,6 +489,9 @@ class Connection
      */
     public function getPDO(): PDO
     {
+        if($this->pdo === null){
+            $this->connect();
+        }
         return $this->pdo;
     }
 

@@ -109,7 +109,7 @@ class Select extends SelectStatement
     public function count($column = '*', bool $distinct = false): int
     {
         parent::count($column, $distinct);
-        return $this->getColumnResultSet();
+        return (int) $this->getColumnResultSet();
     }
 
     /**
@@ -167,6 +167,7 @@ class Select extends SelectStatement
     protected function getColumnResultSet()
     {
         $driver = $this->connection->getDriver();
+        
         return $this->connection->column(
             $driver->select($this->queryStatement),
             $driver->getParams()

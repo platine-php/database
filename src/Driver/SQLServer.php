@@ -47,7 +47,9 @@ declare(strict_types=1);
 namespace Platine\Database\Driver;
 
 use Platine\Database\Query\QueryStatement;
+use Platine\Database\Schema\AlterTable;
 use Platine\Database\Schema\BaseColumn;
+use Platine\Database\Schema\CreateTable;
 
 /**
  * Class SQLServer
@@ -94,17 +96,17 @@ class SQLServer extends Driver
         $offset = $select->getOffset();
 
         if ($offset < 0) {
-            $sql = $select->getDistinct() ? 'SELECT DISTINCT ' : 'SELECT ';
+            $sql = $select->hasDistinct() ? 'SELECT DISTINCT ' : 'SELECT ';
             $sql .= 'TOP ' . $limit;
-            $sql .= $this->getColumns($select->getColumns());
+            $sql .= $this->getColumnList($select->getColumns());
             $sql .= $this->getInto($select->getIntoTable());
             $sql .= ' FROM ';
-            $sql .= $this->getTables($select->getTables());
+            $sql .= $this->getTableList($select->getTables());
             $sql .= $this->getJoins($select->getJoins());
             $sql .= $this->getWheres($select->getWheres());
             $sql .= $this->getGroupBy($select->getGroupBy());
-            $sql .= $this->getOrders($select->getOrder());
             $sql .= $this->getHaving($select->getHaving());
+            $sql .= $this->getOrders($select->getOrder());
 
             return $sql;
         }
@@ -115,11 +117,11 @@ class SQLServer extends Driver
             $order = 'ORDER BY (SELECT 0)';
         }
 
-        $sql = $select->getDistinct() ? 'SELECT DISTINCT ' : 'SELECT ';
-        $sql .= $this->getColumns($select->getColumns());
+        $sql = $select->hasDistinct() ? 'SELECT DISTINCT ' : 'SELECT ';
+        $sql .= $this->getColumnList($select->getColumns());
         $sql .= ', ROW_NUMBER() OVER (' . $order . ') AS P_ROWNUM';
         $sql .= ' FROM ';
-        $sql .= $this->getTables($select->getTables());
+        $sql .= $this->getTableList($select->getTables());
         $sql .= $this->getJoins($select->getJoins());
         $sql .= $this->getWheres($select->getWheres());
         $sql .= $this->getGroupBy($select->getGroupBy());
@@ -145,11 +147,11 @@ class SQLServer extends Driver
         $tables = $update->getTables();
 
         if ($joins !== '') {
-            $joins = ' FROM ' . $this->getTables($tables) . ' ' . $joins;
+            $joins = ' FROM ' . $this->getTableList($tables) . ' ' . $joins;
             $tables = array_values($tables);
         }
         $sql = 'UPDATE ';
-        $sql .= $this->getTables($tables);
+        $sql .= $this->getTableList($tables);
         $sql .= $this->getSetColumns($update->getColumns());
         $sql .= $joins;
         $sql .= $this->getWheres($update->getWheres());

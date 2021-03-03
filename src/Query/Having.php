@@ -46,6 +46,8 @@ declare(strict_types=1);
 
 namespace Platine\Database\Query;
 
+use Closure;
+
 /**
  * Class Having
  * @package Platine\Database\Query
@@ -73,20 +75,19 @@ class Having
      * Having constructor.
      * @param QueryStatement $queryStatement
      */
-    public function __construct(
-        QueryStatement $queryStatement
-    ) {
+    public function __construct(QueryStatement $queryStatement)
+    {
         $this->queryStatement = $queryStatement;
     }
 
     /**
-     * @param string|Expression|\Closure $aggregate
+     * @param string|Expression|Closure $aggregate
      * @param string $separator
      * @return self
      */
     public function init($aggregate, string $separator): self
     {
-        if ($aggregate instanceof \Closure) {
+        if ($aggregate instanceof Closure) {
             $aggregate = Expression::fromClosure($aggregate);
         }
         $this->aggregate = $aggregate;
@@ -196,21 +197,31 @@ class Having
     }
 
     /**
-     * @param array|\Closure $value
+     * @param array<int, mixed>|Closure $value
      * @return WhereStatement
      */
     public function in($value): WhereStatement
     {
-        $this->queryStatement->addHavingIn($this->aggregate, $value, $this->separator, false);
+        return $this->queryStatement->addHavingIn(
+            $this->aggregate,
+            $value,
+            $this->separator,
+            false
+        );
     }
 
     /**
-     * @param array|\Closure $value
+     * @param array<int, mixed>|Closure $value
      * @return WhereStatement
      */
     public function notIn($value): WhereStatement
     {
-        $this->queryStatement->addHavingIn($this->aggregate, $value, $this->separator, true);
+        return $this->queryStatement->addHavingIn(
+            $this->aggregate,
+            $value,
+            $this->separator,
+            true
+        );
     }
 
     /**
@@ -236,6 +247,11 @@ class Having
             $expr = new Expression();
             $value = $expr->column($value);
         }
-        $this->queryStatement->addHaving($this->aggregate, $value, $operator, $this->separator);
+        $this->queryStatement->addHaving(
+            $this->aggregate,
+            $value,
+            $operator,
+            $this->separator
+        );
     }
 }

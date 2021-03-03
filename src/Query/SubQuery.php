@@ -54,13 +54,13 @@ class SubQuery
 {
 
     /**
-     * The Select instance
-     * @var Select
+     * The SelectStatement instance
+     * @var SelectStatement
      */
-    protected Select $select;
+    protected SelectStatement $select;
 
     /**
-     * @param string|array $tables
+     * @param string|array<int, string> $tables
      * @return SelectStatement
      */
     public function from($tables): SelectStatement

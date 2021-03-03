@@ -61,7 +61,7 @@ class AlterTable
 
     /**
      * The list of commands
-     * @var array
+     * @var array<int, array<string, mixed>>
      */
     protected array $commands = [];
 
@@ -85,7 +85,7 @@ class AlterTable
 
     /**
      *
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function getCommands(): array
     {
@@ -168,7 +168,7 @@ class AlterTable
 
     /**
      *
-     * @param string|array $columns
+     * @param string|array<int, string> $columns
      * @param string|null $name
      * @return self
      */
@@ -179,7 +179,7 @@ class AlterTable
 
     /**
      *
-     * @param string|array $columns
+     * @param string|array<int, string> $columns
      * @param string|null $name
      * @return self
      */
@@ -190,7 +190,7 @@ class AlterTable
 
     /**
      *
-     * @param string|array $columns
+     * @param string|array<int, string> $columns
      * @param string|null $name
      * @return self
      */
@@ -201,7 +201,7 @@ class AlterTable
 
     /**
      *
-     * @param string|array $columns
+     * @param string|array<int, string> $columns
      * @param string|null $name
      * @return ForeignKey
      */
@@ -533,7 +533,7 @@ class AlterTable
     /**
      *
      * @param string $type
-     * @param string|array $columns
+     * @param string|array<int, string> $columns
      * @param string|null $name
      * @return self
      */
@@ -550,7 +550,7 @@ class AlterTable
             $columns = [$columns];
         }
 
-        if ($name === nul) {
+        if ($name === null) {
             $name = $this->table . '_' . $maps[$type] . '_' . implode('_', $columns);
         }
 

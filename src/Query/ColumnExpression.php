@@ -84,7 +84,7 @@ class ColumnExpression
 
     /**
      * Add multiple columns
-     * @param array $columns
+     * @param array<int|string, mixed> $columns
      * @return self
      */
     public function columns(array $columns): self
@@ -106,10 +106,10 @@ class ColumnExpression
     }
 
     /**
-     * @param string|Expression $column
+     * @param string|array<int, mixed>|Expression|Closure $column
      * @param string|null $alias
      * @param bool $distinct
-     * @return $this
+     * @return self
      */
     public function count($column = '*', string $alias = null, bool $distinct = false): self
     {
@@ -117,10 +117,10 @@ class ColumnExpression
     }
 
     /**
-     * @param string|Expression $column
+     * @param string|Expression|Closure $column
      * @param string|null $alias
      * @param bool $distinct
-     * @return $this
+     * @return self
      */
     public function avg($column, string $alias = null, bool $distinct = false): self
     {
@@ -128,10 +128,10 @@ class ColumnExpression
     }
 
     /**
-     * @param string|Expression $column
+     * @param string|Expression|Closure $column
      * @param string|null $alias
      * @param bool $distinct
-     * @return $this
+     * @return self
      */
     public function sum($column, string $alias = null, bool $distinct = false): self
     {
@@ -139,10 +139,10 @@ class ColumnExpression
     }
 
     /**
-     * @param string|Expression $column
+     * @param string|Expression|Closure $column
      * @param string|null $alias
      * @param bool $distinct
-     * @return $this
+     * @return self
      */
     public function min($column, string $alias = null, bool $distinct = false): self
     {
@@ -150,10 +150,10 @@ class ColumnExpression
     }
 
     /**
-     * @param string|Expression $column
+     * @param string|Expression|Closure $column
      * @param string|null $alias
      * @param bool $distinct
-     * @return $this
+     * @return self
      */
     public function max($column, string $alias = null, bool $distinct = false): self
     {

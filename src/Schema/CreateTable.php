@@ -55,31 +55,31 @@ class CreateTable
 
     /**
      * The list of CreateColumn
-     * @var array
+     * @var array<string, CreateColumn>
      */
     protected array $columns;
 
     /**
      * The primary or list of primary key
-     * @var string|array
+     * @var string|array<string, mixed>
      */
     protected $primaryKey;
 
     /**
      * The list of unique keys
-     * @var array
+     * @var array<string, array<int, mixed>>
      */
     protected array $uniqueKeys = [];
 
     /**
      * The list of indexes keys
-     * @var array
+     * @var array<string, array<int, mixed>>
      */
     protected array $indexes = [];
 
     /**
-     * The list of foreign keys
-     * @var array
+     * The list of ForeignKey
+     * @var array<string, ForeignKey>
      */
     protected array $foreignKeys = [];
 
@@ -93,13 +93,13 @@ class CreateTable
      * The engine for the table
      * @var string|null
      */
-    protected ?string $engine;
+    protected ?string $engine = null;
 
     /**
      * The auto increment name
-     * @var string|null
+     * @var bool|null
      */
-    protected ?string $autoincrement;
+    protected ?bool $autoincrement = null;
 
     /**
      * Class constructor
@@ -121,7 +121,7 @@ class CreateTable
 
     /**
      *
-     * @return array
+     * @return array<string, CreateColumn>
      */
     public function getColumns(): array
     {
@@ -139,7 +139,7 @@ class CreateTable
 
     /**
      *
-     * @return array
+     * @return array<string, array<int, mixed>>
      */
     public function getUniqueKeys(): array
     {
@@ -148,7 +148,7 @@ class CreateTable
 
     /**
      *
-     * @return array
+     * @return array<string, array<int, mixed>>
      */
     public function getIndexes(): array
     {
@@ -157,7 +157,7 @@ class CreateTable
 
     /**
      *
-     * @return array
+     * @return array<string, ForeignKey>
      */
     public function getForeignKeys(): array
     {
@@ -175,9 +175,9 @@ class CreateTable
 
     /**
      *
-     * @return string|null
+     * @return bool|null
      */
-    public function getAutoincrement(): ?string
+    public function getAutoincrement(): ?bool
     {
         return $this->autoincrement;
     }
@@ -196,7 +196,7 @@ class CreateTable
 
     /**
      *
-     * @param string|array $columns
+     * @param string|array<int, string> $columns
      * @param string|null $name
      * @return self
      */
@@ -220,7 +220,7 @@ class CreateTable
 
     /**
      *
-     * @param string|array $columns
+     * @param string|array<int, string> $columns
      * @param string|null $name
      * @return self
      */
@@ -241,7 +241,7 @@ class CreateTable
 
     /**
      *
-     * @param string|array $columns
+     * @param string|array<int, string> $columns
      * @param string|null $name
      * @return self
      */
@@ -262,11 +262,11 @@ class CreateTable
 
     /**
      *
-     * @param string|array $columns
+     * @param string|array<int, string> $columns
      * @param string|null $name
-     * @return self
+     * @return ForeignKey
      */
-    public function foreign($columns, ?string $name = null): self
+    public function foreign($columns, ?string $name = null): ForeignKey
     {
         if (!is_array($columns)) {
             $columns = [$columns];
@@ -276,9 +276,7 @@ class CreateTable
             $name = $this->table . '_fk_' . implode('_', $columns);
         }
 
-        $this->foreignKeys[$name] = new ForeignKey($columns);
-
-        return $this;
+        return $this->foreignKeys[$name] = new ForeignKey($columns);
     }
 
     /**
@@ -293,7 +291,9 @@ class CreateTable
             return $this;
         }
 
-        $this->autoincrement = $this->set('autoincrement', true);
+        $this->autoincrement = true;
+
+        $column->set('autoincrement', true);
 
         return $this->primary($column->getName(), $name);
     }

@@ -46,6 +46,8 @@ declare(strict_types=1);
 
 namespace Platine\Database\Query;
 
+use Closure;
+
 /**
  * Class Where
  * @package Platine\Database\Query
@@ -89,13 +91,13 @@ class Where
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param string $separator
      * @return self
      */
     public function init($column, string $separator): self
     {
-        if ($column instanceof \Closure) {
+        if ($column instanceof Closure) {
             $column = Expression::fromClosure($column);
         }
         $this->column = $column;
@@ -223,7 +225,7 @@ class Where
     }
 
     /**
-     * @param array|\Closure $value
+     * @param array<int, mixed>|Closure $value
      * @return WhereStatement
      */
     public function in($value): WhereStatement
@@ -232,7 +234,7 @@ class Where
     }
 
     /**
-     * @param array|\Closure $value
+     * @param array<int, mixed>|Closure $value
      * @return WhereStatement
      */
     public function notIn($value): WhereStatement

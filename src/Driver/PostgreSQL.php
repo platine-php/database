@@ -47,6 +47,7 @@ declare(strict_types=1);
 namespace Platine\Database\Driver;
 
 use Platine\Database\Schema\AlterTable;
+use Platine\Database\Schema\BaseColumn;
 use Platine\Database\Schema\CreateTable;
 
 /**

@@ -103,7 +103,7 @@ class Database
     /**
      * Shortcut to Connection::query
      * @param string $sql
-     * @param array $params
+     * @param array<int, mixed> $params
      * @return ResultSet
      */
     public function query(string $sql, array $params = []): ResultSet
@@ -123,7 +123,7 @@ class Database
 
     /**
      * Execute a query in order to fetch or to delete records.
-     * @param string|array $tables Table name or an array of tables
+     * @param string|array<string> $tables Table name or an array of tables
      * @return QueryCommand
      */
     public function from($tables): QueryCommand
@@ -133,10 +133,10 @@ class Database
 
     /**
      * Insert new records into a table.
-     * @param array $values An array of values.
+     * @param array<string, mixed> $values An array of values.
      * @return InsertCommand|InsertStatement
      */
-    public function insert(array $values): InsertCommand
+    public function insert(array $values): InsertStatement
     {
         return (new InsertCommand($this->connection))->insert($values);
     }

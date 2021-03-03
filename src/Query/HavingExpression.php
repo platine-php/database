@@ -46,6 +46,12 @@ declare(strict_types=1);
 
 namespace Platine\Database\Query;
 
+use Closure;
+use InvalidArgumentException;
+use Platine\Database\Query\Expression;
+use Platine\Database\Query\Having;
+use Platine\Database\Query\QueryStatement;
+
 /**
  * Class HavingExpression
  * @package Platine\Database\Query
@@ -87,13 +93,13 @@ class HavingExpression
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param string $separator
      * @return self
      */
     public function init($column, string $separator): self
     {
-        if ($column instanceof \Closure) {
+        if ($column instanceof Closure) {
             $column = Expression::fromClosure($column);
         }
         $this->column = $column;

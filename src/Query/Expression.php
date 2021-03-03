@@ -57,12 +57,12 @@ class Expression
 
     /**
      * The list of expression
-     * @var array
+     * @var array<int, array<string, mixed>>
      */
     protected array $expressions = [];
 
     /**
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function getExpressions(): array
     {
@@ -71,7 +71,7 @@ class Expression
 
     /**
      * @param mixed $value
-     * @return $this
+     * @return self
      */
     public function column($value): self
     {
@@ -80,7 +80,7 @@ class Expression
 
     /**
      * @param mixed $value
-     * @return $this
+     * @return self
      */
     public function op($value): self
     {
@@ -89,7 +89,7 @@ class Expression
 
     /**
      * @param mixed $value
-     * @return $this
+     * @return self
      */
     public function value($value): self
     {
@@ -98,7 +98,7 @@ class Expression
 
     /**
      * @param Closure $closure
-     * @return $this
+     * @return self
      */
     public function group(Closure $closure): self
     {
@@ -109,7 +109,7 @@ class Expression
     }
 
     /**
-     * @param string|array $tables
+     * @param string|array<string> $tables
      * @return SelectStatement
      */
     public function from($tables): SelectStatement
@@ -121,31 +121,30 @@ class Expression
     }
 
     /**
-     * @param string|array $column
+     * @param string|array<int, mixed>|Expression|Closure $column
      * @param bool $distinct
-     * @return $this
+     * @return self
      */
     public function count($column = '*', bool $distinct = false): self
     {
         if (!is_array($column)) {
             $column = [$column];
         }
-        $distinct = $distinct || count($column) > 1;
 
         return $this->addFunction(
             'aggregateFunction',
             'COUNT',
             $column,
-            ['distinct' => $distinct]
+            ['distinct' => $distinct || count($column) > 1]
         );
     }
 
     /**
-     * @param string $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
-     * @return $this
+     * @return self
      */
-    public function sum(string $column, bool $distinct = false): self
+    public function sum($column, bool $distinct = false): self
     {
         return $this->addFunction(
             'aggregateFunction',
@@ -156,11 +155,11 @@ class Expression
     }
 
     /**
-     * @param string $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
-     * @return $this
+     * @return self
      */
-    public function avg(string $column, bool $distinct = false): self
+    public function avg($column, bool $distinct = false): self
     {
         return $this->addFunction(
             'aggregateFunction',
@@ -171,11 +170,11 @@ class Expression
     }
 
     /**
-     * @param string $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
-     * @return $this
+     * @return self
      */
-    public function min(string $column, bool $distinct = false): self
+    public function min($column, bool $distinct = false): self
     {
         return $this->addFunction(
             'aggregateFunction',
@@ -186,11 +185,11 @@ class Expression
     }
 
     /**
-     * @param string $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
-     * @return $this
+     * @return self
      */
-    public function max(string $column, bool $distinct = false): self
+    public function max($column, bool $distinct = false): self
     {
         return $this->addFunction(
             'aggregateFunction',
@@ -216,7 +215,7 @@ class Expression
      * @param string $type
      * @param mixed $value
      *
-     * @return $this
+     * @return self
      */
     protected function addExpression(string $type, $value): self
     {
@@ -231,9 +230,9 @@ class Expression
     /**
      * @param string $type
      * @param string $name
-     * @param string|Closure $column
-     * @param array $arguments
-     * @return $this
+     * @param string|Closure|array<int, mixed>|Expression $column
+     * @param array<string, bool> $arguments
+     * @return self
      */
     protected function addFunction(
         string $type,
@@ -242,10 +241,12 @@ class Expression
         array $arguments = []
     ): self {
         if ($column instanceof Closure) {
+            /** @var Expression $column */
             $column = static::fromClosure($column);
         } elseif (is_array($column)) {
             foreach ($column as &$col) {
                 if ($col instanceof Closure) {
+                    /** @var Expression $col */
                     $col = static::fromClosure($col);
                 }
             }
@@ -253,10 +254,10 @@ class Expression
 
         $func = array_merge(
             [
-                    'type' => $type,
-                    'name' => $name,
-                    'column' => $column
-                ],
+                'type' => $type,
+                'name' => $name,
+                'column' => $column
+            ],
             $arguments
         );
 

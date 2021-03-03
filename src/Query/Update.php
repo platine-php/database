@@ -63,7 +63,7 @@ class Update extends UpdateStatement
     /**
      * Update constructor.
      * @param Connection $connection
-     * @param string|array $table
+     * @param string|array<int, string> $table
      * @param QueryStatement|null $queryStatement
      */
     public function __construct(Connection $connection, $table, QueryStatement $queryStatement = null)
@@ -75,7 +75,7 @@ class Update extends UpdateStatement
 
     /**
      * Update a record in database
-     * @param array $columns
+     * @param array<int|string, mixed> $columns
      *
      * @return int
      */
@@ -90,7 +90,7 @@ class Update extends UpdateStatement
     }
 
     /**
-     * @param string|array $column
+     * @param string|array<int|string, mixed> $column
      * @param mixed $value
      * @return int
      */
@@ -100,7 +100,7 @@ class Update extends UpdateStatement
     }
 
     /**
-     * @param string|array $column
+     * @param string|array<int|string, mixed> $column
      * @param mixed $value
      * @return int
      */
@@ -111,7 +111,7 @@ class Update extends UpdateStatement
 
     /**
      * @param string $sign
-     * @param string|array $columns
+     * @param string|array<int|string, mixed> $columns
      * @param mixed $value
      * @return int
      */

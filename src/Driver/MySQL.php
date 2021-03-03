@@ -233,14 +233,19 @@ class MySQL extends Driver
     {
         $tableName = $schema->getTableName();
         $columnName = $data['from'];
-        /** @var BaseColumn * */
+        /** @var BaseColumn  $column */
         $column = $data['column'];
         $newName = $column->getName();
 
+        /** @var array<string, array<string, string>> $columns */
         $columns = $this->connection
                 ->getSchema()
                 ->getColumns($tableName, false, false);
-        $columnType = isset($columns[$columnName]) ? $columns[$columnName]['type'] : 'integer';
+
+        $columnType = 'integer';
+        if (isset($columns[$columnName]) && isset($columns[$columnName]['type'])) {
+            $columnType = $columns[$columnName]['type'];
+        }
 
         return sprintf(
             'ALTER TABLE %s CHANGE %s %s %s',

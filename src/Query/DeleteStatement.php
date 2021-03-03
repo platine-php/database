@@ -55,7 +55,7 @@ class DeleteStatement extends BaseStatement
 
     /**
      * DeleteStatement constructor.
-     * @param string|array $from
+     * @param string|array<string> $from
      * @param QueryStatement|null $queryStatement
      */
     public function __construct($from, QueryStatement $queryStatement = null)
@@ -70,9 +70,10 @@ class DeleteStatement extends BaseStatement
     }
 
     /**
-     * @param string|array $tables
+     * @param string|array<string> $tables
+     * @return mixed
      */
-    public function delete($tables = []): void
+    public function delete($tables = [])
     {
         if (!is_array($tables)) {
             $tables = [$tables];

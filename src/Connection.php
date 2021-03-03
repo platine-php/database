@@ -50,15 +50,10 @@ use PDO;
 use PDOException;
 use PDOStatement;
 use Platine\Database\Driver\Driver;
-use Platine\Database\Driver\MySQL;
-use Platine\Database\Driver\Oracle;
-use Platine\Database\Driver\PostgreSQL;
-use Platine\Database\Driver\SQLite;
-use Platine\Database\Driver\SQLServer;
 use Platine\Database\Exception\ConnectionException;
 use Platine\Database\Exception\QueryException;
 use Platine\Logger\Logger;
-use Platine\Logger\NullLogger;
+use Platine\Logger\NullHandler;
 
 /**
  * Class Connection
@@ -69,271 +64,93 @@ class Connection
 
     /**
      * The PDO instance
-     * @var PDO|null
+     * @var PDO
      */
-    protected ?PDO $pdo = null;
+    protected PDO $pdo;
 
     /**
-     * The database driver name to use
-     * @var string
-     */
-    protected string $driverName = '';
-
-    /**
-     * The PDO dsn
+     * The PDO data source name
      * @var string
      */
     protected string $dsn = '';
 
     /**
-     * The PDO connection options
-     * @var array
+     * The list of execution query logs
+     * @var array<int, array<string, mixed>>
      */
-    protected array $options = [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
-        PDO::ATTR_STRINGIFY_FETCHES => false,
-        PDO::ATTR_EMULATE_PREPARES => false,
-    ];
-
-    /**
-     * The list of SQL command to execute after connection
-     * @var array
-     */
-    protected array $commands = [];
+    protected array $logs = [];
 
     /**
      * The driver to use
-     * @var Driver|null
+     * @var Driver
      */
-    protected ?Driver $driver = null;
+    protected Driver $driver;
 
     /**
      * The Schema instance to use
-     * @var Schema|null
+     * @var Schema
      */
-    protected ?Schema $schema = null;
+    protected Schema $schema;
 
     /**
-     * The driver options
-     * @var array
+     * The connection configuration
+     * @var ConfigurationInterface
      */
-    protected array $driverOptions = [];
-
-    /**
-     * The connection configurations
-     * @var array
-     */
-    protected array $config = [];
+    protected ConfigurationInterface $config;
 
     /**
      * The connection parameters
-     * @var array
+     * @var array<int|string, mixed>
      */
     protected array $params = [];
 
     /**
-     * @var Logger|null
+     * @var Logger
      */
-    protected ?Logger $logger = null;
+    protected Logger $logger;
 
     /**
      * Connection constructor.
-     * @param array $config
-     * @param bool $autoConnect whether to connect to database automatically
+     * @param ConfigurationInterface $config
      * @param Logger $logger
      * @throws ConnectionException
      */
     public function __construct(
-        array $config = [],
+        ConfigurationInterface $config,
         ?Logger $logger = null
     ) {
-        $this->logger = $logger ? $logger : new Logger(new NullLogger());
+        $this->config = $config;
 
-        if (!empty($config)) {
-            $this->setConfig($config);
-        }
+        $this->logger = $logger ? $logger : new Logger(new NullHandler());
+        $this->logger->setChannel(__CLASS__);
+
+        $driverClass = $this->config->getDriverClassName();
+        $this->driver = new $driverClass($this);
+
+        $this->schema = new Schema($this);
+
+        $this->connect();
     }
 
-    /**
+        /**
      * Connect to the database
-     * @return bool
-     */
-    public function connect(): bool
-    {
-        try {
-            $this->pdo = new PDO(
-                $this->dsn,
-                $this->config['username'],
-                $this->config['password'],
-                $this->options
-            );
-
-            foreach ($this->commands as $command) {
-                $this->pdo->exec($command);
-            }
-        } catch (PDOException $exception) {
-            $this->logger->emergency('Can not connect to database. Error message: {error}', [
-                'exception' => $exception,
-                'error' => $exception->getMessage()
-            ]);
-            throw new ConnectionException($exception->getMessage());
-        }
-
-        return $this->pdo !== null;
-    }
-
-    /**
-     * Set the connection configuration
-     * @param array $config
      * @return void
      */
-    public function setConfig(array $config): void
+    public function connect(): void
     {
-        $defaultConfig = [
-            'driver' => 'mysql',
-            'charset' => 'UTF8', //only for some drivers,
-            'appname' => '', //only for MSSQL, DBLIB,
-            'hostname' => 'localhost',
-            'username' => '',
-            'password' => '',
-            'port' => null,
-            'database' => '',
-            'auto_connect' => false,
-            'collation' => 'utf8_general_ci', //only for MySQL
-            'socket' => '', //only for MySQL
-            'options' => [],
-            'commands' => [],
-        ];
+        $this->setConnectionParams();
 
-        $dbConfig = array_merge($defaultConfig, $config);
-        $this->config = $dbConfig;
-
-        $this->driverName = strtolower((string) $dbConfig['driver']);
-
-        $options = array_replace($this->options, (array) $dbConfig['options']);
-
-        $commands = array_merge($this->commands, $dbConfig['commands']);
-
-        $port = null;
-        $attr = [];
-
-        if (is_int($dbConfig['port'])) {
-            $port = $dbConfig['port'];
+        if ($this->config->isPersistent()) {
+            $this->persistent(true);
         }
 
-        $driverName = $this->driverName;
-        switch ($driverName) {
-            case 'mysql':
-            case 'pgsql':
-                $attr = [
-                    'driver' => $driverName,
-                    'dbname' => $dbConfig['database'],
-                    'host' => $dbConfig['hostname'],
-                ];
-
-                if ($port > 0) {
-                    $attr['port'] = $port;
-                }
-
-                if ($driverName === 'mysql') {
-                    //Make MySQL using standard quoted identifier
-                    $commands[] = 'SET SQL_MODE=ANSI_QUOTES';
-
-                    if (!empty($dbConfig['socket'])) {
-                        $attr['unix_socket'] = $dbConfig['socket'];
-
-                        unset($attr['host']);
-                        unset($attr['port']);
-                    }
-                }
-                break;
-            case 'sqlsrv':
-                //Keep MSSQL QUOTED_IDENTIFIER is ON for standard quoting
-                $commands[] = 'SET QUOTED_IDENTIFIER ON';
-
-                //Make ANSI_NULLS is ON for NULL value
-                $commands[] = 'SET ANSI_NULLS ON';
-
-                $attr = [
-                    'driver' => 'sqlsrv',
-                    'Server' => $dbConfig['hostname']
-                        . ($port > 0 ? ':' . $port : ''),
-                    'Database' => $dbConfig['database']
-                ];
-
-                if (!empty($dbConfig['appname'])) {
-                    $attr['APP'] = $dbConfig['appname'];
-                }
-
-                $attributes = [
-                    'ApplicationIntent',
-                    'AttachDBFileName',
-                    'Authentication',
-                    'ColumnEncryption',
-                    'ConnectionPooling',
-                    'Encrypt',
-                    'Failover_Partner',
-                    'KeyStoreAuthentication',
-                    'KeyStorePrincipalId',
-                    'KeyStoreSecret',
-                    'LoginTimeout',
-                    'MultipleActiveResultSets',
-                    'MultiSubnetFailover',
-                    'Scrollable',
-                    'TraceFile',
-                    'TraceOn',
-                    'TransactionIsolation',
-                    'TransparentNetworkIPResolution',
-                    'TrustServerCertificate',
-                    'WSID',
-                ];
-
-                foreach ($attributes as $attribute) {
-                    $keyname = strtolower(preg_replace(
-                        ['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'],
-                        '$1_$2',
-                        $attribute
-                    ));
-
-                    if (isset($dbConfig[$keyname])) {
-                        $attr[$attribute] = $dbConfig[$keyname];
-                    }
-                }
-                break;
-            case 'oci':
-            case 'oracle':
-                $database = $dbConfig['database'];
-                $attr = [
-                    'driver' => 'oci',
-                    'dbname' => '//' . $dbConfig['hostname']
-                    . ($port > 0 ? ':' . $port : ':1521') . '/' . $database
-                ];
-
-                $attr['charset'] = $dbConfig['charset'];
-                break;
-            case 'sqlite':
-                $attr = [
-                    'driver' => 'sqlite',
-                    $dbConfig['database']
-                ];
-                break;
-        }
+        $attr = $this->params;
 
         if (empty($attr)) {
             throw new InvalidArgumentException('Invalid database options supplied');
         }
 
         $driver = $attr['driver'];
-        if (!in_array($driver, PDO::getAvailableDrivers())) {
-            throw new InvalidArgumentException(sprintf(
-                'Invalid database driver [%s], must be one of [%s]',
-                $driver,
-                implode(', ', PDO::getAvailableDrivers())
-            ));
-        }
-        $this->params = $attr;
-
         unset($attr['driver']);
 
         $params = [];
@@ -343,25 +160,48 @@ class Connection
 
         $dsn = $driver . ':' . implode(';', $params);
         if (in_array($driver, ['mysql', 'pgsql', 'sqlsrv'])) {
-            $commands[] = 'SET NAMES "' . $dbConfig['charset'] . '"' . (
-                    $this->driverName === 'mysql'
-                            ? ' COLLATE "' . $dbConfig['collation'] . '"'
+            $charset = $this->config->getCharset();
+            $this->config->addCommand('SET NAMES "' . $charset . '"' . (
+                    $this->config->getDriverName() === 'mysql'
+                            ? ' COLLATE "' . $this->config->getCollation() . '"'
                             : ''
-                    );
+                    ));
         }
 
         $this->dsn = $dsn;
-        $this->commands = $commands;
-        $this->options = $options;
 
-        if (is_bool($dbConfig['auto_connect']) && $dbConfig['auto_connect']) {
-            $this->connect();
+        try {
+            $this->pdo = new PDO(
+                $this->dsn,
+                $this->config->getUsername(),
+                $this->config->getPassword(),
+                $this->config->getOptions()
+            );
+
+            foreach ($this->config->getCommands() as $command) {
+                $this->pdo->exec($command);
+            }
+        } catch (PDOException $exception) {
+            $this->logger->emergency('Can not connect to database. Error message: {error}', [
+                'exception' => $exception,
+                'error' => $exception->getMessage()
+            ]);
+            throw new ConnectionException($exception->getMessage());
         }
     }
 
     /**
+     * Return the query execution logs
+     * @return array<int, array<string, mixed>>
+     */
+    public function getLogs(): array
+    {
+        return $this->logs;
+    }
+
+    /**
      * Return the current connection parameters
-     * @return array
+     * @return array<int|string, mixed>
      */
     public function getParams(): array
     {
@@ -370,22 +210,11 @@ class Connection
 
     /**
      * Return the current connection configuration
-     * @return array
+     * @return ConfigurationInterface
      */
-    public function getConfig(): array
+    public function getConfig(): ConfigurationInterface
     {
         return $this->config;
-    }
-
-    /**
-     * @param Logger $logger
-     * @return self
-     */
-    public function setLogger(Logger $logger): self
-    {
-        $this->logger = $logger;
-
-        return $this;
     }
 
     /**
@@ -394,22 +223,7 @@ class Connection
      */
     public function getDriver(): Driver
     {
-        if ($this->driver === null) {
-            $this->setDefaultDriver();
-        }
         return $this->driver;
-    }
-
-    /**
-     * Set the custom driver to use
-     * @param Driver $driver
-     * @return self
-     */
-    public function setDriver(Driver $driver): self
-    {
-        $this->driver = $driver;
-
-        return $this;
     }
 
     /**
@@ -418,35 +232,7 @@ class Connection
      */
     public function getSchema(): Schema
     {
-        if ($this->schema === null) {
-            $this->schema = new Schema($this);
-        }
         return $this->schema;
-    }
-
-    /**
-     * Set the custom schema to use
-     * @param Schema $schema
-     * @return self
-     */
-    public function setSchema(Schema $schema): self
-    {
-        $this->schema = $schema;
-
-        return $this;
-    }
-
-    /**
-     * Set the PDO connection option
-     * @param string $name
-     * @param mixed $value
-     * @return self
-     */
-    public function setOption(string $name, $value): self
-    {
-        $this->options[$name] = $value;
-
-        return $this;
     }
 
     /**
@@ -456,31 +242,7 @@ class Connection
      */
     public function persistent(bool $value = true): self
     {
-        $this->setOption(PDO::ATTR_PERSISTENT, $value);
-
-        return $this;
-    }
-
-    /**
-     * Set the date format to use for the current driver
-     * @param string $format
-     * @return self
-     */
-    public function setDateFormat(string $format): self
-    {
-        $this->driverOptions['dateFormat'] = $format;
-
-        return $this;
-    }
-
-    /**
-     * Set the quote identifier to use for the current driver
-     * @param string $identifier
-     * @return self
-     */
-    public function setQuoteIdentifier(string $identifier): self
-    {
-        $this->driverOptions['identifier'] = $identifier;
+        $this->config->setOption(PDO::ATTR_PERSISTENT, $value);
 
         return $this;
     }
@@ -494,38 +256,18 @@ class Connection
     }
 
     /**
-     * Return the name of the connection driver
-     * @return string
-     */
-    public function getDriverName(): string
-    {
-        return $this->driverName;
-    }
-
-    /**
      * Return the instance of the PDO
      * @return PDO
      */
     public function getPDO(): PDO
     {
-        if ($this->pdo === null) {
-            $this->connect();
-        }
         return $this->pdo;
-    }
-
-    /**
-     * CLose the connection
-     */
-    public function disconnect(): void
-    {
-        $this->pdo = null;
     }
 
     /**
      * Execute the SQL query and return the result
      * @param string $sql
-     * @param array $params the query parameters
+     * @param array<int, mixed> $params the query parameters
      * @return ResultSet
      * @throws QueryException
      */
@@ -540,7 +282,7 @@ class Connection
     /**
      * Direct execute the SQL query
      * @param string $sql
-     * @param array $params the query parameters
+     * @param array<int, mixed> $params the query parameters
      * @return mixed
      * @throws QueryException
      */
@@ -553,7 +295,7 @@ class Connection
      *  Execute the SQL query and return the number
      * of affected rows
      * @param string $sql
-     * @param array $params the query parameters
+     * @param array<int, mixed> $params the query parameters
      * @return int
      * @throws QueryException
      */
@@ -571,7 +313,7 @@ class Connection
     /**
      *  Execute the SQL query and return the first column result
      * @param string $sql
-     * @param array $params the query parameters
+     * @param array<int, mixed> $params the query parameters
      * @return mixed
      * @throws QueryException
      */
@@ -602,8 +344,6 @@ class Connection
             $that = $this;
         }
 
-        $this->checkConnectionStatus();
-
         if ($this->pdo->inTransaction()) {
             return $callback($that);
         }
@@ -627,28 +367,29 @@ class Connection
     /**
      * Change the query parameters placeholder with the value
      * @param string $query
-     * @param array $params
+     * @param array<int, mixed> $params
      * @return string
      */
     protected function replaceParameters(string $query, array $params): string
     {
-        $driver = $this->getDriver();
+        $driver = $this->driver;
 
-        return preg_replace_callback(
+        return (string) preg_replace_callback(
             '/\?/',
             function () use ($driver, &$params) {
                 $param = array_shift($params);
-                $param = is_object($param) ? get_class($param) : $param;
-                if (is_int($param) || is_float($param)) {
-                    return $param;
+
+                $value = is_object($param) ? get_class($param) : $param;
+                if (is_int($value) || is_float($value)) {
+                    return $value;
                 }
-                if ($param === null) {
+                if ($value === null) {
                     return 'NULL';
                 }
-                if (is_bool($param)) {
-                    return $param ? 'TRUE' : 'FALSE';
+                if (is_bool($value)) {
+                    return $value ? 'TRUE' : 'FALSE';
                 }
-                return $driver->quote($param);
+                return $driver->quote($value);
             },
             $query
         );
@@ -657,13 +398,12 @@ class Connection
     /**
      * Prepare the query
      * @param string $query
-     * @param array $params
-     * @return array
+     * @param array<mixed> $params
+     * @return array<string, mixed>
      * @throws QueryException
      */
     protected function prepare(string $query, array $params): array
     {
-        $this->checkConnectionStatus();
         try {
             $statement = $this->pdo->prepare($query);
         } catch (PDOException $exception) {
@@ -689,7 +429,7 @@ class Connection
 
     /**
      * Execute the prepared query
-     * @param array $prepared
+     * @param array<string, mixed> $prepared
      * @return bool the status of the execution
      * @throws QueryException
      */
@@ -708,6 +448,8 @@ class Connection
             $start = microtime(true);
             $result = $prepared['statement']->execute();
             $sqlLog['time'] = number_format(microtime(true) - $start, 6);
+
+            $this->logs[] = $sqlLog;
 
             $this->logger->info(
                 'Execute Query: [{query}], parameters: [{parameters}], time: [{time}]',
@@ -732,7 +474,7 @@ class Connection
     /**
      * Bind the parameters values
      * @param PDOStatement $statement
-     * @param array $values
+     * @param array<int, mixed> $values
      */
     protected function bindValues(PDOStatement $statement, array $values): void
     {
@@ -751,46 +493,120 @@ class Connection
     }
 
     /**
-     * Set the default driver instance using current driver name
+     * Set the PDO connection parameters to use
      * @return void
      */
-    protected function setDefaultDriver(): void
+    protected function setConnectionParams(): void
     {
-        switch ($this->driverName) {
+        $port = $this->config->getPort();
+        $database = $this->config->getDatabase();
+        $hostname = $this->config->getHostname();
+        $attr = [];
+
+        $driverName = $this->config->getDriverName();
+        switch ($driverName) {
             case 'mysql':
-                $this->driver = new MySQL($this);
-                break;
             case 'pgsql':
-                $this->driver = new PostgreSQL($this);
+                $attr = [
+                    'driver' => $driverName,
+                    'dbname' => $database,
+                    'host' => $hostname,
+                ];
+
+                if ($port > 0) {
+                    $attr['port'] = $port;
+                }
+
+                if ($driverName === 'mysql') {
+                    //Make MySQL using standard quoted identifier
+                    $this->config->addCommand('SET SQL_MODE=ANSI_QUOTES');
+                    $this->config->addCommand('SET CHARACTER SET "' . $this->config->getCharset() . '"');
+
+                    $socket = $this->config->getSocket();
+                    if (!empty($socket)) {
+                        $attr['unix_socket'] = $socket;
+
+                        unset($attr['host']);
+                        unset($attr['port']);
+                    }
+                }
                 break;
-            case 'dblib':
-            case 'mssql':
             case 'sqlsrv':
-            case 'sybase':
-                $this->driver = new SQLServer($this);
+                //Keep MSSQL QUOTED_IDENTIFIER is ON for standard quoting
+                $this->config->addCommand('SET QUOTED_IDENTIFIER ON');
+
+                //Make ANSI_NULLS is ON for NULL value
+                $this->config->addCommand('SET ANSI_NULLS ON');
+
+                $attr = [
+                    'driver' => 'sqlsrv',
+                    'Server' => $hostname
+                        . ($port > 0 ? ':' . $port : ''),
+                    'Database' => $database
+                ];
+
+                $appName = $this->config->getAppname();
+                if (!empty($appName)) {
+                    $attr['APP'] = $appName;
+                }
+
+                $attributes = [
+                    'ApplicationIntent',
+                    'AttachDBFileName',
+                    'Authentication',
+                    'ColumnEncryption',
+                    'ConnectionPooling',
+                    'Encrypt',
+                    'Failover_Partner',
+                    'KeyStoreAuthentication',
+                    'KeyStorePrincipalId',
+                    'KeyStoreSecret',
+                    'LoginTimeout',
+                    'MultipleActiveResultSets',
+                    'MultiSubnetFailover',
+                    'Scrollable',
+                    'TraceFile',
+                    'TraceOn',
+                    'TransactionIsolation',
+                    'TransparentNetworkIPResolution',
+                    'TrustServerCertificate',
+                    'WSID',
+                ];
+
+                foreach ($attributes as $attribute) {
+                    $str = preg_replace(
+                        ['/([a-z\d])([A-Z])/', '/([^_])([A-Z][a-z])/'],
+                        '$1_$2',
+                        $attribute
+                    );
+
+                    if (is_string($str)) {
+                        $keyname = strtolower($str);
+
+                        if ($this->config->hasAttribute($keyname)) {
+                            $attr[$attribute] = $this->config->getAttribute($keyname);
+                        }
+                    }
+                }
                 break;
             case 'oci':
             case 'oracle':
-                $this->driver = new Oracle($this);
+                $attr = [
+                    'driver' => 'oci',
+                    'dbname' => '//' . $hostname
+                    . ($port > 0 ? ':' . $port : ':1521') . '/' . $database
+                ];
+
+                $attr['charset'] = $this->config->getCharset();
                 break;
             case 'sqlite':
-                $this->driver = new SQLite($this);
+                $attr = [
+                    'driver' => 'sqlite',
+                    $database
+                ];
                 break;
-            default:
-                $this->driver = new Driver($this);
         }
-        $this->driver->setOptions($this->driverOptions);
-    }
 
-    /**
-     * Check the status of the connection
-     * @return void
-     * @throws ConnectionException
-     */
-    protected function checkConnectionStatus(): void
-    {
-        if ($this->pdo === null) {
-            throw ConnectionException::connectionNotEstablished();
-        }
+        $this->params = $attr;
     }
 }

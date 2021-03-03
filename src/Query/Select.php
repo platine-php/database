@@ -46,6 +46,7 @@ declare(strict_types=1);
 
 namespace Platine\Database\Query;
 
+use Closure;
 use Platine\Database\Connection;
 use Platine\Database\ResultSet;
 
@@ -64,17 +65,20 @@ class Select extends SelectStatement
     /**
      * Select constructor.
      * @param Connection $connection
-     * @param string|array $tables
+     * @param string|array<int, string> $tables
      * @param QueryStatement|null $queryStatement
      */
-    public function __construct(Connection $connection, $tables, QueryStatement $queryStatement = null)
-    {
+    public function __construct(
+        Connection $connection,
+        $tables,
+        QueryStatement $queryStatement = null
+    ) {
         parent::__construct($tables, $queryStatement);
         $this->connection = $connection;
     }
 
     /**
-     * @param string|Expression|\Closure|string[]|Expression[]|\Closure[] $columns
+     * @param string|Expression|Closure|string[]|Expression[]|Closure[] $columns
      *
      * @return ResultSet
      */
@@ -90,7 +94,7 @@ class Select extends SelectStatement
     }
 
     /**
-     * @param string|Expression|\Closure $name
+     * @param string|Expression|Closure $name
      *
      * @return mixed|false
      */
@@ -101,7 +105,7 @@ class Select extends SelectStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
      *
      * @return int
@@ -113,7 +117,7 @@ class Select extends SelectStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
      *
      * @return int|float
@@ -125,7 +129,7 @@ class Select extends SelectStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
      *
      * @return int|float
@@ -137,7 +141,7 @@ class Select extends SelectStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
      *
      * @return int|float
@@ -149,7 +153,7 @@ class Select extends SelectStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
      *
      * @return int|float

@@ -46,9 +46,9 @@ declare(strict_types=1);
 
 namespace Platine\Database;
 
-use PDOStatement;
-use PDO;
 use Closure;
+use PDO;
+use PDOStatement;
 
 /**
  * Class ResultSet
@@ -74,8 +74,9 @@ class ResultSet
 
     /**
      * Destructor of the class
+     *
      */
-    public function __desctruct()
+    public function __destruct()
     {
         $this->statement->closeCursor();
     }
@@ -93,9 +94,9 @@ class ResultSet
      * Fetch all record
      * @param callable $callable
      * @param int $fetchStyle the PDO fetch style
-     * @return array
+     * @return array<int, mixed>|false
      */
-    public function all(callable $callable = null, int $fetchStyle = 0): array
+    public function all(callable $callable = null, int $fetchStyle = 0)
     {
         if ($callable === null) {
             return $this->statement->fetchAll($fetchStyle);
@@ -107,9 +108,9 @@ class ResultSet
      * Fetch all record per group
      * @param bool $uniq
      * @param callable $callable
-     * @return array
+     * @return array<int, mixed>|false
      */
-    public function allGroup(bool $uniq = false, callable $callable = null): array
+    public function allGroup(bool $uniq = false, callable $callable = null)
     {
         $fetchStyle = PDO::FETCH_GROUP | ($uniq ? PDO::FETCH_UNIQUE : 0);
 
@@ -223,7 +224,7 @@ class ResultSet
     /**
      * Fetch each result as an instance of the given class
      * @param string $class the name of the class
-     * @param array $cargs the constructor arguments
+     * @param array<int, mixed> $cargs the constructor arguments
      * @return self
      */
     public function fetchClass(string $class, array $cargs = []): self

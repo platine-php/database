@@ -46,6 +46,8 @@ declare(strict_types=1);
 
 namespace Platine\Database\Query;
 
+use Closure;
+
 /**
  * Class SelectStatement
  * @package Platine\Database\Query
@@ -60,7 +62,7 @@ class SelectStatement extends BaseStatement
 
     /**
      * SelectStatement constructor.
-     * @param string|array $tables
+     * @param string|array<int, string> $tables
      * @param QueryStatement|null $queryStatement
      */
     public function __construct($tables, QueryStatement $queryStatement = null)
@@ -98,7 +100,7 @@ class SelectStatement extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure|string[]|Expression[]|\Closure[] $columns
+     * @param string|Expression|Closure|string[]|Expression[]|Closure[] $columns
      * @return self
      */
     public function groupBy($columns): self
@@ -112,11 +114,11 @@ class SelectStatement extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
-     * @param \Closure|null $closure
+     * @param string|Expression|Closure $column
+     * @param Closure|null $closure
      * @return self
      */
-    public function having($column, \Closure $closure = null): self
+    public function having($column, Closure $closure = null): self
     {
         $this->havingStatement->having($column, $closure);
 
@@ -124,11 +126,11 @@ class SelectStatement extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
-     * @param \Closure|null $closure
+     * @param string|Expression|Closure $column
+     * @param Closure|null $closure
      * @return self
      */
-    public function orHaving($column, \Closure $closure = null): self
+    public function orHaving($column, Closure $closure = null): self
     {
         $this->havingStatement->orHaving($column, $closure);
 
@@ -136,7 +138,7 @@ class SelectStatement extends BaseStatement
     }
 
     /**
-     * @param string|\Closure|Expression|string[]|Expression[]|\Closure[] $columns
+     * @param string|Closure|Expression|string[]|Expression[]|Closure[] $columns
      * @param string $order
      * @return self
      */
@@ -174,13 +176,14 @@ class SelectStatement extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure|string[]|Expression[]|\Closure[] $columns
+     * @param string|Expression|Closure|string[]|Expression[]|Closure[] $columns
+     * @return mixed
      */
     public function select($columns = [])
     {
         $expr = new ColumnExpression($this->queryStatement);
 
-        if ($columns instanceof \Closure) {
+        if ($columns instanceof Closure) {
             $columns($expr);
         } else {
             if (!is_array($columns)) {
@@ -191,7 +194,8 @@ class SelectStatement extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure $name
+     * @param string|Expression|Closure $name
+     * @return mixed
      */
     public function column($name)
     {
@@ -199,8 +203,9 @@ class SelectStatement extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
+     * @return mixed
      */
     public function count($column = '*', bool $distinct = false)
     {
@@ -208,8 +213,9 @@ class SelectStatement extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
+     * @return mixed
      */
     public function avg($column, bool $distinct = false)
     {
@@ -217,8 +223,9 @@ class SelectStatement extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
+     * @return mixed
      */
     public function sum($column, bool $distinct = false)
     {
@@ -226,8 +233,9 @@ class SelectStatement extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
+     * @return mixed
      */
     public function min($column, bool $distinct = false)
     {
@@ -235,8 +243,9 @@ class SelectStatement extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
+     * @return mixed
      */
     public function max($column, bool $distinct = false)
     {

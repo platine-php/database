@@ -61,13 +61,13 @@ class BaseColumn
 
     /**
      * The type of column
-     * @var string
+     * @var string|null
      */
-    protected ?string $type;
+    protected ?string $type = null;
 
     /**
      * The column properties
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $properties = [];
 
@@ -102,7 +102,7 @@ class BaseColumn
 
     /**
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getProperties(): array
     {
@@ -112,7 +112,7 @@ class BaseColumn
     /**
      *
      * @param string $type
-     * @return self
+     * @return $this
      */
     public function setType(string $type): self
     {
@@ -125,7 +125,7 @@ class BaseColumn
      * Set the value for the given property name
      * @param string $name
      * @param mixed $value
-     * @return self
+     * @return $this
      */
     public function set(string $name, $value): self
     {
@@ -150,6 +150,7 @@ class BaseColumn
      * if not exist the value of $default will be returned
      * @param string $name
      * @param mixed|null $default
+     * @return mixed
      */
     public function get(string $name, $default = null)
     {
@@ -159,7 +160,7 @@ class BaseColumn
     /**
      * Set the size for the column
      * @param string $value
-     * @return self
+     * @return $this
      */
     public function size(string $value): self
     {
@@ -173,7 +174,7 @@ class BaseColumn
 
     /**
      *
-     * @return self
+     * @return $this
      */
     public function notNull(): self
     {
@@ -183,7 +184,7 @@ class BaseColumn
     /**
      * Set comment for the column
      * @param string $comment
-     * @return self
+     * @return $this
      */
     public function description(string $comment): self
     {
@@ -193,7 +194,7 @@ class BaseColumn
     /**
      * Set default value for the column
      * @param mixed $value
-     * @return self
+     * @return $this
      */
     public function defaultValue($value): self
     {
@@ -203,7 +204,7 @@ class BaseColumn
     /**
      *
      * @param bool $value
-     * @return self
+     * @return $this
      */
     public function unsigned(bool $value = true): self
     {
@@ -213,7 +214,7 @@ class BaseColumn
     /**
      * Set length for the column
      * @param mixed $value
-     * @return self
+     * @return $this
      */
     public function length($value): self
     {

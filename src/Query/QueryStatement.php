@@ -58,55 +58,55 @@ class QueryStatement
 
     /**
      * The where SQL parts
-     * @var array
+     * @var array<int, mixed>
      */
     protected array $wheres = [];
 
     /**
      * The having SQL parts
-     * @var array
+     * @var array<int, mixed>
      */
     protected array $having = [];
 
     /**
      * The join SQL parts
-     * @var array
+     * @var array<int, mixed>
      */
     protected array $joins = [];
 
     /**
      * The table SQL parts
-     * @var array
+     * @var array<int, mixed>
      */
     protected array $tables = [];
 
     /**
      * The columns SQL parts
-     * @var array
+     * @var array<int, mixed>
      */
     protected array $columns = [];
 
     /**
      * The order SQL parts
-     * @var array
+     * @var array<int, mixed>
      */
     protected array $order = [];
 
     /**
      * The group SQL parts
-     * @var array
+     * @var string[]|Expression[]
      */
     protected array $group = [];
 
     /**
      * The from SQL parts
-     * @var array
+     * @var array<int, string>
      */
     protected array $from = [];
 
     /**
      * The query placeholders values
-     * @var array
+     * @var array<int, mixed>
      */
     protected array $values = [];
 
@@ -283,7 +283,7 @@ class QueryStatement
 
     /**
      * @param string $type
-     * @param string|array $table
+     * @param string|array<int, string>|Closure $table
      * @param Closure|null $closure
      */
     public function addJoinClause(string $type, $table, Closure $closure = null): void
@@ -347,8 +347,9 @@ class QueryStatement
      * @param mixed $value
      * @param string $separator
      * @param bool $not
+     * @return mixed
      */
-    public function addHavingIn($aggregate, $value, string $separator, bool $not): void
+    public function addHavingIn($aggregate, $value, string $separator, bool $not)
     {
         $aggregate = $this->closureToExpression($aggregate);
 
@@ -394,7 +395,7 @@ class QueryStatement
     }
 
     /**
-     * @param array $tables
+     * @param array<int, string> $tables
      */
     public function addTables(array $tables): void
     {
@@ -402,7 +403,7 @@ class QueryStatement
     }
 
     /**
-     * @param array $columns
+     * @param array<int|string, mixed> $columns
      */
     public function addUpdateColumns(array $columns): void
     {
@@ -440,11 +441,12 @@ class QueryStatement
      */
     public function addGroupBy(array $columns): void
     {
+        $cols = [];
         foreach ($columns as &$column) {
-            $column = $this->closureToExpression($column);
+            $cols[] = $this->closureToExpression($column);
         }
 
-        $this->group = $columns;
+        $this->group = $cols;
     }
 
     /**
@@ -492,7 +494,7 @@ class QueryStatement
     }
 
     /**
-     * @param array $from
+     * @param array<int, string> $from
      */
     public function setFrom(array $from): void
     {
@@ -508,7 +510,7 @@ class QueryStatement
     }
 
     /**
-     * @return array
+     * @return array<int, mixed>
      */
     public function getWheres(): array
     {
@@ -516,7 +518,7 @@ class QueryStatement
     }
 
     /**
-     * @return array
+     * @return array<int, mixed>
      */
     public function getHaving(): array
     {
@@ -524,7 +526,7 @@ class QueryStatement
     }
 
     /**
-     * @return array
+     * @return array<int, mixed>
      */
     public function getJoins(): array
     {
@@ -534,13 +536,13 @@ class QueryStatement
     /**
      * @return bool
      */
-    public function getDistinct(): bool
+    public function hasDistinct(): bool
     {
         return $this->distinct;
     }
 
     /**
-     * @return array
+     * @return array<int, string>
      */
     public function getTables(): array
     {
@@ -548,7 +550,7 @@ class QueryStatement
     }
 
     /**
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function getColumns(): array
     {
@@ -556,7 +558,7 @@ class QueryStatement
     }
 
     /**
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function getOrder(): array
     {
@@ -564,7 +566,7 @@ class QueryStatement
     }
 
     /**
-     * @return array
+     * @return string[]|Expression[]
      */
     public function getGroupBy(): array
     {
@@ -596,7 +598,7 @@ class QueryStatement
     }
 
     /**
-     * @return array
+     * @return array<int, string>
      */
     public function getFrom(): array
     {
@@ -604,7 +606,7 @@ class QueryStatement
     }
 
     /**
-     * @return array
+     * @return array<int, mixed>
      */
     public function getValues(): array
     {

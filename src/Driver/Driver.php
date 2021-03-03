@@ -48,12 +48,14 @@ declare(strict_types=1);
 
 namespace Platine\Database\Driver;
 
+use DateTime;
 use Platine\Database\Connection;
 use Platine\Database\Query\Expression;
 use Platine\Database\Query\QueryStatement;
 use Platine\Database\Schema\AlterTable;
 use Platine\Database\Schema\BaseColumn;
 use Platine\Database\Schema\CreateTable;
+
 
 /**
  * Class Driver
@@ -83,7 +85,7 @@ class Driver
 
     /**
      * The columns modifiers
-     * @var array
+     * @var array<string>
      */
     protected array $modifiers = [
         'unsigned',
@@ -94,7 +96,7 @@ class Driver
 
     /**
      * Columns serial
-     * @var array
+     * @var array<string>
      */
     protected array $serials = [
         'tiny',
@@ -112,7 +114,7 @@ class Driver
 
     /**
      * The query parameters
-     * @var array
+     * @var array<mixed>
      */
     protected array $params = [];
 
@@ -139,7 +141,7 @@ class Driver
      */
     public function select(QueryStatement $select): string
     {
-        $sql = $select->getDistinct() ? 'SELECT DISTINCT ' : 'SELECT ';
+        $sql = $select->hasDistinct() ? 'SELECT DISTINCT ' : 'SELECT ';
         $sql .= $this->getColumnList($select->getColumns());
         $sql .= $this->getInto($select->getIntoTable());
         $sql .= ' FROM ';
@@ -147,8 +149,8 @@ class Driver
         $sql .= $this->getJoins($select->getJoins());
         $sql .= $this->getWheres($select->getWheres());
         $sql .= $this->getGroupBy($select->getGroupBy());
-        $sql .= $this->getOrders($select->getOrder());
         $sql .= $this->getHaving($select->getHaving());
+        $sql .= $this->getOrders($select->getOrder());
         $sql .= $this->getLimit($select->getLimit());
         $sql .= $this->getOffset($select->getOffset());
 
@@ -218,7 +220,7 @@ class Driver
 
     /**
      * Set the drive options
-     * @param array $options
+     * @param array<string, mixed> $options
      */
     public function setOptions(array $options): void
     {
@@ -228,7 +230,7 @@ class Driver
     }
 
     /**
-     * @param array $params
+     * @param array<mixed> $params
      *
      * @return string
      */
@@ -238,7 +240,7 @@ class Driver
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
     public function getParams(): array
     {
@@ -249,7 +251,7 @@ class Driver
     }
 
     /**
-     * @param array $columns
+     * @param Expression[]|string[] $columns
      *
      * @return string
      */
@@ -270,7 +272,7 @@ class Driver
 
     /**
      * Return the SQL for the current database
-     * @return array
+     * @return array<string, mixed>
      */
     public function getDatabaseName(): array
     {
@@ -284,7 +286,7 @@ class Driver
      *
      * @param string $current
      * @param string $new
-     * @return array
+     * @return array<string, mixed>
      */
     public function renameTable(string $current, string $new): array
     {
@@ -298,7 +300,7 @@ class Driver
     /**
      *
      * @param string $database
-     * @return array
+     * @return array<string, mixed>
      */
     public function getTables(string $database): array
     {
@@ -321,7 +323,7 @@ class Driver
      *
      * @param string $database
      * @param string $table
-     * @return array
+     * @return array<string, mixed>
      */
     public function getColumns(string $database, string $table): array
     {
@@ -348,7 +350,7 @@ class Driver
     /**
      *
      * @param CreateTable $schema
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function create(CreateTable $schema): array
     {
@@ -381,7 +383,7 @@ class Driver
     /**
      *
      * @param AlterTable $schema
-     * @return array
+     * @return array<int, array<string, mixed>>
      */
     public function alter(AlterTable $schema): array
     {
@@ -407,7 +409,7 @@ class Driver
     /**
      *
      * @param string $table
-     * @return array
+     * @return array<string, mixed>
      */
     public function drop(string $table): array
     {
@@ -420,7 +422,7 @@ class Driver
     /**
      *
      * @param string $table
-     * @return array
+     * @return array<string, mixed>
      */
     public function truncate(string $table): array
     {
@@ -498,7 +500,7 @@ class Driver
 
     /**
      *
-     * @param array $values
+     * @param array<mixed> $values
      * @param string $separator
      * @return string
      */
@@ -509,7 +511,7 @@ class Driver
 
     /**
      * Handle expressions
-     * @param array $expressions
+     * @param array<int, array<string, mixed>> $expressions
      *
      * @return string
      */
@@ -547,7 +549,7 @@ class Driver
 
     /**
      * Handle SQL function
-     * @param array $functions
+     * @param array<string, mixed> $functions
      *
      * @return string
      */
@@ -560,7 +562,7 @@ class Driver
 
     /**
      * Handle columns
-     * @param array $columns
+     * @param array<int, array<string, mixed>> $columns
      *
      * @return string
      */
@@ -585,7 +587,7 @@ class Driver
 
     /**
      * Handle schema columns
-     * @param array $columns list of BaseColumn
+     * @param array<int|string, BaseColumn> $columns list of BaseColumn
      * @return string
      */
     protected function getSchemaColumns(array $columns): string
@@ -610,11 +612,15 @@ class Driver
      */
     protected function getColumnType(BaseColumn $column): string
     {
-        $callback = 'getType' . ucfirst($column->getType());
-        $result = trim($this->{$callback}($column));
+        $type = $column->getType();
+        $result = '';
+        if (is_string($type)) {
+            $callback = 'getType' . ucfirst($type);
+            $result = trim($this->{$callback}($column));
 
-        if ($result !== '') {
-            $result = ' ' . $result;
+            if ($result !== '') {
+                $result = ' ' . $result;
+            }
         }
 
         return $result;
@@ -632,10 +638,12 @@ class Driver
             $callback = 'getModifier' . ucfirst($modifier);
             $result = trim($this->{$callback}($column));
 
+
             if ($result !== '') {
                 $result = ' ' . $result;
             }
-            $line .= $line;
+
+            $line .= $result;
         }
 
         return $line;
@@ -809,7 +817,8 @@ class Driver
     protected function getModifierAutoincrement(BaseColumn $column): string
     {
         if (
-                $column->getType() !== 'integer' || !in_array($column->get('size', 'normal'), $this->serials)
+            $column->getType() !== 'integer'
+            || !in_array($column->get('size', 'normal'), $this->serials)
         ) {
             return '';
         }
@@ -823,13 +832,13 @@ class Driver
      */
     protected function getPrimaryKey(CreateTable $schema): string
     {
-        $pk = $schema->getPrimaryKey();
-        if ($pk === null) {
+        $primaryKey = $schema->getPrimaryKey();
+        if ($primaryKey === null) {
             return '';
         }
 
-        return ",\n" . 'CONSTRAINT ' . $this->quoteIdentifier($pk['name'])
-                . ' PRIMARY KEY (' . $this->quoteIdentifiers($pk['columns']) . ')';
+        return ",\n" . 'CONSTRAINT ' . $this->quoteIdentifier($primaryKey['name'])
+                . ' PRIMARY KEY (' . $this->quoteIdentifiers($primaryKey['columns']) . ')';
     }
 
     /**
@@ -858,7 +867,7 @@ class Driver
     /**
      *
      * @param CreateTable $schema
-     * @return array
+     * @return array<int, string>
      */
     protected function getIndexKeys(CreateTable $schema): array
     {
@@ -1156,7 +1165,7 @@ class Driver
 
     /**
      * Handle tables
-     * @param array $tables
+     * @param array<mixed, string> $tables
      *
      * @return string
      */
@@ -1179,7 +1188,7 @@ class Driver
 
     /**
      * Handle for joins
-     * @param array $joins
+     * @param array<int, mixed> $joins
      *
      * @return string
      */
@@ -1210,7 +1219,7 @@ class Driver
 
     /**
      * Handle for the join conditions
-     * @param array $conditions
+     * @param array<int, mixed> $conditions
      * @return string
      */
     protected function getJoinConditions(array $conditions): string
@@ -1229,24 +1238,8 @@ class Driver
     }
 
     /**
-     * Handler where
-     * @param array $wheres
-     * @param bool $prefix
-     *
-     * @return string
-     */
-    protected function getWheres(array $wheres, bool $prefix = true): string
-    {
-        $sql = $this->getWheresHaving($wheres);
-        if (empty($sql)) {
-            return '';
-        }
-        return ($prefix ? ' WHERE ' : '') . $sql;
-    }
-
-    /**
      * Handle group by
-     * @param array $groupBy
+     * @param Expression[]|string[] $groupBy
      *
      * @return string
      */
@@ -1257,7 +1250,7 @@ class Driver
 
     /**
      * Handle for Order
-     * @param array $orders
+     * @param array<int, array<string, mixed>> $orders
      * @return string
      */
     protected function getOrders(array $orders): string
@@ -1275,7 +1268,7 @@ class Driver
 
     /**
      * Handle columns for set (UPDATE)
-     * @param array $columns
+     * @param array<int, array<string, mixed>> $columns
      * @return string
      */
     protected function getSetColumns(array $columns): string
@@ -1293,8 +1286,24 @@ class Driver
     }
 
     /**
+     * Handler where
+     * @param array<int, mixed> $wheres
+     * @param bool $prefix
+     *
+     * @return string
+     */
+    protected function getWheres(array $wheres, bool $prefix = true): string
+    {
+        $sql = $this->getWheresHaving($wheres);
+        if (empty($sql)) {
+            return '';
+        }
+        return ($prefix ? ' WHERE ' : '') . $sql;
+    }
+
+    /**
      * Handle for having
-     * @param array $having
+     * @param array<int, mixed> $having
      * @param bool $prefix
      * @return string
      */
@@ -1309,7 +1318,7 @@ class Driver
 
     /**
      * Handle for insert values
-     * @param array $values
+     * @param array<int, mixed> $values
      * @return string
      */
     protected function getInsertValues(array $values): string
@@ -1319,7 +1328,7 @@ class Driver
 
     /**
      * Return the build part for where or having
-     * @param array $values
+     * @param array<int, mixed> $values
      *
      * @return string
      */
@@ -1359,7 +1368,7 @@ class Driver
     }
 
     /**
-     * @param array $join
+     * @param array<string, mixed> $join
      * @return string
      */
     protected function joinColumn(array $join): string
@@ -1373,7 +1382,7 @@ class Driver
     }
 
     /**
-     * @param array $join
+     * @param array<string, mixed> $join
      * @return string
      */
     protected function joinNested(array $join): string
@@ -1382,7 +1391,7 @@ class Driver
     }
 
     /**
-     * @param array $join
+     * @param array<string, mixed> $join
      * @return string
      */
     protected function joinExpression(array $join): string
@@ -1391,7 +1400,7 @@ class Driver
     }
 
     /**
-     * @param array $where
+     * @param array<string, mixed> $where
      * @return string
      */
     protected function whereColumn(array $where): string
@@ -1405,7 +1414,7 @@ class Driver
     }
 
     /**
-     * @param array $where
+     * @param array<string, mixed> $where
      * @return string
      */
     protected function whereIn(array $where): string
@@ -1419,7 +1428,7 @@ class Driver
     }
 
     /**
-     * @param array $where
+     * @param array<string, mixed> $where
      * @return string
      */
     protected function whereInSelect(array $where): string
@@ -1433,7 +1442,7 @@ class Driver
     }
 
     /**
-     * @param array $where
+     * @param array<string, mixed> $where
      * @return string
      */
     protected function whereNested(array $where): string
@@ -1442,7 +1451,7 @@ class Driver
     }
 
     /**
-     * @param array $where
+     * @param array<string, mixed> $where
      * @return string
      */
     public function whereExists(array $where): string
@@ -1455,7 +1464,7 @@ class Driver
     }
 
     /**
-     * @param array $where
+     * @param array<string, mixed> $where
      * @return string
      */
     protected function whereNull(array $where): string
@@ -1468,7 +1477,7 @@ class Driver
     }
 
     /**
-     * @param array $where
+     * @param array<string, mixed> $where
      * @return string
      */
     protected function whereBetween(array $where): string
@@ -1483,7 +1492,7 @@ class Driver
     }
 
     /**
-     * @param array $where
+     * @param array<string, mixed> $where
      * @return string
      */
     protected function whereLike(array $where): string
@@ -1497,7 +1506,7 @@ class Driver
     }
 
     /**
-     * @param array $where
+     * @param array<string, mixed> $where
      * @return string
      */
     protected function whereSubQuery(array $where): string
@@ -1511,7 +1520,7 @@ class Driver
     }
 
     /**
-     * @param array $where
+     * @param array<string, mixed> $where
      * @return string
      */
     protected function whereNop(array $where): string
@@ -1520,7 +1529,7 @@ class Driver
     }
 
     /**
-     * @param array $having
+     * @param array<string, mixed> $having
      * @return string
      */
     protected function havingCondition(array $having): string
@@ -1534,7 +1543,7 @@ class Driver
     }
 
     /**
-     * @param array $having
+     * @param array<string, mixed> $having
      * @return string
      */
     protected function havingNested(array $having): string
@@ -1543,7 +1552,7 @@ class Driver
     }
 
     /**
-     * @param array $having
+     * @param array<string, mixed> $having
      * @return string
      */
     protected function havingBetween(array $having): string
@@ -1558,7 +1567,7 @@ class Driver
     }
 
     /**
-     * @param array $having
+     * @param array<string, mixed> $having
      * @return string
      */
     protected function havingInSelect(array $having): string
@@ -1572,7 +1581,7 @@ class Driver
     }
 
     /**
-     * @param array $having
+     * @param array<string, mixed> $having
      * @return string
      */
     protected function havingIn(array $having): string
@@ -1587,7 +1596,7 @@ class Driver
 
     /**
      * Return aggregate function COUNT
-     * @param array $function
+     * @param array<string, mixed> $function
      * @return string
      */
     protected function aggregateFunctionCOUNT(array $function): string
@@ -1601,7 +1610,7 @@ class Driver
 
     /**
      * Return aggregate function AVG
-     * @param array $function
+     * @param array<string, mixed> $function
      * @return string
      */
     protected function aggregateFunctionAVG(array $function): string
@@ -1609,13 +1618,13 @@ class Driver
         return sprintf(
             'AVG(%s%s)',
             $function['distinct'] ? 'DISTINCT ' : '',
-            $this->columns($function['column'])
+            $this->quoteIdentifier($function['column'])
         );
     }
 
     /**
      * Return aggregate function SUM
-     * @param array $function
+     * @param array<string, mixed> $function
      * @return string
      */
     protected function aggregateFunctionSUM(array $function): string
@@ -1623,13 +1632,13 @@ class Driver
         return sprintf(
             'SUM(%s%s)',
             $function['distinct'] ? 'DISTINCT ' : '',
-            $this->columns($function['column'])
+            $this->quoteIdentifier($function['column'])
         );
     }
 
     /**
      * Return aggregate function MIN
-     * @param array $function
+     * @param array<string, mixed> $function
      * @return string
      */
     protected function aggregateFunctionMIN(array $function): string
@@ -1637,13 +1646,13 @@ class Driver
         return sprintf(
             'MIN(%s%s)',
             $function['distinct'] ? 'DISTINCT ' : '',
-            $this->columns($function['column'])
+            $this->quoteIdentifier($function['column'])
         );
     }
 
     /**
      * Return aggregate function MAX
-     * @param array $function
+     * @param array<string, mixed> $function
      * @return string
      */
     protected function aggregateFunctionMAX(array $function): string
@@ -1651,7 +1660,7 @@ class Driver
         return sprintf(
             'MAX(%s%s)',
             $function['distinct'] ? 'DISTINCT ' : '',
-            $this->columns($function['column'])
+            $this->quoteIdentifier($function['column'])
         );
     }
 }

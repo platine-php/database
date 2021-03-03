@@ -61,25 +61,25 @@ class ForeignKey
 
     /**
      * The referenced columns
-     * @var array
+     * @var string[]
      */
     protected array $referenceColumns = [];
 
     /**
      * The list of actions
-     * @var array
+     * @var array<string, string>
      */
     protected array $actions = [];
 
     /**
      * The base table columns
-     * @var array
+     * @var array<int, string>
      */
     protected array $columns = [];
 
     /**
      * Class constructor
-     * @param array $columns
+     * @param array<int, string> $columns
      */
     public function __construct(array $columns)
     {
@@ -97,7 +97,7 @@ class ForeignKey
 
     /**
      *
-     * @return array
+     * @return string[]
      */
     public function getReferenceColumns(): array
     {
@@ -106,7 +106,7 @@ class ForeignKey
 
     /**
      *
-     * @return array
+     * @return array<int, string>
      */
     public function getColumns(): array
     {
@@ -115,7 +115,7 @@ class ForeignKey
 
     /**
      *
-     * @return array
+     * @return array<string, string>
      */
     public function getActions(): array
     {
@@ -125,13 +125,13 @@ class ForeignKey
     /**
      * Set the references
      * @param string $table
-     * @param array $columns
+     * @param string ...$columns
      * @return self
      */
-    public function references(string $table, ...$columns): self
+    public function references(string $table, string ...$columns): self
     {
         $this->referenceTable = $table;
-        $this->columns = $columns;
+        $this->referenceColumns = $columns;
 
         return $this;
     }
@@ -170,5 +170,7 @@ class ForeignKey
         }
 
         $this->actions[$on] = $actionValue;
+
+        return $this;
     }
 }

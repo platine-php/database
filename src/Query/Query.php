@@ -46,7 +46,15 @@ declare(strict_types=1);
 
 namespace Platine\Database\Query;
 
+use Closure;
 use Platine\Database\Connection;
+use Platine\Database\Query\BaseStatement;
+use Platine\Database\Query\Delete;
+use Platine\Database\Query\Expression;
+use Platine\Database\Query\QueryStatement;
+use Platine\Database\Query\Select;
+use Platine\Database\Query\SelectStatement;
+use Platine\Database\ResultSet;
 
 /**
  * Class Query
@@ -61,14 +69,14 @@ class Query extends BaseStatement
     protected Connection $connection;
 
     /**
-     * @var string|array
+     * @var string|array<string>
      */
     protected $tables;
 
     /**
      * Query constructor.
      * @param Connection $connection
-     * @param string|array $tables
+     * @param string|array<string> $tables
      * @param QueryStatement|null $queryStatement
      */
     public function __construct(
@@ -93,37 +101,39 @@ class Query extends BaseStatement
     }
 
     /**
-     * @param string|array|\Closure|Expression $columns
+     * @param string|array<int, string>|Closure|Expression $columns
      *
      * @return Select|SelectStatement
      */
     public function groupBy($columns)
     {
-        $this->buildSelect()->groupBy($columns);
+        return $this->buildSelect()->groupBy($columns);
     }
 
     /**
      * @param string|Expression $column
+     * @param Closure|null $value
      *
      * @return Select|SelectStatement
      */
-    public function having($column, \Closure $value = null)
+    public function having($column, Closure $value = null)
     {
-        $this->buildSelect()->having($column, $value);
+        return $this->buildSelect()->having($column, $value);
     }
 
     /**
      * @param string|Expression $column
+     * @param Closure|null $value
      *
      * @return Select|SelectStatement
      */
-    public function orHaving($column, \Closure $value = null)
+    public function orHaving($column, Closure $value = null)
     {
-        $this->buildSelect()->orHaving($column, $value);
+        return $this->buildSelect()->orHaving($column, $value);
     }
 
     /**
-     * @param string|string[]|\Closure|\Closure[]|Expression|Expression[] $columns
+     * @param string|string[]|Closure|Closure[]|Expression|Expression[] $columns
      * @param string $order
      *
      * @return Select|SelectStatement
@@ -155,18 +165,17 @@ class Query extends BaseStatement
 
     /**
      * @param string $table
-     * @param string|null $database
      * @return Select|SelectStatement
      */
-    public function into(string $table, string $database = null)
+    public function into(string $table)
     {
-        return $this->buildSelect()->into($table, $database);
+        return $this->buildSelect()->into($table);
     }
 
     /**
-     * @param string|string[]|Expression|Expression[]|\Closure|\Closure[] $columns
+     * @param string|string[]|Expression|Expression[]|Closure|Closure[] $columns
      *
-     * @return Select|SelectStatement
+     * @return ResultSet
      */
     public function select($columns = [])
     {
@@ -174,7 +183,7 @@ class Query extends BaseStatement
     }
 
     /**
-     * @param string|array $tables
+     * @param string|array<string> $tables
      * @return int
      */
     public function delete($tables): int
@@ -183,7 +192,7 @@ class Query extends BaseStatement
     }
 
     /**
-     * @param string|\Closure|Expression $name
+     * @param string|Closure|Expression $name
      *
      * @return Select|SelectStatement
      */
@@ -193,7 +202,7 @@ class Query extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
      *
      * @return int
@@ -204,7 +213,7 @@ class Query extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
      *
      * @return int|float
@@ -215,7 +224,7 @@ class Query extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
      *
      * @return int|float
@@ -226,7 +235,7 @@ class Query extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
      *
      * @return int|float
@@ -237,7 +246,7 @@ class Query extends BaseStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
+     * @param string|Expression|Closure $column
      * @param bool $distinct
      *
      * @return int|float

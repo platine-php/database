@@ -61,7 +61,7 @@ class UpdateStatement extends BaseStatement
 
     /**
      * UpdateStatement constructor.
-     * @param string|array $table
+     * @param string|array<int, string> $table
      * @param QueryStatement|null $queryStatement
      */
     public function __construct($table, QueryStatement $queryStatement = null)
@@ -76,11 +76,11 @@ class UpdateStatement extends BaseStatement
     }
 
     /**
-     * @param array $columns
+     * @param array<int|string, mixed> $columns
      *
-     * @return self
+     * @return void
      */
-    public function set(array $columns): void
+    public function set(array $columns)
     {
         $this->queryStatement->addUpdateColumns($columns);
     }

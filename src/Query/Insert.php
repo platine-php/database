@@ -76,9 +76,9 @@ class Insert extends InsertStatement
      * Set Insert record table
      * @param string $table
      *
-     * @return bool|mixed
+     * @return bool
      */
-    public function into(string $table): int
+    public function into(string $table): bool
     {
         parent::into($table);
 

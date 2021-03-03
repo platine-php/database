@@ -46,8 +46,8 @@ declare(strict_types=1);
 
 namespace Platine\Database;
 
-use Platine\Database\Schema\CreateTable;
 use Platine\Database\Schema\AlterTable;
+use Platine\Database\Schema\CreateTable;
 
 /**
  * Class Schema
@@ -64,7 +64,7 @@ class Schema
 
     /**
      * The list of tables
-     * @var array
+     * @var array<string, string>
      */
     protected array $tables = [];
 
@@ -76,7 +76,7 @@ class Schema
 
     /**
      * The current table columns
-     * @var array
+     * @var array<string, array<string, array<string, string>>>
      */
     protected array $columns = [];
 
@@ -101,10 +101,12 @@ class Schema
             if (isset($result['result'])) {
                 $this->databaseName = $result['result'];
             } else {
-                $this->databaseName = $this->connection->column($result['sql'], $result['params']);
+                $this->databaseName = $this->connection->column(
+                    $result['sql'],
+                    $result['params']
+                );
             }
         }
-
         return $this->databaseName;
     }
 
@@ -124,7 +126,7 @@ class Schema
     /**
      * Return the list of tables for the current database
      * @param bool $skipCache whether to use the cached data or not
-     * @return array
+     * @return array<string, string>
      */
     public function getTables(bool $skipCache = false): array
     {
@@ -137,11 +139,11 @@ class Schema
             $databaseName = $this->getDatabaseName();
             $sql = $driver->getTables($databaseName);
 
-            $results = $this->connection->query($sql['sql'], $sql['params'])
-                    ->fetchNum()
-                    ->all();
+            $results = $this->connection
+                                        ->query($sql['sql'], $sql['params'])
+                                        ->fetchNum();
 
-            foreach ($results as $result) {
+            while ($result = $results->next()) {
                 $this->tables[strtolower($result[0])] = $result[0];
             }
         }
@@ -154,7 +156,7 @@ class Schema
      * @param string $table
      * @param bool $skipCache
      * @param bool $names whether to return only the columns names
-     * @return bool|array
+     * @return string[]|array<string, array<string, string>>
      */
     public function getColumns(
         string $table,
@@ -166,7 +168,7 @@ class Schema
         }
 
         if (!$this->hasTable($table, $skipCache)) {
-            return false;
+            return [];
         }
 
         if (!isset($this->columns[$table])) {
@@ -174,17 +176,23 @@ class Schema
             $databaseName = $this->getDatabaseName();
             $sql = $driver->getColumns($databaseName, $table);
 
-            $results = $this->connection->query($sql['sql'], $sql['params'])
-                    ->fetchAssoc()
-                    ->all();
+            $results = $this->connection
+                                        ->query($sql['sql'], $sql['params'])
+                                        ->fetchAssoc();
 
+            /** @var array<string, array<string, string>> $columns */
             $columns = [];
-            foreach ($results as $ord => &$col) {
+
+            while (
+                    /** @var array<string, string>> $col */
+                    $col = $results->next()
+            ) {
                 $columns[$col['name']] = [
                     'name' => $col['name'],
                     'type' => $col['type'],
                 ];
             }
+
             $this->columns[$table] = $columns;
         }
 

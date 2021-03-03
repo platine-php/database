@@ -82,15 +82,15 @@ class Oracle extends Driver
             return parent::select($select);
         }
 
-        $sql = $select->getDistinct() ? 'SELECT DISTINCT ' : 'SELECT ';
-        $sql .= $this->getColumns($select->getColumns());
+        $sql = $select->hasDistinct() ? 'SELECT DISTINCT ' : 'SELECT ';
+        $sql .= $this->getColumnList($select->getColumns());
         $sql .= ' FROM ';
-        $sql .= $this->getTables($select->getTables());
+        $sql .= $this->getTableList($select->getTables());
         $sql .= $this->getJoins($select->getJoins());
         $sql .= $this->getWheres($select->getWheres());
         $sql .= $this->getGroupBy($select->getGroupBy());
-        $sql .= $this->getOrders($select->getOrder());
         $sql .= $this->getHaving($select->getHaving());
+        $sql .= $this->getOrders($select->getOrder());
 
         $offset = $select->getOffset();
         if ($offset < 0) {

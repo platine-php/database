@@ -81,7 +81,7 @@ class InsertStatement
     }
 
     /**
-     * @param array $values
+     * @param array<string, mixed> $values
      *
      * @return self
      */
@@ -97,8 +97,9 @@ class InsertStatement
 
     /**
      * @param string $table
+     * @return mixed
      */
-    public function into(string $table): void
+    public function into(string $table)
     {
         $this->queryStatement->addTables([$table]);
     }

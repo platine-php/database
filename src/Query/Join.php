@@ -46,6 +46,8 @@ declare(strict_types=1);
 
 namespace Platine\Database\Query;
 
+use Closure;
+
 /**
  * Class Join
  * @package Platine\Database\Query
@@ -55,12 +57,12 @@ class Join
 
     /**
      * The Join conditions
-     * @var array
+     * @var array<int, mixed>
      */
     protected array $conditions = [];
 
     /**
-     * @return array
+     * @return array<int, mixed>
      */
     public function getJoinConditions(): array
     {
@@ -68,8 +70,8 @@ class Join
     }
 
     /**
-     * @param string|Expression|\Closure $column1
-     * @param string|Expression|\Closure|bool|null $column2
+     * @param string|Expression|Closure $column1
+     * @param string|Expression|Closure|bool|null $column2
      * @param string $operator
      * @return self
      */
@@ -79,8 +81,8 @@ class Join
     }
 
     /**
-     * @param string|Expression|\Closure $column1
-     * @param string|Expression|\Closure|bool|null $column2
+     * @param string|Expression|Closure $column1
+     * @param string|Expression|Closure|bool|null $column2
      * @param string $operator
      * @return self
      */
@@ -90,8 +92,8 @@ class Join
     }
 
     /**
-     * @param string|Expression|\Closure $column1
-     * @param string|Expression|\Closure|bool|null $column2
+     * @param string|Expression|Closure $column1
+     * @param string|Expression|Closure|bool|null $column2
      * @param string $operator
      * @return self
      */
@@ -101,13 +103,13 @@ class Join
     }
 
     /**
-     * @param Expression|\Closure $expression
+     * @param Expression|Closure $expression
      * @param string $separator
      * @return self
      */
     protected function addJoinExpression($expression, string $separator = 'AND'): self
     {
-        if ($expression instanceof \Closure) {
+        if ($expression instanceof Closure) {
             $expression = Expression::fromClosure($expression);
         }
 
@@ -116,11 +118,13 @@ class Join
             'expression' => $expression,
             'separator' => $separator
         ];
+
+        return $this;
     }
 
     /**
-     * @param string|Expression|\Closure $column1
-     * @param string|Expression|\Closure|bool|null $column2
+     * @param string|Expression|Closure $column1
+     * @param string|Expression|Closure|bool|null $column2
      * @param string $operator
      * @param string $separator
      * @return self
@@ -131,7 +135,7 @@ class Join
         string $operator,
         string $separator = 'AND'
     ): self {
-        if ($column1 instanceof \Closure) {
+        if ($column1 instanceof Closure) {
             if ($column2 === true) {
                 return $this->addJoinExpression($column1, $separator);
             }
@@ -153,7 +157,7 @@ class Join
             return $this->addJoinExpression($column1, $separator);
         }
 
-        if ($column2 instanceof \Closure) {
+        if ($column2 instanceof Closure) {
             $column2 = Expression::fromClosure($column2);
         }
 

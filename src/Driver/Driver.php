@@ -833,7 +833,7 @@ class Driver
     protected function getPrimaryKey(CreateTable $schema): string
     {
         $primaryKey = $schema->getPrimaryKey();
-        if ($primaryKey === null) {
+        if (empty($primaryKey)) {
             return '';
         }
 

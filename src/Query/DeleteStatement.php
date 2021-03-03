@@ -76,6 +76,7 @@ class DeleteStatement extends BaseStatement
     public function delete($tables = [])
     {
         if (!is_array($tables)) {
+            /** @var array<string> $tables */
             $tables = [$tables];
         }
         $this->queryStatement->addTables($tables);

@@ -193,16 +193,21 @@ class Having
      */
     public function notBetween($value1, $value2): void
     {
-        $this->queryStatement->addHavingBetween($this->aggregate, $value1, $value2, $this->separator, true);
+        $this->queryStatement->addHavingBetween(
+            $this->aggregate, 
+            $value1, 
+            $value2, 
+            $this->separator, true
+        );
     }
 
     /**
      * @param array<int, mixed>|Closure $value
-     * @return WhereStatement
+     * @return void
      */
-    public function in($value): WhereStatement
+    public function in($value): void
     {
-        return $this->queryStatement->addHavingIn(
+        $this->queryStatement->addHavingIn(
             $this->aggregate,
             $value,
             $this->separator,
@@ -212,11 +217,11 @@ class Having
 
     /**
      * @param array<int, mixed>|Closure $value
-     * @return WhereStatement
+     * @return void
      */
-    public function notIn($value): WhereStatement
+    public function notIn($value): void
     {
-        return $this->queryStatement->addHavingIn(
+        $this->queryStatement->addHavingIn(
             $this->aggregate,
             $value,
             $this->separator,

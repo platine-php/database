@@ -66,9 +66,9 @@ class Database
 
     /**
      * The Schema instance
-     * @var Schema|null
+     * @var Schema
      */
-    protected ?Schema $schema = null;
+    protected Schema $schema;
 
     /**
      * Class constructor
@@ -77,6 +77,7 @@ class Database
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
+        $this->schema = $this->connection->getSchema();
     }
 
     /**
@@ -94,9 +95,6 @@ class Database
      */
     public function schema(): Schema
     {
-        if ($this->schema === null) {
-            $this->schema = $this->connection->getSchema();
-        }
         return $this->schema;
     }
 

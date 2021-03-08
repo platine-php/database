@@ -48,12 +48,6 @@ namespace Platine\Database\Query;
 
 use Closure;
 use Platine\Database\Connection;
-use Platine\Database\Query\BaseStatement;
-use Platine\Database\Query\Delete;
-use Platine\Database\Query\Expression;
-use Platine\Database\Query\QueryStatement;
-use Platine\Database\Query\Select;
-use Platine\Database\Query\SelectStatement;
 use Platine\Database\ResultSet;
 
 /**
@@ -194,7 +188,7 @@ class Query extends BaseStatement
     /**
      * @param string|Closure|Expression $name
      *
-     * @return Select|SelectStatement
+     * @return mixed
      */
     public function column($name)
     {
@@ -238,7 +232,7 @@ class Query extends BaseStatement
      * @param string|Expression|Closure $column
      * @param bool $distinct
      *
-     * @return int|float
+     * @return mixed
      */
     public function min($column, bool $distinct = false)
     {
@@ -249,7 +243,7 @@ class Query extends BaseStatement
      * @param string|Expression|Closure $column
      * @param bool $distinct
      *
-     * @return int|float
+     * @return mixed
      */
     public function max($column, bool $distinct = false)
     {

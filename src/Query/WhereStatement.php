@@ -81,23 +81,6 @@ class WhereStatement
     }
 
     /**
-     * @param mixed $column
-     * @param string $separator
-     * @param bool $isExpression
-     *
-     * @return WhereStatement|Where
-     */
-    protected function addWhereCondition($column, string $separator = 'AND', bool $isExpression = false)
-    {
-        if (($column instanceof Closure) && !$isExpression) {
-            $this->queryStatement->addWhereGroup($column, $separator);
-
-            return $this;
-        }
-        return $this->where->init($column, $separator);
-    }
-
-    /**
      * @return QueryStatement
      */
     public function getQueryStatement(): QueryStatement
@@ -173,13 +156,34 @@ class WhereStatement
     }
 
     /**
+     * @param mixed $column
+     * @param string $separator
+     * @param bool $isExpression
+     *
+     * @return WhereStatement|Where
+     */
+    protected function addWhereCondition($column, string $separator = 'AND', bool $isExpression = false)
+    {
+        if (($column instanceof Closure) && !$isExpression) {
+            $this->queryStatement->addWhereGroup($column, $separator);
+
+            return $this;
+        }
+        return $this->where->init($column, $separator);
+    }
+
+
+    /**
      * @param Closure $select
      * @param string $separator
      * @param bool $not
      * @return $this
      */
-    protected function addWhereExistsCondition(Closure $select, string $separator = 'AND', bool $not = false): self
-    {
+    protected function addWhereExistsCondition(
+        Closure $select,
+        string $separator = 'AND',
+        bool $not = false
+    ): self {
         $this->queryStatement->addWhereExists($select, $separator, $not);
 
         return $this;

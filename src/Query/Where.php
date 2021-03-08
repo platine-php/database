@@ -219,7 +219,7 @@ class Where
      * @param mixed $value
      * @return WhereStatement|Select|Delete|Update
      */
-    public function noLike($value): WhereStatement
+    public function notLike($value): WhereStatement
     {
         return $this->addLikeCondition($value, true);
     }
@@ -286,14 +286,22 @@ class Where
      * @param bool $isColumn
      * @return WhereStatement|Select|Delete|Update
      */
-    protected function addCondition($value, string $operator, bool $isColumn = false): WhereStatement
-    {
+    protected function addCondition(
+        $value,
+        string $operator,
+        bool $isColumn = false
+    ): WhereStatement {
         if ($isColumn && is_string($value)) {
             $value = function (Expression $expr) use ($value) {
                 return $expr->column($value);
             };
         }
-        $this->queryStatement->addWhere($this->column, $value, $operator, $this->separator);
+        $this->queryStatement->addWhere(
+            $this->column,
+            $value,
+            $operator,
+            $this->separator
+        );
 
         return $this->whereStatement;
     }
@@ -306,7 +314,13 @@ class Where
      */
     protected function addBetweenCondition($value1, $value2, bool $not): WhereStatement
     {
-        $this->queryStatement->addWhereBetween($this->column, $value1, $value2, $this->separator, $not);
+        $this->queryStatement->addWhereBetween(
+            $this->column,
+            $value1,
+            $value2,
+            $this->separator,
+            $not
+        );
 
         return $this->whereStatement;
     }
@@ -318,7 +332,12 @@ class Where
      */
     protected function addLikeCondition(string $pattern, bool $not): WhereStatement
     {
-        $this->queryStatement->addWhereLike($this->column, $pattern, $this->separator, $not);
+        $this->queryStatement->addWhereLike(
+            $this->column,
+            $pattern,
+            $this->separator,
+            $not
+        );
 
         return $this->whereStatement;
     }

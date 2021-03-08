@@ -52,6 +52,7 @@ use PDOStatement;
 use Platine\Database\Driver\Driver;
 use Platine\Database\Exception\ConnectionException;
 use Platine\Database\Exception\QueryException;
+use Platine\Database\Exception\TransactionException;
 use Platine\Logger\Logger;
 use Platine\Logger\NullHandler;
 
@@ -186,7 +187,11 @@ class Connection
                 'exception' => $exception,
                 'error' => $exception->getMessage()
             ]);
-            throw new ConnectionException($exception->getMessage());
+            throw new ConnectionException(
+                'Can not connect to database',
+                (int) $exception->getCode(),
+                $exception->getPrevious()
+            );
         }
     }
 
@@ -283,10 +288,10 @@ class Connection
      * Direct execute the SQL query
      * @param string $sql
      * @param array<int, mixed> $params the query parameters
-     * @return mixed
+     * @return bool
      * @throws QueryException
      */
-    public function exec(string $sql, array $params = [])
+    public function exec(string $sql, array $params = []): bool
     {
         return $this->execute($this->prepare($sql, $params));
     }
@@ -358,7 +363,11 @@ class Connection
                 'exception' => $exception,
                 'error' => $exception->getMessage()
             ]);
-            throw new ConnectionException($exception->getMessage());
+            throw new TransactionException(
+                $exception->getMessage(),
+                (int) $exception->getCode(),
+                $exception->getPrevious()
+            );
         }
 
         return $result;
@@ -407,14 +416,13 @@ class Connection
         try {
             $statement = $this->pdo->prepare($query);
         } catch (PDOException $exception) {
-            $sql = $this->replaceParameters($query, $params);
-            $this->logger->error('Error when prepare query [{sql}]. Error message: {error}', [
+            $this->logger->error('Error when prepare query [{query}]. Error message: {error}', [
                 'exception' => $exception,
                 'error' => $exception->getMessage(),
-                'sql' => $sql
+                'query' => $query
             ]);
             throw new QueryException(
-                $exception->getMessage() . ' [' . $sql . ']',
+                $exception->getMessage() . ' [' . $query . ']',
                 (int) $exception->getCode(),
                 $exception->getPrevious()
             );

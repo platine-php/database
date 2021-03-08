@@ -35,10 +35,10 @@ namespace Platine\Database\Exception;
 use Exception;
 
 /**
- * Class QueryException
+ * Class TransactionException
  * @package Platine\Database\Exception
  */
-class QueryException extends Exception
+class TransactionException extends Exception
 {
 
 }

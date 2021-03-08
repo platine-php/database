@@ -46,6 +46,8 @@ declare(strict_types=1);
 
 namespace Platine\Database\Query;
 
+use Closure;
+
 /**
  * Class HavingStatement
  * @package Platine\Database\Query
@@ -74,6 +76,7 @@ class HavingStatement
         if ($queryStatement === null) {
             $queryStatement = new QueryStatement();
         }
+        $this->queryStatement = $queryStatement;
         $this->expression = new HavingExpression($queryStatement);
     }
 
@@ -86,21 +89,21 @@ class HavingStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
-     * @param \Closure|null $value
+     * @param string|Expression|Closure $column
+     * @param Closure|null $value
      * @return self
      */
-    public function having($column, \Closure $value = null): self
+    public function having($column, Closure $value = null): self
     {
         return $this->addCondition($column, $value, 'AND');
     }
 
     /**
-     * @param string|Expression|\Closure $column
-     * @param \Closure|null $value
+     * @param string|Expression|Closure $column
+     * @param Closure|null $value
      * @return self
      */
-    public function orHaving($column, \Closure $value = null): self
+    public function orHaving($column, Closure $value = null): self
     {
         return $this->addCondition($column, $value, 'OR');
     }
@@ -115,14 +118,14 @@ class HavingStatement
     }
 
     /**
-     * @param string|Expression|\Closure $column
-     * @param \Closure|null $value
+     * @param string|Expression|Closure $column
+     * @param Closure|null $value
      * @param string $separator
      * @return self
      */
-    protected function addCondition($column, \Closure $value = null, string $separator = 'AND'): self
+    protected function addCondition($column, Closure $value = null, string $separator = 'AND'): self
     {
-        if (($column instanceof \Closure) && $value === null) {
+        if (($column instanceof Closure) && $value === null) {
             $this->queryStatement->addHavingGroup($column, $separator);
         } else {
             $expr = $this->expression->init($column, $separator);

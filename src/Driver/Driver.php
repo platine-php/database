@@ -574,7 +574,7 @@ class Driver
         $sql = [];
 
         foreach ($columns as $column) {
-            if ($column['alias'] !== null) {
+            if (isset($column['alias'])) {
                 $sql[] = $this->quoteIdentifier($column['name'])
                         . ' AS ' . $this->quoteIdentifier($column['alias']);
             } else {

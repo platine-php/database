@@ -47,7 +47,6 @@ declare(strict_types=1);
 namespace Platine\Database\Query;
 
 use Closure;
-use InvalidArgumentException;
 use Platine\Database\Query\Expression;
 use Platine\Database\Query\Having;
 use Platine\Database\Query\QueryStatement;

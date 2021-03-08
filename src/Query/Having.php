@@ -183,7 +183,13 @@ class Having
      */
     public function between($value1, $value2): void
     {
-        $this->queryStatement->addHavingBetween($this->aggregate, $value1, $value2, $this->separator, false);
+        $this->queryStatement->addHavingBetween(
+            $this->aggregate,
+            $value1,
+            $value2,
+            $this->separator,
+            false
+        );
     }
 
     /**
@@ -194,10 +200,11 @@ class Having
     public function notBetween($value1, $value2): void
     {
         $this->queryStatement->addHavingBetween(
-            $this->aggregate, 
-            $value1, 
-            $value2, 
-            $this->separator, true
+            $this->aggregate,
+            $value1,
+            $value2,
+            $this->separator,
+            true
         );
     }
 

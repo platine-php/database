@@ -484,7 +484,7 @@ class Driver
         if ($value instanceof Expression) {
             return $this->getExpressions($value->getExpressions());
         }
-
+        
         $identifiers = [];
 
         foreach (explode('.', $value) as $segment) {

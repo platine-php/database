@@ -623,7 +623,7 @@ class QueryStatement
         if ($value instanceof Closure) {
             return Expression::fromClosure($value);
         }
-
+        
         return $value;
     }
 }

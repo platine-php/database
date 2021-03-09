@@ -123,14 +123,14 @@ class Update extends UpdateStatement
 
         $values = [];
 
-        foreach ($columns as $k => $v) {
-            if (is_numeric($k)) {
-                $values[$k] = function (Expression $expr) use ($sign, $v, $value) {
-                    $expr->column($v)->op($sign)->value($value);
+        foreach ($columns as $key => $val) {
+            if (is_numeric($key)) {
+                $values[$val] = function (Expression $expr) use ($sign, $val, $value) {
+                    $expr->column($val)->op($sign)->value($value);
                 };
             } else {
-                $values[$k] = function (Expression $expr) use ($sign, $k, $v) {
-                    $expr->column($k)->op($sign)->value($v);
+                $values[$key] = function (Expression $expr) use ($sign, $key, $val) {
+                    $expr->column($key)->op($sign)->value($val);
                 };
             }
         }

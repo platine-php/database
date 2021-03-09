@@ -63,5 +63,6 @@
         "analyze": "phpmd src xml phpmd.xml"
     },
 	
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

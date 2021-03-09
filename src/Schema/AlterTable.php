@@ -279,8 +279,8 @@ class AlterTable
         ?int $precision = null
     ): AlterColumn {
         return $this->addColumn($name, 'decimal')
-                        ->set('length', $length)
-                        ->set('precision', $precision);
+                    ->set('length', $length)
+                    ->set('precision', $precision);
     }
 
     /**
@@ -312,7 +312,7 @@ class AlterTable
     public function string(string $name, int $length = 255): AlterColumn
     {
         return $this->addColumn($name, 'string')
-                        ->set('length', $length);
+                    ->set('length', $length);
     }
 
     /**
@@ -324,7 +324,7 @@ class AlterTable
     public function fixed(string $name, int $length = 255): AlterColumn
     {
         return $this->addColumn($name, 'fixed')
-                        ->set('length', $length);
+                    ->set('length', $length);
     }
 
     /**
@@ -418,8 +418,8 @@ class AlterTable
         ?int $precision = null
     ): AlterColumn {
         return $this->modifyColumn($name, 'decimal')
-                        ->set('length', $length)
-                        ->set('precision', $precision);
+                    ->set('length', $length)
+                    ->set('precision', $precision);
     }
 
     /**
@@ -450,7 +450,7 @@ class AlterTable
     public function toString(string $name, int $length = 255): AlterColumn
     {
         return $this->modifyColumn($name, 'string')
-                        ->set('length', $length);
+                    ->set('length', $length);
     }
 
     /**
@@ -461,7 +461,7 @@ class AlterTable
     public function toFixed(string $name, int $length = 255): AlterColumn
     {
         return $this->modifyColumn($name, 'fixed')
-                        ->set('length', $length);
+                    ->set('length', $length);
     }
 
     /**

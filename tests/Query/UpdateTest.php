@@ -43,7 +43,7 @@ class UpdateTest extends PlatineTestCase
             'name' => 'foo',
             'status' => false
         ];
-        
+
         $qsMockMethods = $this->getClassMethodsToMock(QueryStatement::class, [
             'addTables',
             'addUpdateColumns',
@@ -51,14 +51,14 @@ class UpdateTest extends PlatineTestCase
             'getColumns',
             'closureToExpression',
         ]);
-        
-        
+
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->onlyMethods($qsMockMethods)
                     ->getMock();
 
-        
+
         $e = new Update($cnx, $table, $qs);
 
         $e->set($sets);
@@ -66,16 +66,16 @@ class UpdateTest extends PlatineTestCase
         $expected = "UPDATE `foo` SET `name` = 'foo', `status` = FALSE";
         $this->assertEquals($expected, $cnx->getRawSql());
     }
-    
+
     public function testIncrementDecrementUsingArrayOfColumns(): void
     {
         $name = ['bar_increment' => 4];
         $value = 4;
-        
-        $this->incrementDecrementUsingArrayOfColumnsTests('increment', $name, '+', $value);        
-        $this->incrementDecrementUsingArrayOfColumnsTests('decrement', $name, '-', $value);        
+
+        $this->incrementDecrementUsingArrayOfColumnsTests('increment', $name, '+', $value);
+        $this->incrementDecrementUsingArrayOfColumnsTests('decrement', $name, '-', $value);
     }
-    
+
     public function testIncrementDecrementSimple(): void
     {
         $this->incrementDecrementSimple('increment', '+', 1);
@@ -83,12 +83,12 @@ class UpdateTest extends PlatineTestCase
         $this->incrementDecrementSimple('decrement', '-', 1);
         $this->incrementDecrementSimple('decrement', '-', 3);
     }
-    
+
     private function incrementDecrementUsingArrayOfColumnsTests($method, $name, $sign, $value): void
     {
         $cnx = new Connection('MySQL');
         $table = 'foo';
-        
+
         $qsMockMethods = $this->getClassMethodsToMock(QueryStatement::class, [
             'addTables',
             'addUpdateColumns',
@@ -97,14 +97,14 @@ class UpdateTest extends PlatineTestCase
             'addColumn',
             'closureToExpression',
         ]);
-        
-        
+
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->onlyMethods($qsMockMethods)
                     ->getMock();
 
-        
+
         $e = new Update($cnx, $table, $qs);
 
         $e->{$method}($name);
@@ -112,13 +112,13 @@ class UpdateTest extends PlatineTestCase
         $expected = sprintf("UPDATE `foo` SET `bar_increment` = `bar_increment` %s %s", $sign, $value);
         $this->assertEquals($expected, $cnx->getRawSql());
     }
-    
+
     private function incrementDecrementSimple($method, $sign, $value = 1): void
     {
         $cnx = new Connection('MySQL');
         $table = 'foo';
         $name = 'bar_increment';
-        
+
         $qsMockMethods = $this->getClassMethodsToMock(QueryStatement::class, [
             'addTables',
             'addUpdateColumns',
@@ -127,14 +127,14 @@ class UpdateTest extends PlatineTestCase
             'addColumn',
             'closureToExpression',
         ]);
-        
-        
+
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->onlyMethods($qsMockMethods)
                     ->getMock();
 
-        
+
         $e = new Update($cnx, $table, $qs);
 
         $e->{$method}($name, $value);

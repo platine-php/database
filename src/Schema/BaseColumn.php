@@ -154,7 +154,9 @@ class BaseColumn
      */
     public function get(string $name, $default = null)
     {
-        return isset($this->properties[$name]) ? $this->properties[$name] : $default;
+        return isset($this->properties[$name])
+                    ? $this->properties[$name]
+                    : $default;
     }
 
     /**

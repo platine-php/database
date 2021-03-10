@@ -34,7 +34,7 @@ class SelectStatementTest extends PlatineTestCase
     {
         $tables = ['foo'];
         $e = new SelectStatement($tables);
-        
+
         $this->assertInstanceOf(QueryStatement::class, $e->getQueryStatement());
         $this->assertEquals($tables, $e->getQueryStatement()->getTables());
     }
@@ -72,7 +72,7 @@ class SelectStatementTest extends PlatineTestCase
         $this->assertInstanceOf(QueryStatement::class, $e->getQueryStatement());
         $this->assertEquals($qs, $e->getQueryStatement());
     }
-    
+
     public function testInto(): void
     {
         $from = 'foo';
@@ -86,10 +86,10 @@ class SelectStatementTest extends PlatineTestCase
            ->with($table);
 
         $e = new SelectStatement($from, $qs);
-        
+
         $e->into($table);
     }
-    
+
     public function testDistinct(): void
     {
         $from = 'foo';
@@ -103,16 +103,16 @@ class SelectStatementTest extends PlatineTestCase
            ->with($value);
 
         $e = new SelectStatement($from, $qs);
-        
+
         $e->distinct($value);
     }
-    
+
     public function testGroupBy(): void
     {
         $from = 'foo';
-        
+
         $columns = 'bar';
-        
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->getMock();
@@ -122,23 +122,23 @@ class SelectStatementTest extends PlatineTestCase
            ->with([$columns]);
 
         $e = new SelectStatement($from, $qs);
-        
+
         $e->groupBy($columns);
     }
-    
+
     public function testHaving(): void
     {
-        $this->havingTests('having', 'AND');  
-        $this->havingTests('orHaving', 'OR');  
+        $this->havingTests('having', 'AND');
+        $this->havingTests('orHaving', 'OR');
     }
-        
+
     public function testOrderBy(): void
     {
         $from = 'foo';
-        
+
         $columns = 'bar';
         $order = 'ASC';
-        
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->getMock();
@@ -148,16 +148,16 @@ class SelectStatementTest extends PlatineTestCase
            ->with([$columns], $order);
 
         $e = new SelectStatement($from, $qs);
-        
+
         $e->orderBy($columns, $order);
     }
-    
+
     public function testSelectColumnsIsString(): void
     {
         $from = 'foo';
-        
+
         $columns = 'bar';
-        
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->getMock();
@@ -167,16 +167,16 @@ class SelectStatementTest extends PlatineTestCase
            ->with($columns, null);
 
         $e = new SelectStatement($from, $qs);
-        
+
         $e->select($columns);
     }
-    
+
     public function testSelectColumnsIsExpression(): void
     {
         $from = 'foo';
-        
+
         $columns = (new Expression())->column('baz');
-        
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->getMock();
@@ -186,18 +186,18 @@ class SelectStatementTest extends PlatineTestCase
            ->with($columns, null);
 
         $e = new SelectStatement($from, $qs);
-        
+
         $e->select($columns);
     }
-    
+
     public function testSelectColumnsIsClosure(): void
     {
         $from = 'foo';
-        
-        $columns = function(ColumnExpression $exp){
+
+        $columns = function (ColumnExpression $exp) {
             $exp->column('baz');
         };
-        
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->getMock();
@@ -207,16 +207,16 @@ class SelectStatementTest extends PlatineTestCase
            ->with('baz', null);
 
         $e = new SelectStatement($from, $qs);
-        
+
         $e->select($columns);
     }
-    
+
     public function testColumn(): void
     {
         $from = 'foo';
-        
+
         $column = 'foo';
-        
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->getMock();
@@ -226,10 +226,10 @@ class SelectStatementTest extends PlatineTestCase
             ->with($column);
 
         $e = new SelectStatement($from, $qs);
-        
+
         $e->column($column);
     }
-    
+
     public function testAggregateFunctions(): void
     {
         $this->aggregateFunctionsTests('count');
@@ -238,37 +238,37 @@ class SelectStatementTest extends PlatineTestCase
         $this->aggregateFunctionsTests('min');
         $this->aggregateFunctionsTests('max');
     }
-    
+
     public function testClone(): void
     {
         $from = 'foo';
-        
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->getMock();
-        
+
         $e = new SelectStatement($from, $qs);
-            
+
         $c = clone $e;
-        
+
         $hsr = $this->getPrivateProtectedAttribute(SelectStatement::class, 'havingStatement');
-        
+
         $this->assertInstanceOf(HavingStatement::class, $hsr->getValue($c));
         $this->assertEquals($qs, $hsr->getValue($c)->getQueryStatement());
     }
-   
+
     public function testlimitAndOffset(): void
     {
         $this->limitAndOffset('limit', 'setLimit');
         $this->limitAndOffset('offset', 'setOffset');
     }
-    
+
     public function aggregateFunctionsTests($method): void
     {
         $from = 'foo';
-        
+
         $column = 'foo';
-        
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->getMock();
@@ -277,17 +277,17 @@ class SelectStatementTest extends PlatineTestCase
            ->method('addColumn');
 
         $e = new SelectStatement($from, $qs);
-        
+
         $e->{$method}($column);
     }
 
-    
+
     private function limitAndOffset($method, $qsMethod): void
     {
         $from = 'foo';
-        
+
         $value = 13;
-        
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->getMock();
@@ -297,32 +297,32 @@ class SelectStatementTest extends PlatineTestCase
            ->with($value);
 
         $e = new SelectStatement($from, $qs);
-        
+
         $e->{$method}($value);
     }
-    
-    
+
+
     private function havingTests($method, $separator): void
     {
         $from = 'foo';
-        
-        $column = function(HavingExpression $exp){
+
+        $column = function (HavingExpression $exp) {
             $exp->avg()->is(1);
         };
-        
+
         $closure = null;
-        
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->getMock();
-        
+
         $qs->expects($this->once())
            ->method('addHavingGroup')
            ->with($column, $separator);
 
 
         $e = new SelectStatement($from, $qs);
-        
-        $e->{$method}($column, $closure);        
+
+        $e->{$method}($column, $closure);
     }
 }

@@ -72,7 +72,7 @@ class UpdateStatementTest extends PlatineTestCase
     public function testSet(): void
     {
         $tables = 'foo';
-        
+
         $sets = [
             'name' => 'foo',
             'status' => false

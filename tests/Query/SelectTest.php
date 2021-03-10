@@ -41,14 +41,14 @@ class SelectTest extends PlatineTestCase
         $cnx = new Connection('MySQL');
         $from = 'foo';
         $columns = 'bar';
-        
+
         $mockColumns = [
             [
                 'name' => $columns,
                 'alias' => null
             ]
         ];
-        
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->getMock();
@@ -56,11 +56,11 @@ class SelectTest extends PlatineTestCase
         $qs->expects($this->any())
                 ->method('getTables')
                 ->will($this->returnValue([$from]));
-        
+
         $qs->expects($this->any())
                 ->method('getOffset')
                 ->will($this->returnValue(-1));
-        
+
         $qs->expects($this->any())
                 ->method('getColumns')
                 ->will($this->returnValue($mockColumns));
@@ -72,20 +72,20 @@ class SelectTest extends PlatineTestCase
         $expected = 'SELECT `bar` FROM `foo`';
         $this->assertEquals($expected, $cnx->getRawSql());
     }
-    
+
     public function testSelectColumnsIsExpression(): void
     {
         $cnx = new Connection('MySQL');
         $from = 'foo';
         $columns = (new Expression())->column('baz');
-        
+
         $mockColumns = [
             [
                 'name' => $columns,
                 'alias' => null
             ]
         ];
-        
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->getMock();
@@ -93,11 +93,11 @@ class SelectTest extends PlatineTestCase
         $qs->expects($this->any())
                 ->method('getTables')
                 ->will($this->returnValue([$from]));
-        
+
         $qs->expects($this->any())
                 ->method('getOffset')
                 ->will($this->returnValue(-1));
-        
+
         $qs->expects($this->any())
                 ->method('getColumns')
                 ->will($this->returnValue($mockColumns));
@@ -109,14 +109,14 @@ class SelectTest extends PlatineTestCase
         $expected = 'SELECT `baz` FROM `foo`';
         $this->assertEquals($expected, $cnx->getRawSql());
     }
-    
+
     public function testColumn(): void
     {
         $cnx = new Connection('MySQL');
         $from = 'foo';
-        
+
         $columns = 'bar';
-        
+
         $qsMockMethods = $this->getClassMethodsToMock(QueryStatement::class, [
             'getTables',
             'getOffset',
@@ -125,12 +125,12 @@ class SelectTest extends PlatineTestCase
             'closureToExpression',
             'addTables'
         ]);
-        
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->onlyMethods($qsMockMethods)
                     ->getMock();
-        
+
         $e = new Select($cnx, $from, $qs);
 
         $e->column($columns);
@@ -138,23 +138,23 @@ class SelectTest extends PlatineTestCase
         $expected = 'SELECT `bar` FROM `foo`';
         $this->assertEquals($expected, $cnx->getRawSql());
     }
-    
+
     public function testAggregateFunctionsColumnsIsString(): void
     {
         $columns = 'col_aggregate';
-        
+
         $this->aggregateFunctionsTests('count', $columns, 'COUNT');
         $this->aggregateFunctionsTests('avg', $columns, 'AVG');
         $this->aggregateFunctionsTests('min', $columns, 'MIN');
         $this->aggregateFunctionsTests('max', $columns, 'MAX');
         $this->aggregateFunctionsTests('sum', $columns, 'SUM');
     }
-    
+
     private function aggregateFunctionsTests($method, $columns, $name): void
     {
         $cnx = new Connection('MySQL');
         $from = 'foo';
-        
+
         $qsMockMethods = $this->getClassMethodsToMock(QueryStatement::class, [
             'getTables',
             'getOffset',
@@ -163,12 +163,12 @@ class SelectTest extends PlatineTestCase
             'closureToExpression',
             'addTables'
         ]);
-        
+
         /** @var QueryStatement $qs */
         $qs = $this->getMockBuilder(QueryStatement::class)
                     ->onlyMethods($qsMockMethods)
                     ->getMock();
-        
+
         $e = new Select($cnx, $from, $qs);
 
         $e->{$method}($columns);

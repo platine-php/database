@@ -57,7 +57,7 @@ class CreateTable
      * The list of CreateColumn
      * @var array<string, CreateColumn>
      */
-    protected array $columns;
+    protected array $columns = [];
 
     /**
      * The primary or list of primary key

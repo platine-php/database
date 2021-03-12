@@ -69,7 +69,8 @@ class SQLite extends Driver
     protected array $modifiers = [
         'nullable',
         'default',
-        'autoincrement'
+        'autoincrement',
+        'description'
     ];
 
     /**

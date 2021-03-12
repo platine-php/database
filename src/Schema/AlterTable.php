@@ -555,8 +555,8 @@ class AlterTable
         }
 
         return $this->addCommand($type, [
-                    'name' => $name,
-                    'columns' => $columns
+                'name' => $name,
+                'columns' => $columns
         ]);
     }
 

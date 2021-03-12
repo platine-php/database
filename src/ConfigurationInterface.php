@@ -46,6 +46,8 @@ declare(strict_types=1);
 
 namespace Platine\Database;
 
+use InvalidArgumentException;
+
 /**
  * Interface ConfigurationInterface
  * @package Platine\Database
@@ -58,6 +60,12 @@ interface ConfigurationInterface
      * @return string
      */
     public function getDriverName(): string;
+
+    /**
+     * Return the name of the configuration connection
+     * @return string
+     */
+    public function getName(): string;
 
     /**
      *
@@ -173,6 +181,19 @@ interface ConfigurationInterface
     /**
      * Load the database configuration from array
      * @param array<string, mixed> $config
+     *
+     * @example
+     * array (
+     *        'name' => 'default',
+     *        'driver' => 'mysql',
+     *        'database' => 'db_name',
+     *        'hostname' => '127.0.0.1',
+     *        'port' => xxxx,
+     *        'username' => 'usrname',
+     *        'password' => '',
+     *        'persistent' => true,
+     * );
+     *
      * @return void
      */
     public function load(array $config): void;

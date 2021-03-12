@@ -98,6 +98,7 @@ class Schema
         if ($this->databaseName === '') {
             $driver = $this->connection->getDriver();
             $result = $driver->getDatabaseName();
+
             if (isset($result['result'])) {
                 $this->databaseName = $result['result'];
             } else {

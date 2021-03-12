@@ -9,6 +9,8 @@ use PDOStatement;
 use PHPUnit\Framework\MockObject\Generator;
 use Platine\Database\Connection as RealConnection;
 use Platine\Database\ResultSet;
+use Platine\Database\Schema as RealSchema;
+use Platine\Database\Schema\CreateTable;
 
 /**
 * Class to mock PDO to prevent error:
@@ -23,6 +25,17 @@ class PDOMock extends PDO
     */
     public function __construct()
     {
+    }
+}
+
+
+
+
+class Schema extends RealSchema
+{
+    public function getDatabaseName(): string
+    {
+        return 'db';
     }
 }
 
@@ -71,5 +84,10 @@ class Connection extends RealConnection
         $this->rawSql = $this->replaceParameters($sql, $params);
 
         return true;
+    }
+
+    public function getSchema(): Schema
+    {
+        return new Schema($this);
     }
 }

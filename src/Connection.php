@@ -133,7 +133,7 @@ class Connection
         $this->connect();
     }
 
-        /**
+    /**
      * Connect to the database
      * @return void
      */
@@ -193,6 +193,18 @@ class Connection
                 $exception->getPrevious()
             );
         }
+    }
+
+    /**
+     *
+     * @param Logger $logger
+     * @return self
+     */
+    public function setLogger(Logger $logger): self
+    {
+        $this->logger = $logger;
+
+        return $this;
     }
 
     /**

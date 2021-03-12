@@ -76,7 +76,8 @@ class SQLServer extends Driver
     protected array $modifiers = [
         'nullable',
         'default',
-        'autoincrement'
+        'autoincrement',
+        'description'
     ];
 
     /**
@@ -237,7 +238,7 @@ class SQLServer extends Driver
     {
         $type = 'DECIMAL';
         $length = $column->get('length');
-        $precision = $column->get('pecision');
+        $precision = $column->get('precision');
         if ($length !== null) {
             if ($precision === null) {
                 $type = 'DECIMAL(' . $this->value($length) . ')';

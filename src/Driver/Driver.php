@@ -55,6 +55,7 @@ use Platine\Database\Query\QueryStatement;
 use Platine\Database\Schema\AlterTable;
 use Platine\Database\Schema\BaseColumn;
 use Platine\Database\Schema\CreateTable;
+use Platine\Database\Schema\ForeignKey;
 
 
 /**
@@ -91,7 +92,8 @@ class Driver
         'unsigned',
         'nullable',
         'default',
-        'autoincrement'
+        'autoincrement',
+        'description'
     ];
 
     /**
@@ -216,6 +218,18 @@ class Driver
     public function getDateFormat(): string
     {
         return $this->dateFormat;
+    }
+
+    /**
+     *
+     * @param string $format
+     * @return $this
+     */
+    public function setDateFormat(string $format): self
+    {
+        $this->dateFormat = $format;
+
+        return $this;
     }
 
     /**
@@ -726,7 +740,7 @@ class Driver
      */
     protected function getTypeString(BaseColumn $column): string
     {
-        return 'VARCHAR(' . $this->value($column->get('length', 355)) . ')';
+        return 'VARCHAR(' . $this->value($column->get('length', 255)) . ')';
     }
 
     /**
@@ -736,7 +750,7 @@ class Driver
      */
     protected function getTypeFixed(BaseColumn $column): string
     {
-        return 'CHAR(' . $this->value($column->get('length', 355)) . ')';
+        return 'CHAR(' . $this->value($column->get('length', 255)) . ')';
     }
 
     /**
@@ -807,6 +821,16 @@ class Driver
     protected function getModifierDefault(BaseColumn $column): string
     {
         return $column->get('default', null) === null ? '' : 'DEFAULT ' . $this->value($column->get('default'));
+    }
+
+    /**
+     *
+     * @param BaseColumn $column
+     * @return string
+     */
+    protected function getModifierDescription(BaseColumn $column): string
+    {
+        return $column->get('description', null) === null ? '' : 'COMMENT ' . $this->value($column->get('description'));
     }
 
     /**
@@ -1106,12 +1130,13 @@ class Driver
      */
     protected function getAddForeign(AlterTable $schema, $data): string
     {
+        /** @var ForeignKey $key */
         $key = $data['foreign'];
         return sprintf(
             'ALTER TABLE %s ADD CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s (%s)',
             $this->quoteIdentifier($schema->getTableName()),
             $this->quoteIdentifier($data['name']),
-            $this->quoteIdentifiers($data['columns']),
+            $this->quoteIdentifiers($key->getColumns()),
             $this->quoteIdentifier($key->getReferenceTable()),
             $this->quoteIdentifiers($key->getReferenceColumns()),
         );

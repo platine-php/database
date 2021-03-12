@@ -46,6 +46,7 @@ declare(strict_types=1);
 
 namespace Platine\Database;
 
+use InvalidArgumentException;
 use PDO;
 use Platine\Database\Driver\Driver;
 use Platine\Database\Driver\MySQL;
@@ -65,6 +66,12 @@ class Configuration implements ConfigurationInterface
      * @var string
      */
     protected string $driver = 'mysql';
+
+    /**
+     * The connection name
+     * @var string
+     */
+    protected string $name = '';
 
     /**
      * The driver character set
@@ -170,6 +177,14 @@ class Configuration implements ConfigurationInterface
     public function getDriverName(): string
     {
         return $this->driver;
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**

@@ -226,7 +226,7 @@ class Oracle extends Driver
     {
         $type = 'NUMBER(10)';
         $length = $column->get('length');
-        $precision = $column->get('pecision');
+        $precision = $column->get('precision');
         if ($length !== null) {
             if ($precision === null) {
                 $type = 'NUMBER(' . $this->value($length) . ')';

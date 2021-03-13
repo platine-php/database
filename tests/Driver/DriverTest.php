@@ -175,47 +175,46 @@ class DriverTest extends PlatineTestCase
     public function testSelectFull(): void
     {
         $e = $this->getDriverInstance();
-        
+
         $join = new Join();
-        $cb = function(Join $j){
+        $cb = function (Join $j) {
             $j->on('foo.id', 'baz.id');
             $j->on('bar.name', 'baz.stat');
-            $j->on((new Expression())->column('biz'), 'baz',);
-            
-            $j->on(function(Join $j1){
+            $j->on((new Expression())->column('biz'), 'baz');
+
+            $j->on(function (Join $j1) {
                 $j1->on('my_col1', 'my_col2');
             });
-           
-            $j->on(function(Expression $exp){
-                $exp->group(function(Expression $ex){
+
+            $j->on(function (Expression $exp) {
+                $exp->group(function (Expression $ex) {
                     $ex->column('col_closure')->op('*')->value(23);
                 });
-                
+
                 $exp->from('sub_tab')->select('foo_sq');
             }, true);
-           
         };
-        
+
         $havingNested = new HavingStatement();
-        
-        $cbh = function(HavingStatement $hs){
-          $hs->having('hs', function(HavingExpression $exp){
-              $exp->avg()->is(10.8);
-          });
+
+        $cbh = function (HavingStatement $hs) {
+            $hs->having('hs', function (HavingExpression $exp) {
+                $exp->avg()->is(10.8);
+            });
         };
-        
+
         $cbh($havingNested);
-        
+
         $cb($join);
-        
+
         $sq = new SubQuery();
-        
-        $cbs = function(SubQuery $sq){
+
+        $cbs = function (SubQuery $sq) {
             $sq->from('my_tab')
                 ->where('created_at')->lt('2020-01-01')
                 ->select('id');
         };
-        
+
         $cbs($sq);
 
         $mockMethodsMaps = [
@@ -308,11 +307,11 @@ class DriverTest extends PlatineTestCase
         $this->assertEquals($result, $expected);
     }
 
-    
+
     public function testInsertColumnsIsEmpty(): void
     {
         $e = $this->getDriverInstance();
-        
+
         $mockMethodsMaps = [
             'getTables' => ['bar'],
             'getValues' => ['foo', 1],
@@ -324,11 +323,11 @@ class DriverTest extends PlatineTestCase
         $result = $e->insert($qs);
         $this->assertEquals($result, $expected);
     }
-    
+
     public function testInsert(): void
     {
         $e = $this->getDriverInstance();
-        
+
         $mockMethodsMaps = [
             'getTables' => ['bar'],
             'getValues' => ['foo', 1],
@@ -345,35 +344,34 @@ class DriverTest extends PlatineTestCase
         $result = $e->insert($qs);
         $this->assertEquals($result, $expected);
     }
-    
+
     public function testUpdate(): void
     {
         $e = $this->getDriverInstance();
-        
+
         $join = new Join();
-        $cb = function(Join $j){
-            
+        $cb = function (Join $j) {
         };
-        
+
         $cb($join);
-        
+
         $whereNested = new WhereStatement();
-        
-        $cbw = function(WhereStatement $ws){
-          $ws->where('name')->like('%foo%')
+
+        $cbw = function (WhereStatement $ws) {
+            $ws->where('name')->like('%foo%')
                ->orWhere('status')->is(1);
         };
-        
+
         $cbw($whereNested);
-        
+
         $sq = new SubQuery();
-        
-        $cbs = function(SubQuery $sq){
+
+        $cbs = function (SubQuery $sq) {
             $sq->from('my_tab')
                 ->where('created_at')->lt('2020-01-01')
                 ->select('id');
         };
-        
+
         $cbs($sq);
 
         $mockMethodsMaps = [
@@ -445,20 +443,19 @@ class DriverTest extends PlatineTestCase
                 . ' AND "in_select" IN (SELECT "id" FROM "my_tab" WHERE "created_at" < ?)'
                 . ' AND "wh_select" = (SELECT "id" FROM "my_tab" WHERE "created_at" < ?)'
                 . ' OR "nop_wh"';
-                
+
         $result = $e->update($qs);
         $this->assertEquals($result, $expected);
     }
-    
+
     public function testUpdateWithoutColumns(): void
     {
         $e = $this->getDriverInstance();
-        
+
         $join = new Join();
-        $cb = function(Join $j){
-            
+        $cb = function (Join $j) {
         };
-        
+
         $cb($join);
 
         $mockMethodsMaps = [
@@ -505,7 +502,7 @@ class DriverTest extends PlatineTestCase
         $qs = $this->getQueryStatementInstance($mockMethodsMaps);
         $expected = 'UPDATE "bar" AS "b" INNER JOIN "tjoin" WHERE "bazz" = ? AND "bazi" = ?'
                 . ' AND "id" IN (?) AND "name" IS NULL';
-                
+
         $result = $e->update($qs);
         $this->assertEquals($result, $expected);
     }
@@ -513,12 +510,12 @@ class DriverTest extends PlatineTestCase
     public function testDeleteTablesIsEmpty(): void
     {
         $e = $this->getDriverInstance();
-        
+
         $join = new Join();
-        $cb = function(Join $j){
+        $cb = function (Join $j) {
             $j->on('foo.id', 'baz.id');
         };
-        
+
         $cb($join);
 
         $mockMethodsMaps = [
@@ -562,21 +559,21 @@ class DriverTest extends PlatineTestCase
                 . '"tjoin" ON "foo"."id" = "baz"."id" WHERE "bazz" = ?'
                 . ' AND "name" BETWEEN ? AND ?'
                 . ' OR "status" LIKE ?';
-                
-                
+
+
         $result = $e->delete($qs);
         $this->assertEquals($result, $expected);
     }
-    
+
     public function testDelete(): void
     {
         $e = $this->getDriverInstance();
-        
+
         $join = new Join();
-        $cb = function(Join $j){
+        $cb = function (Join $j) {
             $j->on('foo.id', 'baz.id');
         };
-        
+
         $cb($join);
 
         $mockMethodsMaps = [
@@ -603,45 +600,45 @@ class DriverTest extends PlatineTestCase
         $qs = $this->getQueryStatementInstance($mockMethodsMaps);
         $expected = 'DELETE "foo" FROM "bar" '
                 . 'INNER JOIN "tjoin" ON "foo"."id" = "baz"."id" WHERE "bazz" = ?';
-               
+
         $result = $e->delete($qs);
         $this->assertEquals($result, $expected);
     }
-    
+
     public function testDateFormat(): void
     {
         $e = $this->getDriverInstance();
-        
+
         $this->assertEquals('Y-m-d H:i:s', $e->getDateFormat());
-        
+
         $e->setDateFormat('Y-m-d');
-        
+
         $this->assertEquals('Y-m-d', $e->getDateFormat());
     }
-    
+
     public function testOptions(): void
     {
         $options = [
             'dateFormat' => 'Y-m-d'
         ];
-        
-        
+
+
         $e = $this->getDriverInstance();
-        
+
         $this->assertEquals('Y-m-d H:i:s', $e->getDateFormat());
-        
+
         $e->setOptions($options);
-       
+
         $this->assertEquals('Y-m-d', $e->getDateFormat());
     }
-    
-    public function testDetDatabaseName(): void
+
+    public function testGetDatabaseName(): void
     {
-        
+
         $e = $this->getDriverInstance();
-        
+
         $infos = $e->getDatabaseName();
-        
+
         $this->assertIsArray($infos);
         $this->assertArrayHasKey('sql', $infos);
         $this->assertArrayHasKey('params', $infos);
@@ -649,102 +646,104 @@ class DriverTest extends PlatineTestCase
         $this->assertEquals('SELECT database()', $infos['sql']);
         $this->assertEmpty($infos['params']);
     }
-    
+
     public function testRenameTable(): void
     {
-       
+
         $e = $this->getDriverInstance();
-        
+
         $current = 'foo';
         $new = 'bar';
-        
+
         $infos = $e->renameTable($current, $new);
-        
+
         $this->assertIsArray($infos);
         $this->assertArrayHasKey('sql', $infos);
         $this->assertArrayHasKey('params', $infos);
-        
+
         $expectedSql = sprintf('RENAME TABLE "%s" TO "%s"', $current, $new);
 
         $this->assertEquals($expectedSql, $infos['sql']);
         $this->assertEmpty($infos['params']);
     }
-    
+
     public function testGetTables(): void
     {
-       
+
         $e = $this->getDriverInstance();
-        
+
         $database = 'foo';
-        
+
         $infos = $e->getTables($database);
-        
+
         $this->assertIsArray($infos);
         $this->assertArrayHasKey('sql', $infos);
         $this->assertArrayHasKey('params', $infos);
-        
-        $expectedSql = sprintf('SELECT "%s" FROM "%s"."%s" WHERE '
-                . 'table_type = ? AND table_schema = ? ORDER BY "%s" ASC', 
-                'table_name',
-                'information_schema',
-                'tables',
-                'table_name',
-                );
+
+        $expectedSql = sprintf(
+            'SELECT "%s" FROM "%s"."%s" WHERE '
+                . 'table_type = ? AND table_schema = ? ORDER BY "%s" ASC',
+            'table_name',
+            'information_schema',
+            'tables',
+            'table_name',
+        );
 
         $this->assertEquals($expectedSql, $infos['sql']);
         $this->assertCount(2, $infos['params']);
         $this->assertContains('BASE TABLE', $infos['params']);
         $this->assertContains($database, $infos['params']);
     }
-    
+
     public function testGetColumns(): void
     {
-       
+
         $e = $this->getDriverInstance();
-        
+
         $database = 'foo';
         $table = 'bar';
-        
+
         $infos = $e->getColumns($database, $table);
-        
+
         $this->assertIsArray($infos);
         $this->assertArrayHasKey('sql', $infos);
         $this->assertArrayHasKey('params', $infos);
-        
-        $expectedSql = sprintf('SELECT "%s" AS "%s", "%s" AS "%s" '
+
+        $expectedSql = sprintf(
+            'SELECT "%s" AS "%s", "%s" AS "%s" '
                 . 'FROM "%s"."%s" WHERE "%s" = ? AND "%s" = ? ORDER BY "%s" ASC',
-                'column_name',
-                'name',
-                'column_type',
-                'type',
-                'information_schema',
-                'columns',
-                'table_schema',
-                'table_name',
-                'ordinal_position',
-                );
+            'column_name',
+            'name',
+            'column_type',
+            'type',
+            'information_schema',
+            'columns',
+            'table_schema',
+            'table_name',
+            'ordinal_position',
+        );
 
         $this->assertEquals($expectedSql, $infos['sql']);
         $this->assertCount(2, $infos['params']);
         $this->assertContains($table, $infos['params']);
         $this->assertContains($database, $infos['params']);
     }
-    
+
     public function testCreateSimple(): void
     {
-       
+
         $e = $this->getDriverInstance();
-        
+
         $ccIntMockMethodsMaps = [
             'getName' => 'bar',
             'getType' => 'integer',
         ];
-        
-        
+
+
         $columns = [
             'bar' => $this->getCreateColumnInstance($ccIntMockMethodsMaps),
         ];
-        
+
         $ctMockMethodsMaps = [
             'getTableName' => 'bar',
             'getColumns' => $columns,
@@ -753,158 +752,153 @@ class DriverTest extends PlatineTestCase
             'getUniqueKeys' => [],
             'getPrimaryKey' => [],
         ];
-        
+
         $ct = $this->getCreateTableInstance($ctMockMethodsMaps);
-        
+
         $infos = $e->create($ct);
-        
+
         $this->assertCount(1, $infos);
         $this->assertIsArray($infos[0]);
         $this->assertArrayHasKey('sql', $infos[0]);
         $this->assertArrayHasKey('params', $infos[0]);
-                
+
         $expectedSql = 'CREATE TABLE "bar"(
 "bar" INT)
 ';
-        
+
         $this->assertEquals($expectedSql, $infos[0]['sql']);
         $this->assertEmpty($infos[0]['params']);
     }
-    
-     public function testCreateFull(): void
+
+    public function testCreateFull(): void
     {
-       
+
         $e = $this->getDriverInstance();
-        
+
         $ccIntMockMethodsMaps = [
-            'getName' => 'bar',
-            'getType' => 'integer',
+           'getName' => 'bar',
+           'getType' => 'integer',
         ];
-        
+
         $ccFloatMockMethodsMaps = [
-            'getName' => 'f_bar',
-            'getType' => 'float',
+           'getName' => 'f_bar',
+           'getType' => 'float',
         ];
-        
+
         $ccDoubleMockMethodsMaps = [
-            'getName' => 'double_bar',
-            'getType' => 'double',
+           'getName' => 'double_bar',
+           'getType' => 'double',
         ];
-        
+
         $ccDecimalMockMethodsMaps = [
-            'getName' => 'deci_bar',
-            'getType' => 'decimal',
+           'getName' => 'deci_bar',
+           'getType' => 'decimal',
         ];
-        
+
         $ccBoolMockMethodsMaps = [
-            'getName' => 'bool_bar',
-            'getType' => 'boolean',
+           'getName' => 'bool_bar',
+           'getType' => 'boolean',
         ];
-        
+
         $ccBinaryMockMethodsMaps = [
-            'getName' => 'bin_bar',
-            'getType' => 'binary',
+           'getName' => 'bin_bar',
+           'getType' => 'binary',
         ];
-        
+
         $ccTextMockMethodsMaps = [
-            'getName' => 'txt_bar',
-            'getType' => 'text',
+           'getName' => 'txt_bar',
+           'getType' => 'text',
         ];
-        
-        $ccTextMockMethodsMaps = [
-            'getName' => 'txt_bar',
-            'getType' => 'text',
-        ];
-        
+
         $ccStrMockMethodsMaps = [
-            'getName' => 'str_bar',
-            'getType' => 'string',
+           'getName' => 'str_bar',
+           'getType' => 'string',
         ];
-        
+
         $ccFixedMockMethodsMaps = [
-            'getName' => 'fix_bar',
-            'getType' => 'fixed',
+           'getName' => 'fix_bar',
+           'getType' => 'fixed',
         ];
-        
+
         $ccTimeMockMethodsMaps = [
-            'getName' => 'time_bar',
-            'getType' => 'time',
+           'getName' => 'time_bar',
+           'getType' => 'time',
         ];
-        
+
         $ccTimestampMockMethodsMaps = [
-            'getName' => 'timestamp_bar',
-            'getType' => 'timestamp',
+           'getName' => 'timestamp_bar',
+           'getType' => 'timestamp',
         ];
-        
+
         $ccDateMockMethodsMaps = [
-            'getName' => 'date_bar',
-            'getType' => 'date',
+           'getName' => 'date_bar',
+           'getType' => 'date',
         ];
-        
+
         $ccDatetimeMockMethodsMaps = [
-            'getName' => 'datet_bar',
-            'getType' => 'datetime',
+           'getName' => 'datet_bar',
+           'getType' => 'datetime',
         ];
-        
+
         $columns = [
-            'bar' => $this->getCreateColumnInstance($ccIntMockMethodsMaps),
-            'f_bar' => $this->getCreateColumnInstance($ccFloatMockMethodsMaps),
-            'double_bar' => $this->getCreateColumnInstance($ccDoubleMockMethodsMaps),
-            'deci_bar' => $this->getCreateColumnInstance($ccDecimalMockMethodsMaps),
-            'bool_bar' => $this->getCreateColumnInstance($ccBoolMockMethodsMaps),
-            'bin_bar' => $this->getCreateColumnInstance($ccBinaryMockMethodsMaps),
-            'txt_bar' => $this->getCreateColumnInstance($ccTextMockMethodsMaps),
-            'str_bar' => $this->getCreateColumnInstance($ccStrMockMethodsMaps),
-            'fix_bar' => $this->getCreateColumnInstance($ccFixedMockMethodsMaps),
-            'time_bar' => $this->getCreateColumnInstance($ccTimeMockMethodsMaps),
-            'timestamp_bar' => $this->getCreateColumnInstance($ccTimestampMockMethodsMaps),
-            'date_bar' => $this->getCreateColumnInstance($ccDateMockMethodsMaps),
-            'datet_bar' => $this->getCreateColumnInstance($ccDatetimeMockMethodsMaps),
+           'bar' => $this->getCreateColumnInstance($ccIntMockMethodsMaps),
+           'f_bar' => $this->getCreateColumnInstance($ccFloatMockMethodsMaps),
+           'double_bar' => $this->getCreateColumnInstance($ccDoubleMockMethodsMaps),
+           'deci_bar' => $this->getCreateColumnInstance($ccDecimalMockMethodsMaps),
+           'bool_bar' => $this->getCreateColumnInstance($ccBoolMockMethodsMaps),
+           'bin_bar' => $this->getCreateColumnInstance($ccBinaryMockMethodsMaps),
+           'txt_bar' => $this->getCreateColumnInstance($ccTextMockMethodsMaps),
+           'str_bar' => $this->getCreateColumnInstance($ccStrMockMethodsMaps),
+           'fix_bar' => $this->getCreateColumnInstance($ccFixedMockMethodsMaps),
+           'time_bar' => $this->getCreateColumnInstance($ccTimeMockMethodsMaps),
+           'timestamp_bar' => $this->getCreateColumnInstance($ccTimestampMockMethodsMaps),
+           'date_bar' => $this->getCreateColumnInstance($ccDateMockMethodsMaps),
+           'datet_bar' => $this->getCreateColumnInstance($ccDatetimeMockMethodsMaps),
         ];
-        
-        
+
+
         $fkMockMethodsMaps = [
-            'getColumns' => ['bar'],
-            'getReferenceTable' => 'bazz',
-            'getReferenceColumns' => ['foo_bar'],
-            'getActions' => ['ON DELETE' => 'CASCADE'],
+           'getColumns' => ['bar'],
+           'getReferenceTable' => 'bazz',
+           'getReferenceColumns' => ['foo_bar'],
+           'getActions' => ['ON DELETE' => 'CASCADE'],
         ];
-        
+
         $fk = $this->getForeignKeyInstance($fkMockMethodsMaps);
-        
-        
+
+
         $ctMockMethodsMaps = [
-            'getTableName' => 'bar',
-            'getEngine' => 'INNODB',
-            'getColumns' => $columns,
-            'getIndexes' => [
-               'foo_ik_bar' => ['bar']
-            ],
-            'getForeignKeys' => [
-                'foo_fk_bar' => $fk
-            ],
-            'getUniqueKeys' => [
-                'foo_uk_bar' => ['bar']
-            ],
-            'getPrimaryKey' => [
-                'name' => 'foo_pk_bar',
-                'columns' => ['bar']
-            ],
+           'getTableName' => 'bar',
+           'getEngine' => 'INNODB',
+           'getColumns' => $columns,
+           'getIndexes' => [
+              'foo_ik_bar' => ['bar']
+           ],
+           'getForeignKeys' => [
+               'foo_fk_bar' => $fk
+           ],
+           'getUniqueKeys' => [
+               'foo_uk_bar' => ['bar']
+           ],
+           'getPrimaryKey' => [
+               'name' => 'foo_pk_bar',
+               'columns' => ['bar']
+           ],
         ];
-        
+
         $ct = $this->getCreateTableInstance($ctMockMethodsMaps);
-        
+
         $infos = $e->create($ct);
-        
+
         $this->assertCount(2, $infos);
         $this->assertIsArray($infos[0]);
         $this->assertArrayHasKey('sql', $infos[0]);
         $this->assertArrayHasKey('params', $infos[0]);
-        
+
         $this->assertIsArray($infos[1]);
         $this->assertArrayHasKey('sql', $infos[1]);
         $this->assertArrayHasKey('params', $infos[1]);
-        
+
         $expectedSql = 'CREATE TABLE "bar"(
 "bar" INT,
 "f_bar" FLOAT,
@@ -923,7 +917,7 @@ CONSTRAINT "foo_pk_bar" PRIMARY KEY ("bar"),
 CONSTRAINT "foo_uk_bar" UNIQUE ("bar"),
 CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DELETE CASCADE)
  ENGINE = INNODB';
-        
+
         $expectedSqlIndexes = 'CREATE INDEX "foo_ik_bar" ON "bar"("bar")';
 
         $this->assertEquals($expectedSql, $infos[0]['sql']);
@@ -931,26 +925,26 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
         $this->assertEmpty($infos[0]['params']);
         $this->assertEmpty($infos[1]['params']);
     }
-    
+
     public function testAlterFull(): void
     {
-       
+
         $e = $this->getDriverInstance();
-        
+
         $acIntMockMethodsMaps = [
             'getName' => 'bar',
             'getType' => 'integer',
         ];
-        
+
         $fkMockMethodsMaps = [
             'getColumns' => ['bar'],
             'getReferenceTable' => 'bazz',
             'getReferenceColumns' => ['foo_bar'],
             'getActions' => ['ON DELETE' => 'CASCADE'],
         ];
-        
+
         $fk = $this->getForeignKeyInstance($fkMockMethodsMaps);
-        
+
         $atMockMethodsMaps = [
             'getCommands' => [
                 [
@@ -1036,11 +1030,11 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
             ],
             'getTableName' => 'foo'
         ];
-        
+
         $at = $this->getAlterTableInstance($atMockMethodsMaps);
-        
+
         $infos = $e->alter($at);
-        
+
         $this->assertCount(14, $infos);
         $this->assertIsArray($infos[0]);
         $this->assertArrayHasKey('sql', $infos[0]);
@@ -1071,7 +1065,7 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
         $this->assertArrayHasKey('params', $infos[12]);
         $this->assertArrayHasKey('sql', $infos[13]);
         $this->assertArrayHasKey('params', $infos[13]);
-        
+
         $expectedSetDefaultIntSql = 'ALTER TABLE "foo" ALTER COLUMN "bar" SET DEFAULT (100)';
         $expectedDropDefaultSql = 'ALTER TABLE "foo" ALTER COLUMN "baz" DROP DEFAULT';
         $expectedSetDefaultStrSql = 'ALTER TABLE "foo" ALTER COLUMN "bar_str" SET DEFAULT (\'string\')';
@@ -1087,7 +1081,7 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
         $expectedAddFkSql = 'ALTER TABLE "foo" ADD CONSTRAINT "foo_fk_col" '
                 . 'FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar")';
         $expectedAddIkSql = 'CREATE INDEX "foo_ik_col" ON "foo" ("foo_col")';
-        
+
         $this->assertEquals($expectedSetDefaultIntSql, $infos[0]['sql']);
         $this->assertEquals($expectedSetDefaultStrSql, $infos[1]['sql']);
         $this->assertEquals($expectedSetDefaultBoolSql, $infos[2]['sql']);
@@ -1102,7 +1096,7 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
         $this->assertEquals($expectedAddFkSql, $infos[11]['sql']);
         $this->assertEquals($expectedAddIkSql, $infos[12]['sql']);
         $this->assertEquals($expectedSetDefaultNullSql, $infos[13]['sql']);
-        
+
         $this->assertEmpty($infos[0]['params']);
         $this->assertEmpty($infos[1]['params']);
         $this->assertEmpty($infos[2]['params']);
@@ -1118,62 +1112,62 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
         $this->assertEmpty($infos[12]['params']);
         $this->assertEmpty($infos[13]['params']);
     }
-    
+
     public function testDrop(): void
     {
         $e = $this->getDriverInstance();
-        
+
         $table = 'foo';
-        
+
         $infos = $e->drop($table);
-        
+
         $this->assertCount(2, $infos);
         $this->assertIsArray($infos);
         $this->assertArrayHasKey('sql', $infos);
         $this->assertArrayHasKey('params', $infos);
-                
+
         $expectedSql = 'DROP TABLE "foo"';
 
-        
+
         $this->assertEquals($expectedSql, $infos['sql']);
         $this->assertEmpty($infos['params']);
     }
-    
+
     public function testTruncate(): void
     {
         $e = $this->getDriverInstance();
-        
+
         $table = 'foo';
-        
+
         $infos = $e->truncate($table);
-        
+
         $this->assertCount(2, $infos);
         $this->assertIsArray($infos);
         $this->assertArrayHasKey('sql', $infos);
         $this->assertArrayHasKey('params', $infos);
-                
+
         $expectedSql = 'TRUNCATE TABLE "foo"';
 
-        
+
         $this->assertEquals($expectedSql, $infos['sql']);
         $this->assertEmpty($infos['params']);
     }
-    
-    public function testRenameColumn(): void
+
+    public function testRenameAddModifyColumn(): void
     {
-        
+
         $from = 'old_col';
         $to = 'new_col';
-        
+
         $acIntMockMethodsMaps = [
             'getName' => 'bar',
             'getType' => 'integer',
         ];
-        
+
         $col = $this->getAlterColumnInstance($acIntMockMethodsMaps);
-        
+
         $col->set('autoincrement', true);
-        
+
         $atMockMethodsMaps = [
             'getCommands' => [
                 [
@@ -1194,23 +1188,23 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
             ],
             'getTableName' => 'foo'
         ];
-       
+
         $e = $this->getDriverInstance();
-        
+
         $at = $this->getAlterTableInstance($atMockMethodsMaps);
-        
+
         $infos = $e->alter($at);
-        
-        
+
+
         $this->assertCount(2, $infos);
         $this->assertIsArray($infos[0]);
         $this->assertIsArray($infos[1]);
-        
+
         $this->assertArrayHasKey('sql', $infos[0]);
         $this->assertArrayHasKey('sql', $infos[1]);
         $this->assertArrayHasKey('params', $infos[0]);
         $this->assertArrayHasKey('params', $infos[1]);
-        
+
         $expectedSql = 'ALTER TABLE "foo" MODIFY COLUMN "bar" INT';
         $expectedAddColSql = 'ALTER TABLE "foo" ADD COLUMN "bar" INT AUTO_INCREMENT';
         $this->assertEquals($expectedSql, $infos[0]['sql']);
@@ -1218,21 +1212,21 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
         $this->assertEmpty($infos[0]['params']);
         $this->assertEmpty($infos[1]['params']);
     }
-    
+
     public function testAlter(): void
     {
-       
+
         $e = $this->getDriverInstance();
-        
+
         $fkMockMethodsMaps = [
             'getColumns' => ['bar'],
             'getReferenceTable' => 'bazz',
             'getReferenceColumns' => ['foo_bar'],
             'getActions' => ['ON DELETE' => 'CASCADE'],
         ];
-        
+
         $fk = $this->getForeignKeyInstance($fkMockMethodsMaps);
-        
+
         $atMockMethodsMaps = [
             'getCommands' => [
                 [
@@ -1297,11 +1291,11 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
             ],
             'getTableName' => 'foo'
         ];
-        
+
         $at = $this->getAlterTableInstance($atMockMethodsMaps);
-        
+
         $infos = $e->alter($at);
-        
+
         $this->assertCount(11, $infos);
         $this->assertIsArray($infos[0]);
         $this->assertArrayHasKey('sql', $infos[0]);
@@ -1326,7 +1320,7 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
         $this->assertArrayHasKey('params', $infos[9]);
         $this->assertArrayHasKey('sql', $infos[10]);
         $this->assertArrayHasKey('params', $infos[10]);
-        
+
         $expectedSql = 'ALTER TABLE "foo" ALTER COLUMN "bar" SET DEFAULT (100)';
         $expectedDropDefaultSql = 'ALTER TABLE "foo" ALTER COLUMN "baz" DROP DEFAULT';
         $expectedDropPkSql = 'ALTER TABLE "foo" DROP CONSTRAINT "baz_pk_col"';
@@ -1339,7 +1333,7 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
         $expectedAddFkSql = 'ALTER TABLE "foo" ADD CONSTRAINT "foo_fk_col" '
                 . 'FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar")';
         $expectedAddIkSql = 'CREATE INDEX "foo_ik_col" ON "foo" ("foo_col")';
-        
+
         $this->assertEquals($expectedSql, $infos[0]['sql']);
         $this->assertEquals($expectedDropDefaultSql, $infos[1]['sql']);
         $this->assertEquals($expectedDropPkSql, $infos[2]['sql']);
@@ -1385,7 +1379,7 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
 
         return $qs;
     }
-    
+
     private function getCreateTableInstance(array $mockInfos = []): CreateTable
     {
         /** @var CreateTable $ct */
@@ -1401,7 +1395,7 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
 
         return $ct;
     }
-    
+
     private function getAlterTableInstance(array $mockInfos = []): AlterTable
     {
         /** @var AlterTable $at */
@@ -1417,17 +1411,17 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
 
         return $at;
     }
-    
+
     private function getCreateColumnInstance(array $mockInfos = []): CreateColumn
     {
         $methods = $this->getClassMethodsToMock(CreateColumn::class, ['get', 'set']);
-        
+
         /** @var CreateColumn $cc */
         $cc = $this->getMockBuilder(CreateColumn::class)
                     ->onlyMethods($methods)
                     ->disableOriginalConstructor()
                     ->getMock();
-        
+
         foreach ($mockInfos as $method => $returnValue) {
             $cc->expects($this->any())
                 ->method($method)
@@ -1436,17 +1430,17 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
 
         return $cc;
     }
-    
+
     private function getAlterColumnInstance(array $mockInfos = []): AlterColumn
     {
         $methods = $this->getClassMethodsToMock(AlterColumn::class, ['get', 'set']);
-        
+
         /** @var AlterColumn $ac */
         $ac = $this->getMockBuilder(AlterColumn::class)
                     ->onlyMethods($methods)
                     ->disableOriginalConstructor()
                     ->getMock();
-        
+
         foreach ($mockInfos as $method => $returnValue) {
             $ac->expects($this->any())
                 ->method($method)
@@ -1455,7 +1449,7 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
 
         return $ac;
     }
-    
+
     private function getForeignKeyInstance(array $mockInfos = []): ForeignKey
     {
         /** @var ForeignKey $fk */

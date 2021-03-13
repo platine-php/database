@@ -98,7 +98,7 @@ class SQLServer extends Driver
 
         if ($offset < 0) {
             $sql = $select->hasDistinct() ? 'SELECT DISTINCT ' : 'SELECT ';
-            $sql .= 'TOP ' . $limit;
+            $sql .= 'TOP ' . $limit . ' ';
             $sql .= $this->getColumnList($select->getColumns());
             $sql .= $this->getInto($select->getIntoTable());
             $sql .= ' FROM ';

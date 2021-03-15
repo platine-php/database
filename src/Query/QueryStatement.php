@@ -426,7 +426,7 @@ class QueryStatement
         }
         $order = strtoupper($order);
 
-        if ($order !== 'ASC' && $order !== 'DESC') {
+        if (!in_array($order, ['ASC', 'DESC'])) {
             $order = 'ASC';
         }
 

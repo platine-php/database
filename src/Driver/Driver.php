@@ -1252,6 +1252,9 @@ class Driver
         if (empty($conditions)) {
             return '';
         }
+
+        $sql = [];
+
         $sql[] = $this->{$conditions[0]['type']}($conditions[0]);
 
         $count = count($conditions);
@@ -1352,7 +1355,7 @@ class Driver
         if (empty($values)) {
             return '';
         }
-
+        $sql = [];
         $sql[] = $this->{$values[0]['type']}($values[0]);
         $count = count($values);
 

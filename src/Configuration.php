@@ -392,28 +392,18 @@ class Configuration implements ConfigurationInterface
      */
     public function getDriverClassName(): string
     {
-        $class = Driver::class;
+        $maps = [
+          'mysql'  => MySQL::class,
+          'pgsql'  => PostgreSQL::class,
+          'sqlsrv' => SQLServer::class,
+          'oci'    => Oracle::class,
+          'oracle' => Oracle::class,
+          'sqlite' => SQLite::class,
+        ];
 
-        switch ($this->driver) {
-            case 'mysql':
-                $class = MySQL::class;
-                break;
-            case 'pgsql':
-                $class = PostgreSQL::class;
-                break;
-            case 'sqlsrv':
-                $class = SQLServer::class;
-                break;
-            case 'oci':
-            case 'oracle':
-                $class = Oracle::class;
-                break;
-            case 'sqlite':
-                $class = SQLite::class;
-                break;
-        }
-
-        return $class;
+        return isset($maps[$this->driver])
+                ? $maps[$this->driver]
+                : Driver::class;
     }
 
     /**

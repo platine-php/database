@@ -225,4 +225,18 @@ class SQLite extends Driver
             $this->quoteIdentifiers($data['columns'])
         );
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function truncate(string $table): array
+    {
+        //TODO add a way to delete the table sequence information in
+        //"sqlite_sequence table"
+        //DELETE FROM `sqlite_sequence` WHERE `name` = 'TABLE_NAME';
+        return [
+            'sql' => 'DELETE FROM ' . $this->quoteIdentifier($table),
+            'params' => []
+        ];
+    }
 }

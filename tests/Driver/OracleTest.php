@@ -12,6 +12,8 @@ use Platine\Database\Query\HavingStatement;
 use Platine\Database\Query\Join;
 use Platine\Database\Query\QueryStatement;
 use Platine\Database\Query\SubQuery;
+use Platine\Database\Query\Where;
+use Platine\Database\Query\WhereStatement;
 use Platine\Database\Schema\AlterColumn;
 use Platine\Database\Schema\AlterTable;
 use Platine\Database\Schema\CreateColumn;
@@ -47,6 +49,38 @@ class OracleTest extends PlatineTestCase
 
         $qs = $this->getQueryStatementInstance($mockMethodsMaps);
         $expected = 'SELECT * FROM "BAR"';
+        $result = $e->select($qs);
+        $this->assertEquals($result, $expected);
+    }
+
+    public function testSelectWhereValueIsStringAndIsColumn(): void
+    {
+        $column = 'value_str_is_column';
+        $value = 'baz';
+        $separator = 'AND';
+
+        $e = $this->getOracleInstance();
+
+        $qsMockMethods = $this->getClassMethodsToMock(QueryStatement::class, [
+            'addWhere',
+            'getWheres',
+            'closureToExpression',
+           ]);
+
+        /** @var QueryStatement $qs */
+        $qs = $this->getMockBuilder(QueryStatement::class)
+                    ->onlyMethods($qsMockMethods)
+                    ->getMock();
+
+        /** @var WhereStatement $ws */
+        $ws = $this->getMockBuilder(WhereStatement::class)
+                    ->getMock();
+
+        $w = new Where($ws, $qs);
+        $w->init($column, $separator);
+        $w->isNot($value, true);
+
+        $expected = 'SELECT * FROM  WHERE "VALUE_STR_IS_COLUMN" != "BAZ" OFFSET ?';
         $result = $e->select($qs);
         $this->assertEquals($result, $expected);
     }

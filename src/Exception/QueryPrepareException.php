@@ -35,10 +35,10 @@ namespace Platine\Database\Exception;
 use RuntimeException;
 
 /**
- * Class TransactionException
+ * Class QueryPrepareException
  * @package Platine\Database\Exception
  */
-class TransactionException extends RuntimeException
+class QueryPrepareException extends RuntimeException
 {
 
 }

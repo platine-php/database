@@ -46,7 +46,6 @@ declare(strict_types=1);
 
 namespace Platine\Database;
 
-use InvalidArgumentException;
 use PDO;
 use Platine\Database\Driver\Driver;
 use Platine\Database\Driver\MySQL;
@@ -71,7 +70,7 @@ class Configuration implements ConfigurationInterface
      * The connection name
      * @var string
      */
-    protected string $name = '';
+    protected string $name = 'default';
 
     /**
      * The driver character set
@@ -280,6 +279,18 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritedoc}
      */
+    public function setOptions(array $options): self
+    {
+        foreach ($options as $name => $value) {
+            $this->setOption($name, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritedoc}
+     */
     public function getAttributes(): array
     {
         return $this->attributes;
@@ -291,6 +302,18 @@ class Configuration implements ConfigurationInterface
     public function setAttribute($name, $value): self
     {
         $this->attributes[$name] = $value;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritedoc}
+     */
+    public function setAttributes(array $attributes): self
+    {
+        foreach ($attributes as $name => $value) {
+            $this->setAttribute($name, $value);
+        }
 
         return $this;
     }
@@ -334,12 +357,32 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritedoc}
      */
+    public function addCommands(array $commands): self
+    {
+        foreach ($commands as $command) {
+            $this->addCommand($command);
+        }
+
+        return $this;
+    }
+
+    /**
+     * {@inheritedoc}
+     */
     public function load(array $config): void
     {
         foreach ($config as $name => $value) {
             $key = str_replace('_', '', lcfirst(ucwords($name, '_')));
             if (property_exists($this, $key)) {
-                $this->{$key} = $value;
+                if (in_array($key, ['options', 'attributes', 'commands']) && is_array($value)) {
+                    $method = 'set' . ucfirst($key);
+                    if ($key === 'commands') {
+                        $method = 'addCommands';
+                    }
+                    $this->{$method}($value);
+                } else {
+                    $this->{$key} = $value;
+                }
             }
         }
     }

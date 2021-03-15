@@ -32,6 +32,14 @@
         "squizlabs/php_codesniffer": "3.*"
     },
     
+    "suggest": {
+        "ext-pdo_mysql": "For MySQL or MariaDB driver",
+        "ext-pdo_oci": "For Oracle driver",
+        "ext-pdo_oci8": "For Oracle version 8 driver",
+        "ext-pdo_pqsql": "For PostgreSQL driver",
+        "ext-pdo_sqlite": "For SQLite driver"
+    },
+    
     "autoload": {
         "psr-4":{
             "Platine\\Database\\": "src/"

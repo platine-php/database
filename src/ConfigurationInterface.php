@@ -46,8 +46,6 @@ declare(strict_types=1);
 
 namespace Platine\Database;
 
-use InvalidArgumentException;
-
 /**
  * Interface ConfigurationInterface
  * @package Platine\Database
@@ -136,6 +134,13 @@ interface ConfigurationInterface
     public function setOption($name, $value): self;
 
     /**
+     * Set an array of options
+     * @param array<mixed, mixed> $options
+     * @return self
+     */
+    public function setOptions(array $options): self;
+
+    /**
      *
      * @return array<mixed, mixed>
      */
@@ -148,6 +153,13 @@ interface ConfigurationInterface
      * @return self
      */
     public function setAttribute($name, $value): self;
+
+    /**
+     * Set an array of attributes
+     * @param array<mixed, mixed> $attributes
+     * @return self
+     */
+    public function setAttributes(array $attributes): self;
 
     /**
      * Check whether the attribute exist
@@ -177,6 +189,13 @@ interface ConfigurationInterface
      * @return self
      */
     public function addCommand(string $command): self;
+
+    /**
+     * Add an array of commands
+     * @param array<int, string> $commands
+     * @return self
+     */
+    public function addCommands(array $commands): self;
 
     /**
      * Load the database configuration from array

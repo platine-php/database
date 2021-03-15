@@ -52,6 +52,7 @@ use PDOStatement;
 use Platine\Database\Driver\Driver;
 use Platine\Database\Exception\ConnectionException;
 use Platine\Database\Exception\QueryException;
+use Platine\Database\Exception\QueryPrepareException;
 use Platine\Database\Exception\TransactionException;
 use Platine\Logger\Logger;
 use Platine\Logger\NullHandler;
@@ -187,6 +188,7 @@ class Connection
                 'exception' => $exception,
                 'error' => $exception->getMessage()
             ]);
+
             throw new ConnectionException(
                 'Can not connect to database',
                 (int) $exception->getCode(),
@@ -433,7 +435,7 @@ class Connection
                 'error' => $exception->getMessage(),
                 'query' => $query
             ]);
-            throw new QueryException(
+            throw new QueryPrepareException(
                 $exception->getMessage() . ' [' . $query . ']',
                 (int) $exception->getCode(),
                 $exception->getPrevious()
@@ -545,9 +547,6 @@ class Connection
                     $socket = $this->config->getSocket();
                     if (!empty($socket)) {
                         $attr['unix_socket'] = $socket;
-
-                        unset($attr['host']);
-                        unset($attr['port']);
                     }
                 }
                 break;

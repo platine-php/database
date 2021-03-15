@@ -100,6 +100,25 @@ class SQLiteTest extends PlatineTestCase
         $this->assertEmpty($infos['params']);
     }
 
+    public function testTruncateTable(): void
+    {
+
+        $e = $this->getSQLiteInstance();
+
+        $table = 'foo';
+
+        $infos = $e->truncate($table);
+
+        $this->assertIsArray($infos);
+        $this->assertArrayHasKey('sql', $infos);
+        $this->assertArrayHasKey('params', $infos);
+
+        $expectedSql = sprintf('DELETE FROM `%s`', $table);
+
+        $this->assertEquals($expectedSql, $infos['sql']);
+        $this->assertEmpty($infos['params']);
+    }
+
     public function testCreateSimple(): void
     {
 

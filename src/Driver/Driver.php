@@ -1342,16 +1342,6 @@ class Driver
     }
 
     /**
-     * Handle for insert values
-     * @param array<int, mixed> $values
-     * @return string
-     */
-    protected function getInsertValues(array $values): string
-    {
-        return ' VALUES (' . $this->params($values) . ')';
-    }
-
-    /**
      * Return the build part for where or having
      * @param array<int, mixed> $values
      *
@@ -1370,6 +1360,16 @@ class Driver
             $sql[] = $values[$i]['separator'] . ' ' . $this->{$values[$i]['type']}($values[$i]);
         }
         return implode(' ', $sql);
+    }
+
+    /**
+     * Handle for insert values
+     * @param array<int, mixed> $values
+     * @return string
+     */
+    protected function getInsertValues(array $values): string
+    {
+        return ' VALUES (' . $this->params($values) . ')';
     }
 
     /**

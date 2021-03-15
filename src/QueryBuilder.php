@@ -52,10 +52,10 @@ use Platine\Database\Query\Update as UpdateCommand;
 use Platine\Database\Query\InsertStatement;
 
 /**
- * Class Database
+ * Class QueryBuilder
  * @package Platine\Database
  */
-class Database
+class QueryBuilder
 {
 
     /**

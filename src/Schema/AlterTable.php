@@ -154,15 +154,15 @@ class AlterTable
 
     /**
      *
-     * @param string $from
-     * @param string $to
+     * @param string $oldName
+     * @param string $newName
      * @return self
      */
-    public function renameColumn(string $from, string $to): self
+    public function renameColumn(string $oldName, string $newName): self
     {
         return $this->addCommand('renameColumn', [
-                    'from' => $from,
-                    'column' => new AlterColumn($this, $to)
+                    'from' => $oldName,
+                    'column' => new AlterColumn($this, $newName)
         ]);
     }
 

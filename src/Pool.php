@@ -63,7 +63,7 @@ class Pool
 
     /**
      * The list of connections
-     * @var array<string, Connection>
+     * @var array<string, array<string, mixed>>
      */
     protected array $connections = [];
 
@@ -114,7 +114,7 @@ class Pool
 
         $actives = count($this->connections);
 
-        $this->connections[$name] = new Connection($cfg);
+        $this->storeConnectionInfos($cfg);
 
         if ($actives === 0) {
             $this->default = $name;
@@ -144,13 +144,11 @@ class Pool
             $name = $this->default;
         }
 
-        if (!$this->has($name)) {
-            throw new ConnectionNotFoundException(
-                sprintf('The connection [%s] does not exist', $name)
-            );
-        }
+        $this->checkConnectionName($name);
 
-        return $this->connections[$name];
+        $connection = $this->createConnection($name);
+
+        return $connection;
     }
 
     /**
@@ -161,11 +159,7 @@ class Pool
      */
     public function setDefault(string $name): void
     {
-        if (!$this->has($name)) {
-            throw new ConnectionNotFoundException(
-                sprintf('The connection [%s] does not exist', $name)
-            );
-        }
+        $this->checkConnectionName($name);
 
         $this->default = $name;
     }
@@ -179,5 +173,53 @@ class Pool
     public function remove(string $name): void
     {
         unset($this->connections[$name]);
+    }
+
+    /**
+     *
+     * @param string $name
+     * @return void
+     * @throws ConnectionNotFoundException
+     */
+    protected function checkConnectionName(string $name): void
+    {
+        if (!$this->has($name)) {
+            throw new ConnectionNotFoundException(
+                sprintf('The connection [%s] does not exist', $name)
+            );
+        }
+    }
+
+    /**
+     * Store the connection information
+     * @param ConfigurationInterface $config
+     * @return void
+     */
+    protected function storeConnectionInfos(ConfigurationInterface $config): void
+    {
+        $name = $config->getName();
+
+        $this->connections[$name] = [
+            'config' => $config,
+            'instance' => null
+        ];
+    }
+
+    /**
+     * Create the connection
+     * @param string $name
+     * @return Connection
+     */
+    protected function createConnection(string $name): Connection
+    {
+        $infos = $this->connections[$name];
+
+        if (is_array($infos)) {
+            if (is_null($infos['instance'])) {
+                $this->connections[$name]['instance'] = new Connection($infos['config']);
+            }
+        }
+
+        return $this->connections[$name]['instance'];
     }
 }

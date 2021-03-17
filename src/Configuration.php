@@ -29,7 +29,7 @@
  */
 
 /**
- *  @file DbConfig.php
+ *  @file Configuration.php
  *
  *  The connection configuration class
  *

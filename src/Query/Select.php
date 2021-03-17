@@ -101,7 +101,7 @@ class Select extends SelectStatement
     public function column($name)
     {
         parent::column($name);
-        return $this->getColumnResultSet();
+        return $this->getColumnResult();
     }
 
     /**
@@ -113,7 +113,7 @@ class Select extends SelectStatement
     public function count($column = '*', bool $distinct = false): int
     {
         parent::count($column, $distinct);
-        return (int) $this->getColumnResultSet();
+        return (int) $this->getColumnResult();
     }
 
     /**
@@ -125,7 +125,7 @@ class Select extends SelectStatement
     public function avg($column, bool $distinct = false)
     {
         parent::avg($column, $distinct);
-        return $this->getColumnResultSet();
+        return $this->getColumnResult();
     }
 
     /**
@@ -137,7 +137,7 @@ class Select extends SelectStatement
     public function sum($column, bool $distinct = false)
     {
         parent::sum($column, $distinct);
-        return $this->getColumnResultSet();
+        return $this->getColumnResult();
     }
 
     /**
@@ -149,7 +149,7 @@ class Select extends SelectStatement
     public function min($column, bool $distinct = false)
     {
         parent::min($column, $distinct);
-        return $this->getColumnResultSet();
+        return $this->getColumnResult();
     }
 
     /**
@@ -161,14 +161,14 @@ class Select extends SelectStatement
     public function max($column, bool $distinct = false)
     {
         parent::max($column, $distinct);
-        return $this->getColumnResultSet();
+        return $this->getColumnResult();
     }
 
     /**
      * Return the result set for column
      * @return mixed
      */
-    protected function getColumnResultSet()
+    protected function getColumnResult()
     {
         $driver = $this->connection->getDriver();
 

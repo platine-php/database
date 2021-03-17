@@ -39,10 +39,10 @@ All notable changes to [opis/database](https://github.com/opis/database) are doc
 
 #### Global changes
 
-- Change all namespace **Opis\Database\** to **Platine\Database\**
+- Change all namespace **Opis\Database** to **Platine\Database**
 - Rename package **Opis\Database\SQL** to **Platine\Database\Query**
 - Merge SQL and Schema **Compiler** classes to one class **Platine\Database\Driver\Driver**
-- Move all drivers classes from **Opis\Database\Compiler** and **Opis\Database\Schema\Compiler**  to **Platine\Database\Driver\**
+- Move all drivers classes from **Opis\Database\Compiler** and **Opis\Database\Schema\Compiler**  to **Platine\Database\Driver**
 - Remove drivers classes **DB2, Firebird, NuoDB**
 - Update code to PHP 7.4 (typed properties, **object** type, etc.)
 - Add **declare(strict_types=1);** in all files

@@ -341,7 +341,7 @@ class CreateTable
         ?int $precision = null
     ): CreateColumn {
         return $this->addColumn($name, 'decimal')
-                        ->set('length', $length)
+                        ->length($length)
                         ->set('precision', $precision);
     }
 
@@ -374,7 +374,7 @@ class CreateTable
     public function string(string $name, int $length = 255): CreateColumn
     {
         return $this->addColumn($name, 'string')
-                        ->set('length', $length);
+                        ->length($length);
     }
 
     /**
@@ -386,7 +386,7 @@ class CreateTable
     public function fixed(string $name, int $length = 255): CreateColumn
     {
         return $this->addColumn($name, 'fixed')
-                        ->set('length', $length);
+                        ->length($length);
     }
 
     /**

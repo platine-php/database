@@ -34,7 +34,7 @@ MIT License See [LICENSE.MD](LICENSE.MD)
 Coming soon, be patient
 
 ### Change make to opis/database version 4.1.x-dev
-**Platine Database** get inspiration from **opis/database**
+**Platine Database** get inspiration from **opis/database**. 
 All notable changes to [opis/database](https://github.com/opis/database) are documented below.
 
 #### Global changes
@@ -49,7 +49,7 @@ All notable changes to [opis/database](https://github.com/opis/database) are doc
 - Rename class **Database** to **QueryBuilder**
 - Rename class **SQLStatement** to **QueryStatement**
 - Rename class **Subquery** to **SubQuery**
-- Rename all classes attribute **$sql** instance of **SQLStatement** to **$queryStatement**
+- Rename all classes attribute or parameters **$sql** of **SQLStatement** to **$queryStatement**
 - Add interface **ConfigurationInterface** and classes **Configuration, Pool** 
 - Add Exceptions packages under namespace **Platine\Database\Exception**
 - Change all typehint array to array notation based on static analysis tools (phpstan), example array<int, string>, etc.
@@ -118,12 +118,76 @@ All notable changes to [opis/database](https://github.com/opis/database) are doc
 - Add typehint **null** to parameter **$alias** of methods **addColumn** 
 - Remove **$database** parameter of method **setInto**
 - Rename method **getDistinct** to **hasDistinct**
-- Change return type to *string[]|Expression[]* of methods **getGroupBy**
+- Change return type to **string[]|Expression[]** of methods **getGroupBy**
 - Remove method **getIntoDatabase**
 
 
+##### Class SelectStatement
+- Rename attribute **$have** to **$havingStatment**
+- Remove **$database** parameter of method **into**
+- Remove method **andHaving**
+- Remove **$nulls** parameter of method **orderBy**
 
 
+##### Class SubQuery
+- Rename method **getSQLStatement** to **getQueryStatement**
 
 
+##### Class Where
+- Rename method **notNull** to **isNotNull**
+- Remove methods **lessThan, greaterThan, atLeast, atMost**
 
+
+##### Class WhereStatement
+- Rename method **addWhereExistCondition** to **addWhereExistsCondition**
+- Rename method **getSQLStatement** to **getQueryStatement**
+- Rename parameter **$isExpr** of methods **where, orWhere** to **$isExpression**
+- Remove method **andWhereExists**
+
+
+##### Class CreateColumn
+- Change return type to **CreateTable** of methods **getTable**
+
+##### Class CreateTable
+- In method **autoincrement** set value of attribute **$autoincrement** to true
+
+
+##### Class ForeignKey
+- Rename attribute **$refTable** to **$referenceTable**
+- Rename attribute **$refColumns** to **$referenceColumns**
+- Rename method **getReferencedTable** to **getReferenceColumns**
+
+##### Class Schema\Compiler and SQL\Compiler
+- Merge the two classes to **Driver** class
+- Add **description** in the array list of **$modifiers** attribute 
+- Rename attribute **$wrapper** to **$identifier**
+- Rename all methods **handleXXX** to **getXXX**
+- Rename method **Schema\Compiler\handleColumns** to **getSchemaColumns**
+- Rename method **Schema\Compiler\currentDatabase** to **getDatabaseName**
+- Rename method **SQL\Compiler\handleTables** to **getTableList**
+- Rename method **SQL\Compiler\handleGroupings** to **getGroupBy**
+- Rename method **SQL\Compiler\handleHavings** to **getHaving**
+- Rename method **SQL\Compiler\handleOrderings** to **getOrders**
+- Rename method **SQL\Compiler\whereSubquery** to **whereSubQuery**
+- Rename method **wrap** to **quoteIdentifier**
+- Rename method **wrapArray** to **quoteIdentifiers**
+- Add method **getModifierDescription**
+- Add method **getWheresHaving**
+- Rename parameter **$func** of methods **aggregateFunctionXXX** to **$function**
+- Remove methods **SQL\Compiler\{sqlFunctionUCASE, sqlFunctionLCASE, sqlFunctionMID, sqlFunctionLEN, sqlFunctionROUND, sqlFunctionNOW, sqlFunctionFORMAT}
+
+##### Class SQLite
+- Rewrite method **truncate**
+- Rename attribute **$nopk** to **$noPrimaryKey**
+
+##### Class ResultSet
+- Rename method **first** to **get**
+- Remove method **fetchBoth**
+- Rename parameter **$func** of method **fetchCustom** to **$closure**
+
+##### Class Schema
+- Rename attribute **$tableList** to **$tables**
+- Rename attribute **$currentDatabase** to **$databaseName**
+- Rename method **getCurrentDatabase** to **getDatabaseName**
+- Rename parameter **$clear** of methods **hasTable, getTables, getColumns** to **$skipCache**
+- Change return type to **string[]|array<string, array<string, string>>** of method **getColumns**

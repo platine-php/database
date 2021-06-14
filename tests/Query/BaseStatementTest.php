@@ -8,7 +8,7 @@ use Platine\Database\Query\BaseStatement;
 use Platine\Database\Query\Join;
 use Platine\Database\Query\QueryStatement;
 use Platine\Database\Query\Where;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * BaseStatement class tests

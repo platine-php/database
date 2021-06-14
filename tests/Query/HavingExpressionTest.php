@@ -9,7 +9,7 @@ use Platine\Database\Query\Expression;
 use Platine\Database\Query\Having;
 use Platine\Database\Query\HavingExpression;
 use Platine\Database\Query\QueryStatement;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * HavingExpression class tests

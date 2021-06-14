@@ -6,7 +6,7 @@ namespace Platine\Test\Database;
 
 use Platine\Database\Query\InsertStatement;
 use Platine\Database\Query\QueryStatement;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * InsertStatement class tests

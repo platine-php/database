@@ -7,7 +7,7 @@ namespace Platine\Test\Database;
 use PDO;
 use PDOStatement;
 use Platine\Database\ResultSet;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * ResultSet class tests

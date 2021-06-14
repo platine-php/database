@@ -7,7 +7,7 @@ namespace Platine\Test\Database;
 use Closure;
 use Platine\Database\Query\Expression;
 use Platine\Database\Query\Join;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * Join class tests

@@ -12,7 +12,7 @@ use Platine\Database\ConfigurationInterface;
 use Platine\Database\Connection as RealConnection;
 use Platine\Database\ResultSet;
 use Platine\Database\Schema as RealSchema;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 class Schema extends RealSchema
 {

@@ -7,7 +7,7 @@ namespace Platine\Test\Database;
 use Platine\Database\Schema\CreateColumn;
 use Platine\Database\Schema\CreateTable;
 use Platine\Database\Schema\BaseColumn;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * CreateColumn class tests

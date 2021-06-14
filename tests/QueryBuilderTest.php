@@ -10,7 +10,7 @@ use Platine\Database\Query\UpdateStatement;
 use Platine\Database\QueryBuilder;
 use Platine\Database\ResultSet;
 use Platine\Database\Schema;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 use Platine\Test\Fixture\Connection;
 
 /**

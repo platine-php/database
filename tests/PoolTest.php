@@ -8,7 +8,7 @@ use Platine\Database\Connection;
 use Platine\Database\Exception\ConnectionAlreadyExistsException;
 use Platine\Database\Exception\ConnectionNotFoundException;
 use Platine\Database\Pool;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * Pool class tests

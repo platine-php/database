@@ -171,7 +171,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     * Return the driver name
+     * @return string
      */
     public function getDriverName(): string
     {
@@ -179,7 +180,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     * Return the name of the configuration connection
+     * @return string
      */
     public function getName(): string
     {
@@ -187,7 +189,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     * Return the charset
+     * @return string
      */
     public function getCharset(): string
     {
@@ -195,15 +198,17 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     *  Return the application name
+     * @return string
      */
     public function getAppname(): string
     {
         return $this->appname;
     }
 
-    /**
-     * {@inheritedoc}
+     /**
+     *  Return the hostname
+     * @return string
      */
     public function getHostname(): string
     {
@@ -211,7 +216,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @return string
      */
     public function getUsername(): string
     {
@@ -219,7 +225,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @return string
      */
     public function getPassword(): string
     {
@@ -227,7 +234,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @return int|null
      */
     public function getPort(): ?int
     {
@@ -235,7 +243,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @return string
      */
     public function getDatabase(): string
     {
@@ -243,7 +252,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @return string
      */
     public function getCollation(): string
     {
@@ -251,7 +261,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @return string
      */
     public function getSocket(): string
     {
@@ -259,7 +270,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @return array<mixed, mixed>
      */
     public function getOptions(): array
     {
@@ -267,7 +279,10 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     * Set the PDO connection option
+     * @param mixed $name
+     * @param mixed $value
+     * @return $this
      */
     public function setOption($name, $value): self
     {
@@ -277,7 +292,9 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     * Set an array of options
+     * @param array<mixed, mixed> $options
+     * @return $this
      */
     public function setOptions(array $options): self
     {
@@ -289,7 +306,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @return array<string, mixed>
      */
     public function getAttributes(): array
     {
@@ -297,9 +315,12 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     * Set the connection attribute
+     * @param string $name
+     * @param mixed $value
+     * @return $this
      */
-    public function setAttribute($name, $value): self
+    public function setAttribute(string $name, $value): self
     {
         $this->attributes[$name] = $value;
 
@@ -307,7 +328,9 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     * Set an array of attributes
+     * @param array<string, mixed> $attributes
+     * @return $this
      */
     public function setAttributes(array $attributes): self
     {
@@ -319,7 +342,9 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     * Check whether the attribute exist
+     * @param string $name
+     * @return bool
      */
     public function hasAttribute(string $name): bool
     {
@@ -327,7 +352,11 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @param string $name
+     * @param mixed $default
+     *
+     * @return mixed
      */
     public function getAttribute(string $name, $default = null)
     {
@@ -337,7 +366,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     *
+     * @return array<int, mixed>
      */
     public function getCommands(): array
     {
@@ -345,7 +375,9 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     * Add the connection command
+     * @param string $command
+     * @return $this
      */
     public function addCommand(string $command): self
     {
@@ -355,7 +387,9 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     * Add an array of commands
+     * @param array<int, string> $commands
+     * @return $this
      */
     public function addCommands(array $commands): self
     {
@@ -367,7 +401,22 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     * Load the database configuration from array
+     * @param array<string, mixed> $config
+     *
+     * @example
+     * array (
+     *        'name' => 'default',
+     *        'driver' => 'mysql',
+     *        'database' => 'db_name',
+     *        'hostname' => '127.0.0.1',
+     *        'port' => xxxx,
+     *        'username' => 'usrname',
+     *        'password' => '',
+     *        'persistent' => true,
+     * );
+     *
+     * @return void
      */
     public function load(array $config): void
     {
@@ -388,7 +437,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     * Return the connection driver class name
+     * @return string
      */
     public function getDriverClassName(): string
     {
@@ -407,7 +457,8 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * {@inheritedoc}
+     * Whether the connection is persistent
+     * @return bool
      */
     public function isPersistent(): bool
     {

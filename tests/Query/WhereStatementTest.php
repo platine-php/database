@@ -9,7 +9,7 @@ use Platine\Database\Query\QueryStatement;
 use Platine\Database\Query\Where;
 use Platine\Database\Query\SubQuery;
 use Platine\Database\Query\WhereStatement;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * WhereStatement class tests

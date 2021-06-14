@@ -7,7 +7,7 @@ namespace Platine\Test\Database;
 use Platine\Database\Query\Expression;
 use Platine\Database\Query\QueryStatement;
 use Platine\Database\Query\Select;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 use Platine\Test\Fixture\Connection;
 
 /**

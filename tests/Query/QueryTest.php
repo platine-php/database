@@ -8,7 +8,7 @@ use Platine\Database\Query\Query;
 use Platine\Database\Query\QueryStatement;
 use Platine\Database\Query\Select;
 use Platine\Database\ResultSet;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 use Platine\Test\Fixture\Connection;
 
 /**

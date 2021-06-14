@@ -6,7 +6,7 @@ namespace Platine\Test\Database;
 
 use Platine\Database\Query\QueryStatement;
 use Platine\Database\Query\UpdateStatement;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * UpdateStatement class tests

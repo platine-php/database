@@ -6,7 +6,7 @@ namespace Platine\Test\Database;
 
 use Platine\Database\Query\DeleteStatement;
 use Platine\Database\Query\QueryStatement;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * DeleteStatement class tests

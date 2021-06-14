@@ -11,7 +11,7 @@ use Platine\Database\Query\Join;
 use Platine\Database\Query\QueryStatement;
 use Platine\Database\Query\SubQuery;
 use Platine\Database\Query\WhereStatement;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * QueryStatement class tests

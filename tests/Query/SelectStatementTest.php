@@ -10,7 +10,7 @@ use Platine\Database\Query\HavingExpression;
 use Platine\Database\Query\HavingStatement;
 use Platine\Database\Query\QueryStatement;
 use Platine\Database\Query\SelectStatement;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * SelectStatement class tests

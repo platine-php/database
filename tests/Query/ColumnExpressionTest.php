@@ -7,7 +7,7 @@ namespace Platine\Test\Database;
 use Platine\Database\Query\Expression;
 use Platine\Database\Query\ColumnExpression;
 use Platine\Database\Query\QueryStatement;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * ColumnExpression class tests

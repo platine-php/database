@@ -7,7 +7,7 @@ namespace Platine\Test\Database;
 use Platine\Database\Query\QueryStatement;
 use Platine\Database\Query\SelectStatement;
 use Platine\Database\Query\SubQuery;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * SubQuery class tests

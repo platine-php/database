@@ -9,7 +9,7 @@ use Platine\Database\Schema\AlterColumn;
 use Platine\Database\Schema\AlterTable;
 use Platine\Database\Schema\CreateColumn;
 use Platine\Database\Schema\CreateTable;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 use Platine\Test\Fixture\Connection;
 use Platine\Test\Fixture\Schema;
 

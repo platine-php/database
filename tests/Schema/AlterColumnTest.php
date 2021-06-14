@@ -7,7 +7,7 @@ namespace Platine\Test\Database;
 use Platine\Database\Schema\AlterColumn;
 use Platine\Database\Schema\AlterTable;
 use Platine\Database\Schema\BaseColumn;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * AlterColumn class tests

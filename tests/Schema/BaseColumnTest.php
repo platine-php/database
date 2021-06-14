@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Platine\Test\Database;
 
 use Platine\Database\Schema\BaseColumn;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * BaseColumn class tests

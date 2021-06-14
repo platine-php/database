@@ -10,7 +10,7 @@ use Platine\Database\Driver\Oracle;
 use Platine\Database\Driver\PostgreSQL;
 use Platine\Database\Driver\SQLite;
 use Platine\Database\Driver\SQLServer;
-use Platine\PlatineTestCase;
+use Platine\Dev\PlatineTestCase;
 
 /**
  * Configuration class tests

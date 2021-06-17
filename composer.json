@@ -21,7 +21,8 @@
     "require": {
         "php": "^7.4 || ^8",
         "ext-pdo": "*",
-        "platine-php/logger": "1.0.x-dev"
+        "platine-php/logger": "1.0.x-dev",
+        "platine-php/stdlib": "1.0.x-dev"
     },
 	
     "require-dev": {

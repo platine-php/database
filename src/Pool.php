@@ -47,6 +47,7 @@ namespace Platine\Database;
 
 use Platine\Database\Exception\ConnectionAlreadyExistsException;
 use Platine\Database\Exception\ConnectionNotFoundException;
+use Platine\Logger\Logger;
 
 /**
  * Class Pool
@@ -101,7 +102,7 @@ class Pool
      */
     public function addConnection(array $config): void
     {
-        /** @var ConfigurationInterface $cfg */
+        /** @var Configuration $cfg */
         $cfg = new Configuration($config);
 
         $name = $cfg->getName();
@@ -135,10 +136,11 @@ class Pool
      * Get the connection instance for the given name
      * if $name is null the default will be returned
      * @param string|null $name
+     * @param Logger|null $logger
      * @return Connection
      * @throws ConnectionNotFoundException
      */
-    public function getConnection(?string $name = null): Connection
+    public function getConnection(?string $name = null, ?Logger $logger = null): Connection
     {
         if ($name === null) {
             $name = $this->default;
@@ -146,7 +148,7 @@ class Pool
 
         $this->checkConnectionName($name);
 
-        $connection = $this->createConnection($name);
+        $connection = $this->createConnection($name, $logger);
 
         return $connection;
     }
@@ -192,10 +194,10 @@ class Pool
 
     /**
      * Store the connection information
-     * @param ConfigurationInterface $config
+     * @param Configuration $config
      * @return void
      */
-    protected function storeConnectionInfos(ConfigurationInterface $config): void
+    protected function storeConnectionInfos(Configuration $config): void
     {
         $name = $config->getName();
 
@@ -208,15 +210,19 @@ class Pool
     /**
      * Create the connection
      * @param string $name
+     * @param Logger|null $logger
      * @return Connection
      */
-    protected function createConnection(string $name): Connection
+    protected function createConnection(string $name, ?Logger $logger = null): Connection
     {
         $infos = $this->connections[$name];
 
         if (is_array($infos)) {
             if (is_null($infos['instance'])) {
-                $this->connections[$name]['instance'] = new Connection($infos['config']);
+                $this->connections[$name]['instance'] = new Connection(
+                    $infos['config'],
+                    $logger
+                );
             }
         }
 

@@ -8,7 +8,6 @@ use PDO;
 use PDOStatement;
 use PHPUnit\Framework\MockObject\Generator;
 use Platine\Database\Configuration;
-use Platine\Database\ConfigurationInterface;
 use Platine\Database\Connection as RealConnection;
 use Platine\Database\ResultSet;
 use Platine\Database\Schema as RealSchema;
@@ -85,7 +84,7 @@ class Connection extends RealConnection
 class PlatineTestCaseDb extends PlatineTestCase
 {
 
-    protected function getDbConnectionConfig(): ConfigurationInterface
+    protected function getDbConnectionConfig(): Configuration
     {
         return new Configuration([
                     'name' => 'master',
@@ -95,7 +94,7 @@ class PlatineTestCaseDb extends PlatineTestCase
                 ]);
     }
 
-    protected function getDbConnectionConfigOK(): ConfigurationInterface
+    protected function getDbConnectionConfigOK(): Configuration
     {
         return new Configuration([
                     'name' => 'master',

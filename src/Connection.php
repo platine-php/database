@@ -96,9 +96,9 @@ class Connection
 
     /**
      * The connection configuration
-     * @var ConfigurationInterface
+     * @var Configuration
      */
-    protected ConfigurationInterface $config;
+    protected Configuration $config;
 
     /**
      * The connection parameters
@@ -113,17 +113,17 @@ class Connection
 
     /**
      * Connection constructor.
-     * @param ConfigurationInterface $config
+     * @param Configuration $config
      * @param Logger $logger
      * @throws ConnectionException
      */
     public function __construct(
-        ConfigurationInterface $config,
+        Configuration $config,
         ?Logger $logger = null
     ) {
         $this->config = $config;
 
-        $this->logger = $logger ? $logger : new Logger(new NullHandler());
+        $this->logger = $logger ?? new Logger(new NullHandler());
         $this->logger->setChannel(__CLASS__);
 
         $driverClass = $this->config->getDriverClassName();
@@ -229,9 +229,9 @@ class Connection
 
     /**
      * Return the current connection configuration
-     * @return ConfigurationInterface
+     * @return Configuration
      */
-    public function getConfig(): ConfigurationInterface
+    public function getConfig(): Configuration
     {
         return $this->config;
     }

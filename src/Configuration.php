@@ -53,12 +53,13 @@ use Platine\Database\Driver\Oracle;
 use Platine\Database\Driver\PostgreSQL;
 use Platine\Database\Driver\SQLite;
 use Platine\Database\Driver\SQLServer;
+use Platine\Stdlib\Config\AbstractConfiguration;
 
 /**
  * Class Configuration
  * @package Platine\Database
  */
-class Configuration implements ConfigurationInterface
+class Configuration extends AbstractConfiguration
 {
     /**
      * The connection driver to use
@@ -162,15 +163,6 @@ class Configuration implements ConfigurationInterface
     protected array $commands = [];
 
     /**
-     * Class constructor
-     * @param array<string, mixed> $config the connection configuration
-     */
-    public function __construct(array $config = [])
-    {
-        $this->load($config);
-    }
-
-    /**
      * Return the driver name
      * @return string
      */
@@ -189,7 +181,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Return the charset
+     * Return the character set
      * @return string
      */
     public function getCharset(): string
@@ -207,7 +199,7 @@ class Configuration implements ConfigurationInterface
     }
 
      /**
-     *  Return the hostname
+     *  Return the host
      * @return string
      */
     public function getHostname(): string
@@ -401,42 +393,6 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Load the database configuration from array
-     * @param array<string, mixed> $config
-     *
-     * @example
-     * array (
-     *        'name' => 'default',
-     *        'driver' => 'mysql',
-     *        'database' => 'db_name',
-     *        'hostname' => '127.0.0.1',
-     *        'port' => xxxx,
-     *        'username' => 'usrname',
-     *        'password' => '',
-     *        'persistent' => true,
-     * );
-     *
-     * @return void
-     */
-    public function load(array $config): void
-    {
-        foreach ($config as $name => $value) {
-            $key = str_replace('_', '', lcfirst(ucwords($name, '_')));
-            if (property_exists($this, $key)) {
-                if (in_array($key, ['options', 'attributes', 'commands']) && is_array($value)) {
-                    $method = 'set' . ucfirst($key);
-                    if ($key === 'commands') {
-                        $method = 'addCommands';
-                    }
-                    $this->{$method}($value);
-                } else {
-                    $this->{$key} = $value;
-                }
-            }
-        }
-    }
-
-    /**
      * Return the connection driver class name
      * @return string
      */
@@ -463,5 +419,39 @@ class Configuration implements ConfigurationInterface
     public function isPersistent(): bool
     {
         return $this->persistent;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getValidationRules(): array
+    {
+        return [
+            'options' => 'array',
+            'commands' => 'array',
+            'attributes' => 'array',
+            'persistent' => 'boolean',
+            'socket' => 'string',
+            'collation' => 'string',
+            'database' => 'string',
+            'port' => 'integer',
+            'password' => 'string',
+            'username' => 'string',
+            'hostname' => 'string',
+            'appname' => 'string',
+            'charset' => 'string',
+            'name' => 'string',
+            'driver' => 'string'
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSetterMaps(): array
+    {
+        return [
+            'commands' => 'addCommands',
+        ];
     }
 }

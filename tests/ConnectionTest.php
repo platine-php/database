@@ -7,7 +7,6 @@ namespace Platine\Test\Database;
 use InvalidArgumentException;
 use PDO;
 use Platine\Database\Configuration;
-use Platine\Database\ConfigurationInterface;
 use Platine\Database\Connection;
 use Platine\Database\Driver\SQLite;
 use Platine\Database\Exception\ConnectionException;
@@ -38,7 +37,7 @@ class ConnectionTest extends PlatineTestCaseDb
         $this->assertInstanceOf(Schema::class, $e->getSchema());
         $this->assertInstanceOf(PDO::class, $e->getPDO());
         $this->assertInstanceOf(SQLite::class, $e->getDriver());
-        $this->assertInstanceOf(ConfigurationInterface::class, $e->getConfig());
+        $this->assertInstanceOf(Configuration::class, $e->getConfig());
 
         $this->assertEquals('sqlite::memory:', $e->getDsn());
 

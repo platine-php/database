@@ -55,7 +55,6 @@ use Platine\Database\Exception\QueryException;
 use Platine\Database\Exception\QueryPrepareException;
 use Platine\Database\Exception\TransactionException;
 use Platine\Logger\Logger;
-use Platine\Logger\NullHandler;
 
 /**
  * Class Connection
@@ -123,7 +122,7 @@ class Connection
     ) {
         $this->config = $config;
 
-        $this->logger = $logger ?? new Logger(new NullHandler());
+        $this->logger = $logger ?? new Logger();
         $this->logger->setChannel(__CLASS__);
 
         $driverClass = $this->config->getDriverClassName();

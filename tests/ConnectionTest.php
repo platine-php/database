@@ -16,7 +16,6 @@ use Platine\Database\Exception\TransactionException;
 use Platine\Database\ResultSet;
 use Platine\Database\Schema;
 use Platine\Logger\Logger;
-use Platine\Logger\NullHandler;
 use Platine\Test\Fixture\PlatineTestCaseDb;
 
 /**
@@ -47,7 +46,7 @@ class ConnectionTest extends PlatineTestCaseDb
         $this->assertArrayHasKey('driver', $e->getParams());
         $this->assertContains(':memory:', $e->getParams());
 
-        $l = new Logger(new NullHandler());
+        $l = $this->getMockInstance(Logger::class);
 
         $e->setLogger($l);
 

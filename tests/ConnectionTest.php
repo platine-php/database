@@ -145,6 +145,27 @@ class ConnectionTest extends PlatineTestCaseDb
         $this->assertFalse($e->column('select id from tests where id in (?,?)', [null, false]));
     }
 
+    public function testSerialization(): void
+    {
+        $cfg = $this->getDbConnectionConfigOK();
+
+        $e1 = new Connection($cfg);
+
+        $serialize = serialize($e1);
+
+        $this->assertNotEmpty($serialize);
+
+        $cnx = unserialize($serialize);
+
+        $this->loadTestsData($cnx->getPDO());
+
+        $rs = $cnx->query('select * from tests');
+
+        $this->assertInstanceOf(ResultSet::class, $rs);
+        $this->assertEquals(1, $rs->column(0));
+        $this->assertEquals('bar', $rs->column(1));
+    }
+
     public function testQueryPrepareError(): void
     {
         $cfg = $this->getDbConnectionConfigOK();

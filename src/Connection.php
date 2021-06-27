@@ -55,6 +55,7 @@ use Platine\Database\Exception\QueryException;
 use Platine\Database\Exception\QueryPrepareException;
 use Platine\Database\Exception\TransactionException;
 use Platine\Logger\Logger;
+use Platine\Logger\LoggerInterface;
 
 /**
  * Class Connection
@@ -106,19 +107,20 @@ class Connection
     protected array $params = [];
 
     /**
-     * @var Logger
+     * The logger interface test
+     * @var LoggerInterface
      */
-    protected Logger $logger;
+    protected LoggerInterface $logger;
 
     /**
      * Connection constructor.
      * @param Configuration $config
-     * @param Logger $logger
+     * @param LoggerInterface|null $logger
      * @throws ConnectionException
      */
     public function __construct(
         Configuration $config,
-        ?Logger $logger = null
+        ?LoggerInterface $logger = null
     ) {
         $this->config = $config;
 
@@ -171,6 +173,16 @@ class Connection
 
         $this->dsn = $dsn;
 
+        $this->createPDO();
+    }
+
+    /**
+     * Create PDO connection
+     * @return void
+     * @throws ConnectionException
+     */
+    protected function createPDO(): void
+    {
         try {
             $this->pdo = new PDO(
                 $this->dsn,
@@ -198,10 +210,10 @@ class Connection
 
     /**
      *
-     * @param Logger $logger
-     * @return self
+     * @param LoggerInterface $logger
+     * @return $this
      */
-    public function setLogger(Logger $logger): self
+    public function setLogger(LoggerInterface $logger): self
     {
         $this->logger = $logger;
 
@@ -387,6 +399,29 @@ class Connection
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function __sleep()
+    {
+        return [
+            'dsn',
+            'driver',
+            'schema',
+            'config',
+            'params',
+            'logger',
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __wakeup()
+    {
+        $this->createPDO();
+    }
+
+     /**
      * Change the query parameters placeholder with the value
      * @param string $query
      * @param array<int, mixed> $params

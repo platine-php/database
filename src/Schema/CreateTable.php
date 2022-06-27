@@ -388,6 +388,20 @@ class CreateTable
         return $this->addColumn($name, 'fixed')
                         ->length($length);
     }
+    
+    /**
+     *
+     * @param string $name
+     * @param array<mixed> $values
+     * @return CreateColumn
+     */
+    public function enum(
+        string $name,
+        array $values
+    ): CreateColumn {
+        return $this->addColumn($name, 'enum')
+                        ->set('values', $values);
+    }
 
     /**
      *

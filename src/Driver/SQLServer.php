@@ -250,6 +250,16 @@ class SQLServer extends Driver
 
         return $type;
     }
+    
+    /**
+     * @inheritdoc
+     */
+    protected function getTypeEnum(BaseColumn $column): string
+    {
+        // TODO
+
+        return '';
+    }
 
     /**
      * @inheritdoc

@@ -702,6 +702,16 @@ class Driver
     {
         return 'DECIMAL';
     }
+    
+    /**
+     *
+     * @param BaseColumn $column
+     * @return string
+     */
+    protected function getTypeEnum(BaseColumn $column): string
+    {
+        return 'ENUM';
+    }
 
     /**
      *

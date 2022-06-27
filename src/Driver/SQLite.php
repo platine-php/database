@@ -157,6 +157,16 @@ class SQLite extends Driver
     {
         return 'DATETIME';
     }
+    
+    /**
+     * @inheritdoc
+     */
+    protected function getTypeEnum(BaseColumn $column): string
+    {
+        // TODO
+
+        return '';
+    }
 
     /**
      * @inheritDoc

@@ -326,6 +326,20 @@ class AlterTable
         return $this->addColumn($name, 'fixed')
                     ->length($length);
     }
+    
+    /**
+     *
+     * @param string $name
+     * @param array<mixed> $values
+     * @return AlterColumn
+     */
+    public function enum(
+        string $name,
+        array $values
+    ): AlterColumn {
+        return $this->addColumn($name, 'enum')
+                        ->set('values', $values);
+    }
 
     /**
      *
@@ -408,8 +422,10 @@ class AlterTable
     }
 
     /**
-     *
+     * 
      * @param string $name
+     * @param int|null $length
+     * @param int|null $precision
      * @return AlterColumn
      */
     public function toDecimal(
@@ -420,6 +436,20 @@ class AlterTable
         return $this->modifyColumn($name, 'decimal')
                     ->length($length)
                     ->set('precision', $precision);
+    }
+    
+    /**
+     * 
+     * @param string $name
+     * @param array<mixed> $values
+     * @return AlterColumn
+     */
+    public function toEnum(
+        string $name,
+        array $values
+    ): AlterColumn {
+        return $this->modifyColumn($name, 'enum')
+                    ->set('values', $values);
     }
 
     /**

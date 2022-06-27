@@ -839,6 +839,11 @@ class DriverTest extends PlatineTestCase
            'getName' => 'datet_bar',
            'getType' => 'datetime',
         ];
+        
+        $ccEnumMockMethodsMaps = [
+           'getName' => 'enum_bar',
+           'getType' => 'enum',
+        ];
 
         $columns = [
            'bar' => $this->getCreateColumnInstance($ccIntMockMethodsMaps),
@@ -854,6 +859,7 @@ class DriverTest extends PlatineTestCase
            'timestamp_bar' => $this->getCreateColumnInstance($ccTimestampMockMethodsMaps),
            'date_bar' => $this->getCreateColumnInstance($ccDateMockMethodsMaps),
            'datet_bar' => $this->getCreateColumnInstance($ccDatetimeMockMethodsMaps),
+           'enum_bar' => $this->getCreateColumnInstance($ccEnumMockMethodsMaps),
         ];
 
 
@@ -913,6 +919,7 @@ class DriverTest extends PlatineTestCase
 "timestamp_bar" TIMESTAMP,
 "date_bar" DATE,
 "datet_bar" DATETIME,
+"enum_bar" ENUM,
 CONSTRAINT "foo_pk_bar" PRIMARY KEY ("bar"),
 CONSTRAINT "foo_uk_bar" UNIQUE ("bar"),
 CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DELETE CASCADE)
@@ -930,11 +937,6 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
     {
 
         $e = $this->getDriverInstance();
-
-        $acIntMockMethodsMaps = [
-            'getName' => 'bar',
-            'getType' => 'integer',
-        ];
 
         $fkMockMethodsMaps = [
             'getColumns' => ['bar'],

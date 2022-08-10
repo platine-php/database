@@ -54,7 +54,6 @@ use Platine\Database\Schema\BaseColumn;
  */
 class MySQL extends Driver
 {
-
     /**
      * @inheritdoc
      * @var string
@@ -104,7 +103,7 @@ class MySQL extends Driver
 
         return $type;
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -114,8 +113,8 @@ class MySQL extends Driver
         $values = $column->get('values');
 
         if (!empty($values)) {
-           $values = array_map([$this, 'value'], $values);
-           $type = 'ENUM(' . implode(',', $values) . ')';
+            $values = array_map([$this, 'value'], $values);
+            $type = 'ENUM(' . implode(',', $values) . ')';
         }
 
         return $type;

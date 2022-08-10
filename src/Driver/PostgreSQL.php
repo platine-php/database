@@ -56,7 +56,6 @@ use Platine\Database\Schema\CreateTable;
  */
 class PostgreSQL extends Driver
 {
-
     /**
      * @inheritDoc
      */
@@ -171,7 +170,7 @@ class PostgreSQL extends Driver
 
         return $type;
     }
-    
+
     /**
      * @inheritdoc
      */

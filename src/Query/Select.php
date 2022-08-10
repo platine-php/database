@@ -56,7 +56,6 @@ use Platine\Database\ResultSet;
  */
 class Select extends SelectStatement
 {
-
     /**
      * @var Connection
      */

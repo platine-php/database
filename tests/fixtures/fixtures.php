@@ -24,7 +24,6 @@ class Schema extends RealSchema
 
 class Connection extends RealConnection
 {
-
     private string $rawSql = '';
 
     public function __construct($driver)
@@ -83,7 +82,6 @@ class Connection extends RealConnection
 
 class PlatineTestCaseDb extends PlatineTestCase
 {
-
     protected function getDbConnectionConfig(): Configuration
     {
         return new Configuration([

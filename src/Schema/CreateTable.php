@@ -52,7 +52,6 @@ namespace Platine\Database\Schema;
  */
 class CreateTable
 {
-
     /**
      * The list of CreateColumn
      * @var array<string, CreateColumn>
@@ -388,7 +387,7 @@ class CreateTable
         return $this->addColumn($name, 'fixed')
                         ->length($length);
     }
-    
+
     /**
      *
      * @param string $name

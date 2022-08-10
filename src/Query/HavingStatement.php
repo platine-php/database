@@ -54,7 +54,6 @@ use Closure;
  */
 class HavingStatement
 {
-
     /**
      * The Query statement instance
      * @var QueryStatement

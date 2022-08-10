@@ -29,7 +29,6 @@ use Platine\Test\Fixture\Connection;
  */
 class DriverTest extends PlatineTestCase
 {
-
     public function testConstructor(): void
     {
         $e = $this->getDriverInstance();
@@ -839,7 +838,7 @@ class DriverTest extends PlatineTestCase
            'getName' => 'datet_bar',
            'getType' => 'datetime',
         ];
-        
+
         $ccEnumMockMethodsMaps = [
            'getName' => 'enum_bar',
            'getType' => 'enum',

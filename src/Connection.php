@@ -63,7 +63,6 @@ use Platine\Logger\LoggerInterface;
  */
 class Connection
 {
-
     /**
      * The PDO instance
      * @var PDO

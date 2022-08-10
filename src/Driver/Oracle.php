@@ -57,7 +57,6 @@ use Platine\Database\Schema\BaseColumn;
  */
 class Oracle extends Driver
 {
-
     /**
      * @inheritDoc
      */
@@ -238,7 +237,7 @@ class Oracle extends Driver
 
         return $type;
     }
-    
+
     /**
      * @inheritdoc
      */
@@ -248,8 +247,8 @@ class Oracle extends Driver
         $values = $column->get('values');
 
         if (!empty($values)) {
-           $values = array_map([$this, 'value'], $values);
-           $type = 'ENUM(' . implode(',', $values) . ')';
+            $values = array_map([$this, 'value'], $values);
+            $type = 'ENUM(' . implode(',', $values) . ')';
         }
 
         return $type;

@@ -17,7 +17,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class CreateColumnTest extends PlatineTestCase
 {
-
     public function testConstructor(): void
     {
         $ctMockMethods = $this->getClassMethodsToMock(

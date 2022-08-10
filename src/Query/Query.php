@@ -56,7 +56,6 @@ use Platine\Database\ResultSet;
  */
 class Query extends BaseStatement
 {
-
     /**
      * @var Connection
      */

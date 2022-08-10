@@ -52,7 +52,6 @@ namespace Platine\Database\Schema;
  */
 class AlterTable
 {
-
     /**
      * The name of table
      * @var string
@@ -326,7 +325,7 @@ class AlterTable
         return $this->addColumn($name, 'fixed')
                     ->length($length);
     }
-    
+
     /**
      *
      * @param string $name
@@ -422,7 +421,7 @@ class AlterTable
     }
 
     /**
-     * 
+     *
      * @param string $name
      * @param int|null $length
      * @param int|null $precision
@@ -437,9 +436,9 @@ class AlterTable
                     ->length($length)
                     ->set('precision', $precision);
     }
-    
+
     /**
-     * 
+     *
      * @param string $name
      * @param array<mixed> $values
      * @return AlterColumn

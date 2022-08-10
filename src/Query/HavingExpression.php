@@ -57,7 +57,6 @@ use Platine\Database\Query\QueryStatement;
  */
 class HavingExpression
 {
-
     /**
      * The Query statement instance
      * @var QueryStatement

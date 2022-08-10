@@ -54,7 +54,6 @@ use Platine\Database\Connection;
  */
 class Update extends UpdateStatement
 {
-
     /**
      * @var Connection
      */

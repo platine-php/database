@@ -17,7 +17,6 @@ use Platine\Test\Fixture\Connection;
  */
 class InsertTest extends PlatineTestCase
 {
-
     public function testConstructor(): void
     {
         $cnx = new Connection('MySQL');

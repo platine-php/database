@@ -65,7 +65,6 @@ use Platine\Database\Schema\ForeignKey;
  */
 class Driver
 {
-
     /**
      * The driver default date format
      * @var string
@@ -93,7 +92,8 @@ class Driver
         'nullable',
         'default',
         'autoincrement',
-        'description'
+        'description',
+        'after',
     ];
 
     /**
@@ -702,7 +702,7 @@ class Driver
     {
         return 'DECIMAL';
     }
-    
+
     /**
      *
      * @param BaseColumn $column
@@ -841,6 +841,16 @@ class Driver
     protected function getModifierDescription(BaseColumn $column): string
     {
         return $column->get('description', null) === null ? '' : 'COMMENT ' . $this->value($column->get('description'));
+    }
+
+    /**
+     *
+     * @param BaseColumn $column
+     * @return string
+     */
+    protected function getModifierAfter(BaseColumn $column): string
+    {
+        return $column->get('after', null) === null ? '' : 'AFTER ' . $this->quoteIdentifier($column->get('after'));
     }
 
     /**

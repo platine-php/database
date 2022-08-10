@@ -52,7 +52,6 @@ namespace Platine\Database\Query;
  */
 class InsertStatement
 {
-
     /**
      * The Query statement instance
      * @var QueryStatement

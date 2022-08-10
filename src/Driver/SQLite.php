@@ -56,7 +56,6 @@ use Platine\Database\Schema\CreateTable;
  */
 class SQLite extends Driver
 {
-
     /**
      * @inheritdoc
      * @var string
@@ -157,7 +156,7 @@ class SQLite extends Driver
     {
         return 'DATETIME';
     }
-    
+
     /**
      * @inheritdoc
      */

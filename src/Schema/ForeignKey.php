@@ -52,7 +52,6 @@ namespace Platine\Database\Schema;
  */
 class ForeignKey
 {
-
     /**
      * The referenced table
      * @var string

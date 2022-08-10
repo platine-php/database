@@ -54,7 +54,6 @@ use Closure;
  */
 class SelectStatement extends BaseStatement
 {
-
     /**
      * @var HavingStatement
      */

@@ -54,7 +54,6 @@ use Platine\Database\Connection;
  */
 class Insert extends InsertStatement
 {
-
     /**
      * @var Connection
      */

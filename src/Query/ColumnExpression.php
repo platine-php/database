@@ -54,7 +54,6 @@ use Closure;
  */
 class ColumnExpression
 {
-
     /**
      * The Query statement instance
      * @var QueryStatement

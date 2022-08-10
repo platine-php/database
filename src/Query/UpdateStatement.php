@@ -52,7 +52,6 @@ namespace Platine\Database\Query;
  */
 class UpdateStatement extends BaseStatement
 {
-
     /**
      * The Query statement instance
      * @var QueryStatement

@@ -17,7 +17,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class CreateTableTest extends PlatineTestCase
 {
-
     public function testConstructor(): void
     {
         $table = 'foo';

@@ -18,7 +18,6 @@ use Platine\Test\Fixture\Connection;
  */
 class SelectTest extends PlatineTestCase
 {
-
     public function testConstructorFromIsString(): void
     {
         $cnx = new Connection('MySQL');

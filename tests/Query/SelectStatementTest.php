@@ -20,7 +20,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class SelectStatementTest extends PlatineTestCase
 {
-
     public function testConstructorTableIsStringQueryStatementParamIsNull(): void
     {
         $tables = 'foo';

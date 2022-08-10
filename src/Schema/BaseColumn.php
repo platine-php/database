@@ -52,7 +52,6 @@ namespace Platine\Database\Schema;
  */
 class BaseColumn
 {
-
     /**
      * The name of the column
      * @var string

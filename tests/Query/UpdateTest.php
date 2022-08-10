@@ -17,7 +17,6 @@ use Platine\Test\Fixture\Connection;
  */
 class UpdateTest extends PlatineTestCase
 {
-
     public function testConstructorTableIsString(): void
     {
         $cnx = new Connection('MySQL');

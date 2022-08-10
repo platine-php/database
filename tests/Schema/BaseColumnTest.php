@@ -15,7 +15,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class BaseColumnTest extends PlatineTestCase
 {
-
     public function testConstructor(): void
     {
         $name = 'foo';

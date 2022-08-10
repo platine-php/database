@@ -55,7 +55,6 @@ use Platine\Database\Schema\CreateTable;
  */
 class Schema
 {
-
     /**
      * The Connection instance
      * @var Connection

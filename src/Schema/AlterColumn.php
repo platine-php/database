@@ -52,7 +52,6 @@ namespace Platine\Database\Schema;
  */
 class AlterColumn extends BaseColumn
 {
-
     /**
      * The alter table
      * @var AlterTable
@@ -90,6 +89,16 @@ class AlterColumn extends BaseColumn
         }
 
         return $this;
+    }
+
+    /**
+     * Set after for the column
+     * @param string $column
+     * @return $this
+     */
+    public function after(string $column): self
+    {
+        return $this->set('after', $column);
     }
 
     /**

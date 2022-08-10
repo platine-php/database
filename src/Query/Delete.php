@@ -55,7 +55,6 @@ use Platine\Database\Exception\QueryException;
  */
 class Delete extends DeleteStatement
 {
-
     /**
      * @var Connection
      */

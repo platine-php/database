@@ -16,7 +16,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class InsertStatementTest extends PlatineTestCase
 {
-
     public function testConstructorQueryStatementParamIsNull(): void
     {
         $e = new InsertStatement();

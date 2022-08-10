@@ -52,7 +52,6 @@ namespace Platine\Database\Query;
  */
 class DeleteStatement extends BaseStatement
 {
-
     /**
      * DeleteStatement constructor.
      * @param string|array<string> $from

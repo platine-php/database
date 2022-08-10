@@ -52,7 +52,6 @@ namespace Platine\Database\Schema;
  */
 class CreateColumn extends BaseColumn
 {
-
     /**
      * The associated table instance
      * @var CreateTable

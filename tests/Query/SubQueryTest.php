@@ -17,7 +17,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class SubQueryTest extends PlatineTestCase
 {
-
     public function testFromString(): void
     {
         $tables = 'foo';

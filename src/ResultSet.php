@@ -56,7 +56,6 @@ use PDOStatement;
  */
 class ResultSet
 {
-
     /**
      * The PDOStatement instance
      * @var PDOStatement

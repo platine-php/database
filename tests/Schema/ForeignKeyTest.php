@@ -15,7 +15,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class ForeignKeyTest extends PlatineTestCase
 {
-
     public function testConstructor(): void
     {
         $columns = ['foo'];

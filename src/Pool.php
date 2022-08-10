@@ -55,7 +55,6 @@ use Platine\Logger\Logger;
  */
 class Pool
 {
-
     /**
      * The default connection name
      * @var string

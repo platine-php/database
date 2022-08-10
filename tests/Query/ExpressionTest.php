@@ -17,7 +17,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class ExpressionTest extends PlatineTestCase
 {
-
     public function testGetExpressions(): void
     {
         $e = new Expression();

@@ -40,5 +40,4 @@ use RuntimeException;
  */
 class TransactionException extends RuntimeException
 {
-
 }

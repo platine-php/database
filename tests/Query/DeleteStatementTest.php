@@ -16,7 +16,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class DeleteStatementTest extends PlatineTestCase
 {
-
     public function testConstructorFromIsStringQueryStatementParamIsNull(): void
     {
         $from = 'foo';

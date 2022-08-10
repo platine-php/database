@@ -21,7 +21,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class QueryStatementTest extends PlatineTestCase
 {
-
     public function testAddWhereGroup(): void
     {
         $separator = 'AND';

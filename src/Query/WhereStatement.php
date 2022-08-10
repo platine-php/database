@@ -54,7 +54,6 @@ use Closure;
  */
 class WhereStatement
 {
-
     /**
      * The Query statement instance
      * @var QueryStatement

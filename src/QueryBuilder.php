@@ -57,7 +57,6 @@ use Platine\Database\Query\InsertStatement;
  */
 class QueryBuilder
 {
-
     /**
      * The Connection instance
      * @var Connection

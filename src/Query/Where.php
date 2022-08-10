@@ -54,7 +54,6 @@ use Closure;
  */
 class Where
 {
-
     /**
      * @var string|Expression
      */

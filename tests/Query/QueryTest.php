@@ -19,7 +19,6 @@ use Platine\Test\Fixture\Connection;
  */
 class QueryTest extends PlatineTestCase
 {
-
     public function testConstructorTablesIsString(): void
     {
         $cnx = new Connection('MySQL');

@@ -54,7 +54,6 @@ use Closure;
  */
 class Expression
 {
-
     /**
      * The list of expression
      * @var array<int, array<string, mixed>>

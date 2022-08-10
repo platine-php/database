@@ -17,7 +17,6 @@ use Platine\Test\Fixture\Connection;
  */
 class DeleteTest extends PlatineTestCase
 {
-
     public function testConstructorFromIsString(): void
     {
         $cnx = new Connection('MySQL');

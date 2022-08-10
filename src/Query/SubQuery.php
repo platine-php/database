@@ -52,7 +52,6 @@ namespace Platine\Database\Query;
  */
 class SubQuery
 {
-
     /**
      * The SelectStatement instance
      * @var SelectStatement

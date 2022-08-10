@@ -40,5 +40,4 @@ use RuntimeException;
  */
 class QueryPrepareException extends RuntimeException
 {
-
 }

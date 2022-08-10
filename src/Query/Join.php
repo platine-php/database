@@ -54,7 +54,6 @@ use Closure;
  */
 class Join
 {
-
     /**
      * The Join conditions
      * @var array<int, mixed>

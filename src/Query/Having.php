@@ -54,7 +54,6 @@ use Closure;
  */
 class Having
 {
-
     /**
      * @var string|Expression
      */

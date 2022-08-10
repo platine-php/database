@@ -19,7 +19,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class HavingExpressionTest extends PlatineTestCase
 {
-
     public function testConstructor(): void
     {
         /** @var QueryStatement $qs */

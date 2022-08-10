@@ -57,7 +57,6 @@ use Platine\Database\Schema\CreateTable;
  */
 class SQLServer extends Driver
 {
-
     /**
      * @inheritdoc
      * @var string
@@ -250,7 +249,7 @@ class SQLServer extends Driver
 
         return $type;
     }
-    
+
     /**
      * @inheritdoc
      */

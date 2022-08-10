@@ -55,7 +55,6 @@ use Closure;
  */
 class QueryStatement
 {
-
     /**
      * The where SQL parts
      * @var array<int, mixed>

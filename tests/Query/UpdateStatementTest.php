@@ -16,7 +16,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class UpdateStatementTest extends PlatineTestCase
 {
-
     public function testConstructorTableIsStringQueryStatementParamIsNull(): void
     {
         $table = 'foo';

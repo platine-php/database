@@ -17,7 +17,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class JoinTest extends PlatineTestCase
 {
-
     public function testGetJoinConditions(): void
     {
         $e = new Join();

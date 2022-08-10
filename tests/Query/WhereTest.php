@@ -18,7 +18,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class WhereTest extends PlatineTestCase
 {
-
     public function testConstructor(): void
     {
         /** @var QueryStatement $qs */

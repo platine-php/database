@@ -54,7 +54,6 @@ use Closure;
  */
 class BaseStatement extends WhereStatement
 {
-
     /**
      * @param string|string[] $table
      * @param Closure $closure

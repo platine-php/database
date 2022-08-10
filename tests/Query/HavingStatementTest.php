@@ -19,7 +19,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class HavingStatementTest extends PlatineTestCase
 {
-
     public function testConstructorQueryStatementParamIsNull(): void
     {
         $e = new HavingStatement();

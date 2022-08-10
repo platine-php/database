@@ -17,7 +17,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class AlterColumnTest extends PlatineTestCase
 {
-
     public function testConstructor(): void
     {
         $atMockMethods = $this->getClassMethodsToMock(
@@ -125,6 +124,41 @@ class AlterColumnTest extends PlatineTestCase
         $this->assertCount(1, $props);
         $this->assertTrue($e->has($name));
         $this->assertTrue($e->get($name));
+        $this->assertArrayHasKey($name, $props);
+    }
+
+    public function testAfter(): void
+    {
+        $atMockMethods = $this->getClassMethodsToMock(
+            AlterTable::class,
+            []
+        );
+
+        /** @var AlterTable $at */
+        $at = $this->getMockBuilder(AlterTable::class)
+                    ->onlyMethods($atMockMethods)
+                    ->disableOriginalConstructor()
+                    ->getMock();
+
+        $column = 'foo';
+        $name = 'after';
+        $afterColumn = 'bar';
+
+        $e = new AlterColumn($at, $column);
+
+        $props = $e->getProperties();
+
+        $this->assertEmpty($props);
+        $this->assertFalse($e->has($name));
+        $this->assertNull($e->get($name));
+
+        $e->after($afterColumn);
+
+        $props = $e->getProperties();
+
+        $this->assertCount(1, $props);
+        $this->assertTrue($e->has($name));
+        $this->assertEquals($afterColumn, $e->get($name));
         $this->assertArrayHasKey($name, $props);
     }
 }

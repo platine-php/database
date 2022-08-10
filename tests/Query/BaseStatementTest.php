@@ -18,7 +18,6 @@ use Platine\Dev\PlatineTestCase;
  */
 class BaseStatementTest extends PlatineTestCase
 {
-
     public function testConstructorQueryStatementParamIsNull(): void
     {
         $e = new BaseStatement();

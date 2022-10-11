@@ -124,7 +124,7 @@ class Connection
         $this->config = $config;
 
         $this->logger = $logger ?? new Logger();
-        $this->logger->setChannel(__CLASS__);
+        $this->logger->setChannel('db');
 
         $driverClass = $this->config->getDriverClassName();
         $this->driver = new $driverClass($this);

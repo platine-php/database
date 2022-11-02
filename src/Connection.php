@@ -195,7 +195,6 @@ class Connection
             }
         } catch (PDOException $exception) {
             $this->logger->emergency('Can not connect to database. Error message: {error}', [
-                'exception' => $exception,
                 'error' => $exception->getMessage()
             ]);
 
@@ -384,7 +383,6 @@ class Connection
         } catch (PDOException $exception) {
             $this->pdo->rollBack();
             $this->logger->error('Database transaction error. Error message: {error}', [
-                'exception' => $exception,
                 'error' => $exception->getMessage()
             ]);
             throw new TransactionException(
@@ -464,7 +462,6 @@ class Connection
             $statement = $this->pdo->prepare($query);
         } catch (PDOException $exception) {
             $this->logger->error('Error when prepare query [{query}]. Error message: {error}', [
-                'exception' => $exception,
                 'error' => $exception->getMessage(),
                 'query' => $query
             ]);
@@ -512,7 +509,6 @@ class Connection
             );
         } catch (PDOException $exception) {
             $this->logger->error('Error when execute query [{sql}]. Error message: {error}', [
-                'exception' => $exception,
                 'error' => $exception->getMessage(),
                 'sql' => $sql
             ]);

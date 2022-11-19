@@ -117,6 +117,18 @@ class ConnectionTest extends PlatineTestCaseDb
         ])));
     }
 
+    public function testEmulation(): void
+    {
+        $cfg = $this->getDbConnectionConfigOK();
+
+        $e = new Connection($cfg);
+
+        $this->assertFalse($e->getEmulate());
+
+        $e->setEmulate(true);
+        $this->assertTrue($e->getEmulate());
+    }
+
     public function testQuery(): void
     {
         $cfg = $this->getDbConnectionConfigOK();
@@ -127,10 +139,49 @@ class ConnectionTest extends PlatineTestCaseDb
 
         $rs = $e->query('select * from tests');
 
+
+
         $this->assertInstanceOf(ResultSet::class, $rs);
         $this->assertEquals(1, $rs->column(0));
         $this->assertEquals('bar', $rs->column(1));
+        $this->assertEquals('select * from tests', $e->getSql());
+        $this->assertEmpty($e->getValues());
 
+        $rsp = $e->query('select * from tests where id = ?', [3]);
+        $this->assertInstanceOf(ResultSet::class, $rsp);
+        $this->assertEquals(3, $rsp->column(0));
+
+        $this->assertTrue($e->exec('select * from tests'));
+
+        //TODO SQLite Driver always return 0 for PDOStatement::rowCount()
+        //$this->assertEquals(4, $e->count('select * from tests'));
+        $this->assertEquals(0, $e->count('select * from tests'));
+
+        $this->assertEquals(1, $e->column('select id from tests where id = ?', [1]));
+        $this->assertFalse($e->column('select id from tests where id in (?,?)', [null, false]));
+    }
+
+    public function testQueryUsingEmulation(): void
+    {
+        $cfg = $this->getDbConnectionConfigOK();
+
+        $e = new Connection($cfg);
+
+        $this->loadTestsData($e->getPDO());
+
+        $e->setEmulate(true);
+
+        $rs = $e->query('select * from tests');
+
+
+
+        $this->assertInstanceOf(ResultSet::class, $rs);
+        $this->assertFalse($rs->column(0));
+        $this->assertFalse($rs->column(1));
+        $this->assertEquals('select * from tests', $e->getSql());
+        $this->assertEmpty($e->getValues());
+
+        $e->setEmulate(false);
         $rsp = $e->query('select * from tests where id = ?', [3]);
         $this->assertInstanceOf(ResultSet::class, $rsp);
         $this->assertEquals(3, $rsp->column(0));

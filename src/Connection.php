@@ -112,6 +112,24 @@ class Connection
     protected LoggerInterface $logger;
 
     /**
+     * The last execution SQL query
+     * @var string
+     */
+    protected string $sql = '';
+
+    /**
+     * The last execution query parameters values
+     * @var array<mixed>
+     */
+    protected array $values = [];
+
+    /**
+     * Emulate instead of execute the query
+     * @var bool
+     */
+    protected bool $emulate = false;
+
+    /**
      * Connection constructor.
      * @param Configuration $config
      * @param LoggerInterface|null $logger
@@ -173,37 +191,6 @@ class Connection
         $this->dsn = $dsn;
 
         $this->createPDO();
-    }
-
-    /**
-     * Create PDO connection
-     * @return void
-     * @throws ConnectionException
-     */
-    protected function createPDO(): void
-    {
-        try {
-            $this->pdo = new PDO(
-                $this->dsn,
-                $this->config->getUsername(),
-                $this->config->getPassword(),
-                $this->config->getOptions()
-            );
-
-            foreach ($this->config->getCommands() as $command) {
-                $this->pdo->exec($command);
-            }
-        } catch (PDOException $exception) {
-            $this->logger->emergency('Can not connect to database. Error message: {error}', [
-                'error' => $exception->getMessage()
-            ]);
-
-            throw new ConnectionException(
-                'Can not connect to database',
-                (int) $exception->getCode(),
-                $exception->getPrevious()
-            );
-        }
     }
 
     /**
@@ -418,6 +405,76 @@ class Connection
         $this->createPDO();
     }
 
+    /**
+     * Return the last SQL query
+     * @return string
+     */
+    public function getSql(): string
+    {
+        return $this->sql;
+    }
+
+    /**
+     * Return the last query parameters values
+     * @return array<mixed>
+     */
+    public function getValues(): array
+    {
+        return $this->values;
+    }
+
+    /**
+     * Return the emulation status
+     * @return bool
+     */
+    public function getEmulate(): bool
+    {
+        return $this->emulate;
+    }
+
+    /**
+     * Set the emulation status
+     * @param bool $emulate
+     * @return $this
+     */
+    public function setEmulate(bool $emulate): self
+    {
+        $this->emulate = $emulate;
+        return $this;
+    }
+
+
+    /**
+     * Create PDO connection
+     * @return void
+     * @throws ConnectionException
+     */
+    protected function createPDO(): void
+    {
+        try {
+            $this->pdo = new PDO(
+                $this->dsn,
+                $this->config->getUsername(),
+                $this->config->getPassword(),
+                $this->config->getOptions()
+            );
+
+            foreach ($this->config->getCommands() as $command) {
+                $this->pdo->exec($command);
+            }
+        } catch (PDOException $exception) {
+            $this->logger->emergency('Can not connect to database. Error message: {error}', [
+                'error' => $exception->getMessage()
+            ]);
+
+            throw new ConnectionException(
+                'Can not connect to database',
+                (int) $exception->getCode(),
+                $exception->getPrevious()
+            );
+        }
+    }
+
      /**
      * Change the query parameters placeholder with the value
      * @param string $query
@@ -458,6 +515,16 @@ class Connection
      */
     protected function prepare(string $query, array $params): array
     {
+        $this->sql = $query;
+        $this->values = $params;
+        if ($this->emulate) {
+            return [
+                'statement' => new ConnectionStatement(),
+                'query' => $query,
+                'params' => $params
+            ];
+        }
+
         try {
             $statement = $this->pdo->prepare($query);
         } catch (PDOException $exception) {

@@ -144,8 +144,8 @@ class ConnectionTest extends PlatineTestCaseDb
         $this->assertInstanceOf(ResultSet::class, $rs);
         $this->assertEquals(1, $rs->column(0));
         $this->assertEquals('bar', $rs->column(1));
-        $this->assertEquals('select * from tests', $e->getSql());
-        $this->assertEmpty($e->getValues());
+        $this->assertEquals('select * from tests', $e->getSql()[0]);
+        $this->assertEmpty($e->getValues()[0]);
 
         $rsp = $e->query('select * from tests where id = ?', [3]);
         $this->assertInstanceOf(ResultSet::class, $rsp);
@@ -178,8 +178,8 @@ class ConnectionTest extends PlatineTestCaseDb
         $this->assertInstanceOf(ResultSet::class, $rs);
         $this->assertFalse($rs->column(0));
         $this->assertFalse($rs->column(1));
-        $this->assertEquals('select * from tests', $e->getSql());
-        $this->assertEmpty($e->getValues());
+        $this->assertEquals('select * from tests', $e->getSql()[0]);
+        $this->assertEmpty($e->getValues()[0]);
 
         $e->setEmulate(false);
         $rsp = $e->query('select * from tests where id = ?', [3]);

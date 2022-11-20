@@ -112,14 +112,14 @@ class Connection
     protected LoggerInterface $logger;
 
     /**
-     * The last execution SQL query
-     * @var string
+     * The last execution SQL queries
+     * @var array<int, string>
      */
-    protected string $sql = '';
+    protected array $sql = [];
 
     /**
      * The last execution query parameters values
-     * @var array<mixed>
+     * @var array<int, array<mixed>>
      */
     protected array $values = [];
 
@@ -406,17 +406,17 @@ class Connection
     }
 
     /**
-     * Return the last SQL query
-     * @return string
+     * Return the last SQL queries
+     * @return array<string>
      */
-    public function getSql(): string
+    public function getSql(): array
     {
         return $this->sql;
     }
 
     /**
      * Return the last query parameters values
-     * @return array<mixed>
+     * @return array<int, array<mixed>>
      */
     public function getValues(): array
     {
@@ -515,8 +515,8 @@ class Connection
      */
     protected function prepare(string $query, array $params): array
     {
-        $this->sql = $query;
-        $this->values = $params;
+        $this->sql[] = $query;
+        $this->values[] = $params;
         if ($this->emulate) {
             return [
                 'statement' => new ConnectionStatement(),
@@ -558,7 +558,7 @@ class Connection
         $sqlLog = [
             'query' => $prepared['query'],
             'parameters' => implode(', ', $prepared['params']),
-			'emulate' => $this->emulate,
+            'emulate' => $this->emulate,
         ];
 
         try {

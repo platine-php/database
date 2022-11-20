@@ -557,11 +557,9 @@ class Connection
         $sql = $this->replaceParameters($prepared['query'], $prepared['params']);
         $sqlLog = [
             'query' => $prepared['query'],
-            'parameters' => implode(', ', $prepared['params'])
+            'parameters' => implode(', ', $prepared['params']),
+			'emulate' => $this->emulate,
         ];
-		if ($this->emulate) {
-			$sqlLog['emulate'] = true;
-		}
 
         try {
             if ($prepared['params']) {
@@ -574,7 +572,7 @@ class Connection
             $this->logs[] = $sqlLog;
 
             $this->logger->info(
-                'Execute Query: [{query}], parameters: [{parameters}], time: [{time}]',
+                'Execute Query: [{query}], parameters: [{parameters}], time: [{time}], emulation: [{emulate}]',
                 $sqlLog
             );
         } catch (PDOException $exception) {

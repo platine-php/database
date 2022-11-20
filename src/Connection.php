@@ -559,6 +559,9 @@ class Connection
             'query' => $prepared['query'],
             'parameters' => implode(', ', $prepared['params'])
         ];
+		if ($this->emulate) {
+			$sqlLog['emulate'] = true;
+		}
 
         try {
             if ($prepared['params']) {

@@ -153,6 +153,33 @@ class Connection
     }
 
     /**
+     * Start the database transaction
+     * @return bool
+     */
+    public function startTransaction(): bool
+    {
+        return $this->pdo->beginTransaction();
+    }
+
+    /**
+     * Commit database transaction
+     * @return bool
+     */
+    public function commit(): bool
+    {
+        return $this->pdo->commit();
+    }
+
+    /**
+     * Rollback the database transaction
+     * @return bool
+     */
+    public function rollback(): bool
+    {
+        return $this->pdo->rollBack();
+    }
+
+    /**
      * Connect to the database
      * @return void
      */

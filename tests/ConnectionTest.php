@@ -58,6 +58,8 @@ class ConnectionTest extends PlatineTestCaseDb
         $this->assertEquals($l, $logger);
     }
 
+
+
     public function testConnectionAttributesNotSet(): void
     {
         $this->expectException(InvalidArgumentException::class);
@@ -239,6 +241,36 @@ class ConnectionTest extends PlatineTestCaseDb
 
         $this->expectException(QueryException::class);
         $e->query('insert into tests(id, name) values (?, ?) ', [4, uniqid()]);
+    }
+
+    public function testStartCommitTransaction(): void
+    {
+        $cfg = $this->getDbConnectionConfigOK();
+
+        $e = new Connection($cfg);
+
+        $this->loadTestsData($e->getPDO());
+
+        $e->startTransaction();
+        $e->exec('insert into tests(name) values (?)', ['TNH']);
+        $e->commit();
+        $rs = $e->query('select * from tests where name=?', ['TNH']);
+        $this->assertEquals('TNH', $rs->column(1));
+    }
+
+    public function testStartRollbackTransaction(): void
+    {
+        $cfg = $this->getDbConnectionConfigOK();
+
+        $e = new Connection($cfg);
+
+        $this->loadTestsData($e->getPDO());
+
+        $e->startTransaction();
+        $e->exec('insert into tests(name) values (?)', ['TNH']);
+        $e->rollback();
+        $rs = $e->query('select * from tests where name=?', ['TNH']);
+        $this->assertFalse($rs->column(1));
     }
 
     public function testTransaction(): void

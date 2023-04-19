@@ -158,6 +158,8 @@ class Connection
      */
     public function startTransaction(): bool
     {
+        $this->logger->info('start transaction');
+        
         return $this->pdo->beginTransaction();
     }
 
@@ -167,6 +169,8 @@ class Connection
      */
     public function commit(): bool
     {
+        $this->logger->info('commit transaction');
+        
         return $this->pdo->commit();
     }
 
@@ -176,6 +180,8 @@ class Connection
      */
     public function rollback(): bool
     {
+        $this->logger->info('rollback transaction');
+        
         return $this->pdo->rollBack();
     }
 

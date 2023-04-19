@@ -159,7 +159,7 @@ class Connection
      */
     public function startTransaction(string $name = 'default'): bool
     {
-        $this->logger->info('start transaction [{name}]', ['name' => $name]);
+        $this->logger->info('Start transaction [{name}]', ['name' => $name]);
         
         return $this->pdo->beginTransaction();
     }
@@ -171,7 +171,7 @@ class Connection
      */
     public function commit(string $name = 'default'): bool
     {
-        $this->logger->info('commit transaction [{name}]', ['name' => $name]);
+        $this->logger->info('Commit transaction [{name}]', ['name' => $name]);
         
         return $this->pdo->commit();
     }
@@ -183,7 +183,7 @@ class Connection
      */
     public function rollback(string $name = 'default'): bool
     {
-        $this->logger->info('rollback transaction [{name}]', ['name' => $name]);
+        $this->logger->info('Rollback transaction [{name}]', ['name' => $name]);
         
         return $this->pdo->rollBack();
     }

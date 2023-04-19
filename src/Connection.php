@@ -154,33 +154,36 @@ class Connection
 
     /**
      * Start the database transaction
+     * @param string $name
      * @return bool
      */
-    public function startTransaction(): bool
+    public function startTransaction(string $name = 'default'): bool
     {
-        $this->logger->info('start transaction');
+        $this->logger->info('start transaction [{name}]', ['name' => $name]);
         
         return $this->pdo->beginTransaction();
     }
 
     /**
      * Commit database transaction
+     * @param string $name
      * @return bool
      */
-    public function commit(): bool
+    public function commit(string $name = 'default'): bool
     {
-        $this->logger->info('commit transaction');
+        $this->logger->info('commit transaction [{name}]', ['name' => $name]);
         
         return $this->pdo->commit();
     }
 
     /**
      * Rollback the database transaction
+     * @param string $name
      * @return bool
      */
-    public function rollback(): bool
+    public function rollback(string $name = 'default'): bool
     {
-        $this->logger->info('rollback transaction');
+        $this->logger->info('rollback transaction [{name}]', ['name' => $name]);
         
         return $this->pdo->rollBack();
     }

@@ -160,7 +160,7 @@ class Connection
     public function startTransaction(string $name = 'default'): bool
     {
         $this->logger->info('Start transaction [{name}]', ['name' => $name]);
-        
+
         return $this->pdo->beginTransaction();
     }
 
@@ -172,7 +172,7 @@ class Connection
     public function commit(string $name = 'default'): bool
     {
         $this->logger->info('Commit transaction [{name}]', ['name' => $name]);
-        
+
         return $this->pdo->commit();
     }
 
@@ -184,7 +184,7 @@ class Connection
     public function rollback(string $name = 'default'): bool
     {
         $this->logger->info('Rollback transaction [{name}]', ['name' => $name]);
-        
+
         return $this->pdo->rollBack();
     }
 
@@ -458,7 +458,7 @@ class Connection
     {
         return $this->values;
     }
-    
+
     /**
      * Reset the last query SQL and parameters
      * @return $this;
@@ -467,7 +467,7 @@ class Connection
     {
         $this->sql    = [];
         $this->values = [];
-        
+
         return $this;
     }
 
@@ -602,10 +602,10 @@ class Connection
      */
     protected function execute(array $prepared): bool
     {
-        if($this->emulate){
+        if ($this->emulate) {
             return true;
         }
-        
+
         $sql = $this->replaceParameters($prepared['query'], $prepared['params']);
         $sqlLog = [
             'query' => $prepared['query'],

@@ -182,7 +182,7 @@ class ConnectionTest extends PlatineTestCaseDb
         $this->assertFalse($rs->column(1));
         $this->assertEquals('select * from tests', $e->getSql()[0]);
         $this->assertEmpty($e->getValues()[0]);
-        
+
         $e->resetSqlValues();
         $this->assertEmpty($e->getSql());
         $this->assertEmpty($e->getValues());

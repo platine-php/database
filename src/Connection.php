@@ -458,6 +458,18 @@ class Connection
     {
         return $this->values;
     }
+    
+    /**
+     * Reset the last query SQL and parameters
+     * @return $this;
+     */
+    public function resetSqlValues(): self
+    {
+        $this->sql    = [];
+        $this->values = [];
+        
+        return $this;
+    }
 
     /**
      * Return the emulation status

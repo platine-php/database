@@ -610,7 +610,6 @@ class Connection
         $sqlLog = [
             'query' => $prepared['query'],
             'parameters' => implode(', ', $prepared['params']),
-            'emulate' => $this->emulate,
         ];
 
         try {
@@ -624,7 +623,7 @@ class Connection
             $this->logs[] = $sqlLog;
 
             $this->logger->info(
-                'Execute Query: [{query}], parameters: [{parameters}], time: [{time}], emulation: [{emulate}]',
+                'Execute Query: [{query}], parameters: [{parameters}], time: [{time}]',
                 $sqlLog
             );
         } catch (PDOException $exception) {

@@ -602,6 +602,10 @@ class Connection
      */
     protected function execute(array $prepared): bool
     {
+        if($this->emulate){
+            return true;
+        }
+        
         $sql = $this->replaceParameters($prepared['query'], $prepared['params']);
         $sqlLog = [
             'query' => $prepared['query'],

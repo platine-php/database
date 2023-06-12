@@ -285,6 +285,26 @@ class OracleTest extends PlatineTestCase
         $this->assertContains($database, $infos['params']);
     }
 
+    public function testGetViewTables(): void
+    {
+
+        $e = $this->getOracleInstance();
+
+        $database = 'foo';
+
+        $infos = $e->getViews($database);
+
+        $this->assertIsArray($infos);
+        $this->assertArrayHasKey('sql', $infos);
+        $this->assertArrayHasKey('params', $infos);
+
+        $expectedSql = 'SELECT "VIEW_NAME" FROM "ALL_VIEWS" WHERE owner = ?  ORDER BY "VIEW_NAME" ASC';
+
+        $this->assertEquals($expectedSql, $infos['sql']);
+        $this->assertCount(1, $infos['params']);
+        $this->assertContains($database, $infos['params']);
+    }
+
     public function testGetColumns(): void
     {
 
@@ -294,6 +314,31 @@ class OracleTest extends PlatineTestCase
         $table = 'bar';
 
         $infos = $e->getColumns($database, $table);
+
+        $this->assertIsArray($infos);
+        $this->assertArrayHasKey('sql', $infos);
+        $this->assertArrayHasKey('params', $infos);
+
+        $expectedSql = 'SELECT "COLUMN_NAME" AS "NAME", "DATA_TYPE" AS "TYPE" '
+                . 'FROM "ALL_TAB_COLUMNS" WHERE LOWER("OWNER") = ? '
+                . 'AND LOWER("TABLE_NAME") = ? '
+                . 'ORDER BY "COLUMN_ID" ASC';
+
+        $this->assertEquals($expectedSql, $infos['sql']);
+        $this->assertCount(2, $infos['params']);
+        $this->assertEquals($database, $infos['params'][0]);
+        $this->assertEquals($table, $infos['params'][1]);
+    }
+
+    public function testGetViewColumns(): void
+    {
+
+        $e = $this->getOracleInstance();
+
+        $database = 'foo';
+        $table = 'bar';
+
+        $infos = $e->getViewColumns($database, $table);
 
         $this->assertIsArray($infos);
         $this->assertArrayHasKey('sql', $infos);

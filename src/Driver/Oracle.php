@@ -144,6 +144,25 @@ class Oracle extends Driver
     /**
      * @inheritDoc
      */
+    public function getViews(string $database): array
+    {
+        $sql = sprintf(
+            'SELECT %s FROM %s WHERE owner = ? '
+                . ' ORDER BY %s ASC',
+            $this->quoteIdentifier('view_name'),
+            $this->quoteIdentifier('all_views'),
+            $this->quoteIdentifier('view_name'),
+        );
+
+        return [
+            'sql' => $sql,
+            'params' => [$database]
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getColumns(string $database, string $table): array
     {
         $sql = sprintf(
@@ -162,6 +181,30 @@ class Oracle extends Driver
         return [
             'sql' => $sql,
             'params' => [$database, $table]
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getViewColumns(string $database, string $view): array
+    {
+        $sql = sprintf(
+            'SELECT %s AS %s, %s AS %s FROM %s WHERE LOWER(%s) = ? '
+                . 'AND LOWER(%s) = ? ORDER BY %s ASC',
+            $this->quoteIdentifier('column_name'),
+            $this->quoteIdentifier('name'),
+            $this->quoteIdentifier('data_type'),
+            $this->quoteIdentifier('type'),
+            $this->quoteIdentifier('all_tab_columns'),
+            $this->quoteIdentifier('owner'),
+            $this->quoteIdentifier('table_name'),
+            $this->quoteIdentifier('column_id'),
+        );
+
+        return [
+            'sql' => $sql,
+            'params' => [$database, $view]
         ];
     }
 

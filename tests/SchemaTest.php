@@ -94,6 +94,20 @@ class SchemaTest extends PlatineTestCaseDb
         $this->assertTrue($e->hasTable('tests'));
     }
 
+    public function testHasView(): void
+    {
+        $cfg = $this->getDbConnectionConfigOK();
+
+        $cnx = new Connection($cfg);
+
+        $this->loadTestsData($cnx->getPDO());
+
+        $e = new Schema($cnx);
+
+        $this->assertFalse($e->hasView('goo'));
+        $this->assertTrue($e->hasView('v_tests'));
+    }
+
     public function testGetTables(): void
     {
         $cfg = $this->getDbConnectionConfigOK();
@@ -112,6 +126,22 @@ class SchemaTest extends PlatineTestCaseDb
         $this->assertArrayHasKey('tests', $tables);
     }
 
+    public function testGetViews(): void
+    {
+        $cfg = $this->getDbConnectionConfigOK();
+
+        $cnx = new Connection($cfg);
+
+        $this->loadTestsData($cnx->getPDO());
+
+        $e = new Schema($cnx);
+
+        $tables = $e->getViews(true);
+
+        $this->assertCount(1, $tables);
+        $this->assertArrayHasKey('v_tests', $tables);
+    }
+
     public function testGetColumnsTableNotExists(): void
     {
         $cfg = $this->getDbConnectionConfigOK();
@@ -123,6 +153,20 @@ class SchemaTest extends PlatineTestCaseDb
         $e = new Schema($cnx);
 
         $columns = $e->getColumns('not_found_table', true);
+        $this->assertEmpty($columns);
+    }
+
+    public function testGetViewColumnsViewNotExists(): void
+    {
+        $cfg = $this->getDbConnectionConfigOK();
+
+        $cnx = new Connection($cfg);
+
+        $this->loadTestsData($cnx->getPDO());
+
+        $e = new Schema($cnx);
+
+        $columns = $e->getViewColumns('not_found_view', true);
         $this->assertEmpty($columns);
     }
 
@@ -143,6 +187,22 @@ class SchemaTest extends PlatineTestCaseDb
         $this->assertEquals('name', $columns[1]);
     }
 
+    public function testGetViewColumnsNamed(): void
+    {
+        $cfg = $this->getDbConnectionConfigOK();
+
+        $cnx = new Connection($cfg);
+
+        $this->loadTestsData($cnx->getPDO());
+
+        $e = new Schema($cnx);
+
+        $columns = $e->getViewColumns('v_tests', true, true);
+
+        $this->assertCount(1, $columns);
+        $this->assertEquals('name', $columns[0]);
+    }
+
     public function testGetColumnsNotNamed(): void
     {
         $cfg = $this->getDbConnectionConfigOK();
@@ -157,6 +217,22 @@ class SchemaTest extends PlatineTestCaseDb
 
         $this->assertCount(2, $columns);
         $this->assertArrayHasKey('id', $columns);
+        $this->assertArrayHasKey('name', $columns);
+    }
+
+    public function testGetViewColumnsNotNamed(): void
+    {
+        $cfg = $this->getDbConnectionConfigOK();
+
+        $cnx = new Connection($cfg);
+
+        $this->loadTestsData($cnx->getPDO());
+
+        $e = new Schema($cnx);
+
+        $columns = $e->getViewColumns('v_tests', true, false);
+
+        $this->assertCount(1, $columns);
         $this->assertArrayHasKey('name', $columns);
     }
 

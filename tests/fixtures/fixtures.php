@@ -108,9 +108,12 @@ class PlatineTestCaseDb extends PlatineTestCase
     protected function loadTestsData(PDO $pdo): void
     {
         $this->assertTrue($pdo->exec('drop table if exists tests') >= 0);
+        $this->assertTrue($pdo->exec('drop view if exists v_tests') >= 0);
 
         $this->assertTrue($pdo->exec('create table tests('
                 . 'id integer primary key autoincrement, name text)') >= 0);
+
+        $this->assertTrue($pdo->exec('create view v_tests AS select name FROM tests') >= 0);
 
 
         $data = [

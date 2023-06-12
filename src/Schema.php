@@ -68,6 +68,12 @@ class Schema
     protected array $tables = [];
 
     /**
+     * The list of views
+     * @var array<string, string>
+     */
+    protected array $views = [];
+
+    /**
      * The current database name
      * @var string
      */
@@ -124,6 +130,19 @@ class Schema
     }
 
     /**
+     * Check whether the given view exists
+     * @param string $view
+     * @param bool $skipCache
+     * @return bool
+     */
+    public function hasView(string $view, bool $skipCache = false): bool
+    {
+        $list = $this->getViews($skipCache);
+
+        return isset($list[strtolower($view)]);
+    }
+
+    /**
      * Return the list of tables for the current database
      * @param bool $skipCache whether to use the cached data or not
      * @return array<string, string>
@@ -149,6 +168,34 @@ class Schema
         }
 
         return $this->tables;
+    }
+
+    /**
+     * Return the list of views for the current database
+     * @param bool $skipCache whether to use the cached data or not
+     * @return array<string, string>
+     */
+    public function getViews(bool $skipCache = false): array
+    {
+        if ($skipCache) {
+            $this->views = [];
+        }
+
+        if (empty($this->views)) {
+            $driver = $this->connection->getDriver();
+            $databaseName = $this->getDatabaseName();
+            $sql = $driver->getViews($databaseName);
+
+            $results = $this->connection
+                                        ->query($sql['sql'], $sql['params'])
+                                        ->fetchNum();
+
+            while ($result = $results->next()) {
+                $this->views[strtolower($result[0])] = $result[0];
+            }
+        }
+
+        return $this->views;
     }
 
     /**
@@ -197,6 +244,54 @@ class Schema
         }
 
         return $names ? array_keys($this->columns[$table]) : $this->columns[$table];
+    }
+
+    /**
+     * Return the list of columns for the given view
+     * @param string $view
+     * @param bool $skipCache
+     * @param bool $names whether to return only the columns names
+     * @return string[]|array<string, array<string, string>>
+     */
+    public function getViewColumns(
+        string $view,
+        bool $skipCache = false,
+        bool $names = true
+    ) {
+        if ($skipCache) {
+            unset($this->columns[$view]);
+        }
+
+        if (!$this->hasView($view, $skipCache)) {
+            return [];
+        }
+
+        if (!isset($this->columns[$view])) {
+            $driver = $this->connection->getDriver();
+            $databaseName = $this->getDatabaseName();
+            $sql = $driver->getViewColumns($databaseName, $view);
+
+            $results = $this->connection
+                                        ->query($sql['sql'], $sql['params'])
+                                        ->fetchAssoc();
+
+            /** @var array<string, array<string, string>> $columns */
+            $columns = [];
+
+            while (
+                    /** @var array<string, string>> $col */
+                    $col = $results->next()
+            ) {
+                $columns[$col['name']] = [
+                    'name' => $col['name'],
+                    'type' => $col['type'],
+                ];
+            }
+
+            $this->columns[$view] = $columns;
+        }
+
+        return $names ? array_keys($this->columns[$view]) : $this->columns[$view];
     }
 
     /**

@@ -336,6 +336,28 @@ class Driver
     /**
      *
      * @param string $database
+     * @return array<string, mixed>
+     */
+    public function getViews(string $database): array
+    {
+        $sql = sprintf(
+            'SELECT %s FROM %s.%s WHERE table_type = ? '
+                . 'AND table_schema = ? ORDER BY %s ASC',
+            $this->quoteIdentifier('table_name'),
+            $this->quoteIdentifier('information_schema'),
+            $this->quoteIdentifier('tables'),
+            $this->quoteIdentifier('table_name'),
+        );
+
+        return [
+            'sql' => $sql,
+            'params' => ['VIEW', $database]
+        ];
+    }
+
+    /**
+     *
+     * @param string $database
      * @param string $table
      * @return array<string, mixed>
      */
@@ -358,6 +380,34 @@ class Driver
         return [
             'sql' => $sql,
             'params' => [$database, $table]
+        ];
+    }
+
+    /**
+     *
+     * @param string $database
+     * @param string $view
+     * @return array<string, mixed>
+     */
+    public function getViewColumns(string $database, string $view): array
+    {
+        $sql = sprintf(
+            'SELECT %s AS %s, %s AS %s FROM %s.%s WHERE %s = ? '
+                . 'AND %s = ? ORDER BY %s ASC',
+            $this->quoteIdentifier('column_name'),
+            $this->quoteIdentifier('name'),
+            $this->quoteIdentifier('column_type'),
+            $this->quoteIdentifier('type'),
+            $this->quoteIdentifier('information_schema'),
+            $this->quoteIdentifier('columns'),
+            $this->quoteIdentifier('table_schema'),
+            $this->quoteIdentifier('table_name'),
+            $this->quoteIdentifier('ordinal_position'),
+        );
+
+        return [
+            'sql' => $sql,
+            'params' => [$database, $view]
         ];
     }
 

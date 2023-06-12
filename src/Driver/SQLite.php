@@ -116,11 +116,46 @@ class SQLite extends Driver
     /**
      * @inheritDoc
      */
+    public function getViews(string $database): array
+    {
+        $sql = sprintf(
+            'SELECT %s FROM %s WHERE type = ? '
+                . ' ORDER BY %s ASC',
+            $this->quoteIdentifier('name'),
+            $this->quoteIdentifier('sqlite_master'),
+            $this->quoteIdentifier('name'),
+        );
+
+        return [
+            'sql' => $sql,
+            'params' => ['view']
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getColumns(string $database, string $table): array
     {
         $sql = sprintf(
             'PRAGMA table_info(%s)',
             $this->quoteIdentifier($table)
+        );
+
+        return [
+            'sql' => $sql,
+            'params' => []
+        ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getViewColumns(string $database, string $view): array
+    {
+        $sql = sprintf(
+            'PRAGMA table_info(%s)',
+            $this->quoteIdentifier($view)
         );
 
         return [

@@ -60,6 +60,26 @@ class SQLiteTest extends PlatineTestCase
         $this->assertContains('table', $infos['params']);
     }
 
+    public function testGetViews(): void
+    {
+
+        $e = $this->getSQLiteInstance();
+
+        $database = 'foo';
+
+        $infos = $e->getViews($database);
+
+        $this->assertIsArray($infos);
+        $this->assertArrayHasKey('sql', $infos);
+        $this->assertArrayHasKey('params', $infos);
+
+        $expectedSql = 'SELECT `name` FROM `sqlite_master` WHERE type = ?  ORDER BY `name` ASC';
+
+        $this->assertEquals($expectedSql, $infos['sql']);
+        $this->assertCount(1, $infos['params']);
+        $this->assertContains('view', $infos['params']);
+    }
+
     public function testGetColumns(): void
     {
 
@@ -69,6 +89,26 @@ class SQLiteTest extends PlatineTestCase
         $table = 'bar';
 
         $infos = $e->getColumns($database, $table);
+
+        $this->assertIsArray($infos);
+        $this->assertArrayHasKey('sql', $infos);
+        $this->assertArrayHasKey('params', $infos);
+
+        $expectedSql = sprintf('PRAGMA table_info(`%s`)', $table);
+
+        $this->assertEquals($expectedSql, $infos['sql']);
+        $this->assertEmpty($infos['params']);
+    }
+
+    public function testGetViewColumns(): void
+    {
+
+        $e = $this->getSQLiteInstance();
+
+        $database = 'foo';
+        $table = 'bar';
+
+        $infos = $e->getViewColumns($database, $table);
 
         $this->assertIsArray($infos);
         $this->assertArrayHasKey('sql', $infos);

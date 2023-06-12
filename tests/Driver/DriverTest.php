@@ -694,6 +694,34 @@ class DriverTest extends PlatineTestCase
         $this->assertContains($database, $infos['params']);
     }
 
+    public function testGetViews(): void
+    {
+
+        $e = $this->getDriverInstance();
+
+        $database = 'foo';
+
+        $infos = $e->getViews($database);
+
+        $this->assertIsArray($infos);
+        $this->assertArrayHasKey('sql', $infos);
+        $this->assertArrayHasKey('params', $infos);
+
+        $expectedSql = sprintf(
+            'SELECT "%s" FROM "%s"."%s" WHERE '
+                . 'table_type = ? AND table_schema = ? ORDER BY "%s" ASC',
+            'table_name',
+            'information_schema',
+            'tables',
+            'table_name',
+        );
+
+        $this->assertEquals($expectedSql, $infos['sql']);
+        $this->assertCount(2, $infos['params']);
+        $this->assertContains('VIEW', $infos['params']);
+        $this->assertContains($database, $infos['params']);
+    }
+
     public function testGetColumns(): void
     {
 
@@ -703,6 +731,40 @@ class DriverTest extends PlatineTestCase
         $table = 'bar';
 
         $infos = $e->getColumns($database, $table);
+
+        $this->assertIsArray($infos);
+        $this->assertArrayHasKey('sql', $infos);
+        $this->assertArrayHasKey('params', $infos);
+
+        $expectedSql = sprintf(
+            'SELECT "%s" AS "%s", "%s" AS "%s" '
+                . 'FROM "%s"."%s" WHERE "%s" = ? AND "%s" = ? ORDER BY "%s" ASC',
+            'column_name',
+            'name',
+            'column_type',
+            'type',
+            'information_schema',
+            'columns',
+            'table_schema',
+            'table_name',
+            'ordinal_position',
+        );
+
+        $this->assertEquals($expectedSql, $infos['sql']);
+        $this->assertCount(2, $infos['params']);
+        $this->assertContains($table, $infos['params']);
+        $this->assertContains($database, $infos['params']);
+    }
+
+    public function testGetViewColumns(): void
+    {
+
+        $e = $this->getDriverInstance();
+
+        $database = 'foo';
+        $table = 'bar';
+
+        $infos = $e->getViewColumns($database, $table);
 
         $this->assertIsArray($infos);
         $this->assertArrayHasKey('sql', $infos);

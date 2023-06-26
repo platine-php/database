@@ -618,7 +618,8 @@ class Connection
             }
             $start = microtime(true);
             $result = $prepared['statement']->execute();
-            $sqlLog['time'] = number_format(microtime(true) - $start, 6);
+            $executionTime = microtime(true) - $start;
+            $sqlLog['time'] = number_format($executionTime, 6);
 
             $this->logs[] = $sqlLog;
 
@@ -626,6 +627,13 @@ class Connection
                 'Execute Query: [{query}], parameters: [{parameters}], time: [{time}]',
                 $sqlLog
             );
+
+            if ($executionTime >= 1) { // TODO use configuration
+                $this->logger->warning(
+                    'Query: [{query}] cost too much time: [{time}]',
+                    $sqlLog
+                );
+            }
         } catch (PDOException $exception) {
             $this->logger->error('Error when execute query [{sql}]. Error message: {error}', [
                 'error' => $exception->getMessage(),

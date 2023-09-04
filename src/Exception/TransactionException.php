@@ -32,12 +32,10 @@ declare(strict_types=1);
 
 namespace Platine\Database\Exception;
 
-use RuntimeException;
-
 /**
  * Class TransactionException
  * @package Platine\Database\Exception
  */
-class TransactionException extends RuntimeException
+class TransactionException extends DatabaseException
 {
 }

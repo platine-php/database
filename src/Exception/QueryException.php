@@ -32,12 +32,10 @@ declare(strict_types=1);
 
 namespace Platine\Database\Exception;
 
-use RuntimeException;
-
 /**
  * Class QueryException
  * @package Platine\Database\Exception
  */
-class QueryException extends RuntimeException
+class QueryException extends DatabaseException
 {
 }

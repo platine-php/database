@@ -28,53 +28,16 @@
  * SOFTWARE.
  */
 
-/**
- *  @file ConnectionStatement.php
- *
- *  The connection statement to be used in emulation mode class
- *
- *  @package    Platine\Database
- *  @author Platine Developers Team
- *  @copyright  Copyright (c) 2020
- *  @license    http://opensource.org/licenses/MIT  MIT License
- *  @link   https://www.platine-php.com
- *  @version 1.0.0
- *  @filesource
- */
-
 declare(strict_types=1);
 
-namespace Platine\Database;
+namespace Platine\Database\Exception;
 
-use PDOStatement;
+use Exception;
 
 /**
- * Class ConnectionStatement
- * @package Platine\Database
+ * Class DatabaseException
+ * @package Platine\Database\Exception
  */
-class ConnectionStatement extends PDOStatement
+class DatabaseException extends Exception
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function closeCursor(): bool
-    {
-        return true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function execute($input_parameters = null): bool
-    {
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rowCount(): int
-    {
-        return 0;
-    }
 }

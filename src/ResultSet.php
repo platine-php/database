@@ -86,7 +86,7 @@ class ResultSet
      */
     public function count(): int
     {
-        return $this->statement->rowCount();
+        return (int) $this->statement->rowCount();
     }
 
     /**

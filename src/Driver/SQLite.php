@@ -69,7 +69,6 @@ class SQLite extends Driver
         'nullable',
         'default',
         'autoincrement',
-        'description'
     ];
 
     /**

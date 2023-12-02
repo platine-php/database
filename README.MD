@@ -5,11 +5,10 @@
 [![Latest Stable Version](https://poser.pugx.org/platine-php/database/v)](https://packagist.org/packages/platine-php/database)
 [![Latest Unstable Version](https://poser.pugx.org/platine-php/database/v/unstable)](https://packagist.org/packages/platine-php/database)
 [![Total Downloads](https://poser.pugx.org/platine-php/database/downloads)](https://packagist.org/packages/platine-php/database)
-[![License](https://poser.pugx.org/platine-php/database/license)](https://packagist.org/packages/platine-php/database)
-[![Build Status](https://img.shields.io/travis/com/platine-php/database?style=flat-square)](https://travis-ci.com/platine-php/database)  
+[![License](https://poser.pugx.org/platine-php/database/license)](https://packagist.org/packages/platine-php/database)  
 [![Quality Score](https://img.shields.io/scrutinizer/g/platine-php/database.svg?style=flat-square)](https://scrutinizer-ci.com/g/platine-php/database)
-[![Maintainability](https://api.codeclimate.com/v1/badges/15c5b5181e9019729d60/maintainability)](https://codeclimate.com/github/platine-php/database/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/15c5b5181e9019729d60/test_coverage)](https://codeclimate.com/github/platine-php/database/test_coverage)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/51201686896c457eb59468ffbed88a87)](https://app.codacy.com/gh/platine-php/database/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/51201686896c457eb59468ffbed88a87)](https://app.codacy.com/gh/platine-php/database/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 
 ### Requirements 
 - **PHP >= 7.4**, **PHP 8** 
@@ -30,5 +29,6 @@ composer require platine-php/database
 ### License
 MIT License and Apache License 2.0 See [LICENSE.MD](LICENSE.MD)
 
-### Documentation 
-Coming soon, be patient
+
+### Resources
+- [Documentation](https://docs.platine-php.com/packages/database)

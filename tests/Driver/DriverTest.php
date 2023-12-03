@@ -827,7 +827,7 @@ class DriverTest extends PlatineTestCase
 "bar" INT)
 ';
 
-        $this->assertEquals($expectedSql, $infos[0]['sql']);
+        $this->assertCommandOutput($expectedSql, $infos[0]['sql']);
         $this->assertEmpty($infos[0]['params']);
     }
 
@@ -988,7 +988,7 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
 
         $expectedSqlIndexes = 'CREATE INDEX "foo_ik_bar" ON "bar"("bar")';
 
-        $this->assertEquals($expectedSql, $infos[0]['sql']);
+        $this->assertCommandOutput($expectedSql, $infos[0]['sql']);
         $this->assertEquals($expectedSqlIndexes, $infos[1]['sql']);
         $this->assertEmpty($infos[0]['params']);
         $this->assertEmpty($infos[1]['params']);

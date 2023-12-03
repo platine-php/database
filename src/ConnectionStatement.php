@@ -77,7 +77,7 @@ class ConnectionStatement extends PDOStatement
     {
         return 0;
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -85,5 +85,4 @@ class ConnectionStatement extends PDOStatement
     {
         return false;
     }
-
 }

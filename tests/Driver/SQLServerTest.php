@@ -473,7 +473,7 @@ class SQLServerTest extends PlatineTestCase
 [col_ts] DATETIME)
 ';
 
-        $this->assertEquals($expectedSql, $infos[0]['sql']);
+        $this->assertCommandOutput($expectedSql, $infos[0]['sql']);
         $this->assertEmpty($infos[0]['params']);
     }
 

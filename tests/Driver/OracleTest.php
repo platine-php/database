@@ -638,7 +638,7 @@ class OracleTest extends PlatineTestCase
 "COL_DATETIME" DATE)
 ';
 
-        $this->assertEquals($expectedSql, $infos[0]['sql']);
+        $this->assertCommandOutput($expectedSql, $infos[0]['sql']);
         $this->assertEmpty($infos[0]['params']);
     }
 

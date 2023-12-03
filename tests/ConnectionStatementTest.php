@@ -35,4 +35,11 @@ class ConnectionStatementTest extends PlatineTestCase
 
         $this->assertEquals(0, $o->rowCount());
     }
+    
+    public function testFetchColumn(): void
+    {
+        $o = new ConnectionStatement();
+
+        $this->assertFalse($o->fetchColumn());
+    }
 }

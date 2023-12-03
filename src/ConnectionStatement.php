@@ -77,4 +77,13 @@ class ConnectionStatement extends PDOStatement
     {
         return 0;
     }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function fetchColumn($column = null)
+    {
+        return false;
+    }
+
 }

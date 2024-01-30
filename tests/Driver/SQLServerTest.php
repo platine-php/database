@@ -412,6 +412,14 @@ class SQLServerTest extends PlatineTestCase
         $binary = $this->getCreateColumnInstance($ccBinaryMockMethodsMaps);
         $binary->set('size', 'normal');
 
+        //Enum
+        $ccEnumMockMethodsMaps = [
+            'getName' => 'col_enum',
+            'getType' => 'enum',
+        ];
+        $enum = $this->getCreateColumnInstance($ccEnumMockMethodsMaps);
+        $enum->set('values', ['Y', 'N']);
+
         $columns = [
             'col_int' => $int,
             'col_tiny_int' => $tiny,
@@ -434,7 +442,7 @@ class SQLServerTest extends PlatineTestCase
             'col_fixed' => $fixed,
 
             'col_ts' => $ts,
-
+            'col_enum' => $enum,
         ];
 
         $ctMockMethodsMaps = [
@@ -470,7 +478,8 @@ class SQLServerTest extends PlatineTestCase
 [col_bool] BIT,
 [col_str] NVARCHAR(255),
 [col_fixed] NCHAR(255),
-[col_ts] DATETIME)
+[col_ts] DATETIME,
+[col_enum])
 ';
 
         $this->assertCommandOutput($expectedSql, $infos[0]['sql']);

@@ -235,12 +235,19 @@ class SQLiteTest extends PlatineTestCase
         //Timestamp
         $timestamp = $this->getCreateColumnInstance($ccTimestampSimpleMockMethodsMaps);
 
+        //Enum
+        $ccEnumMockMethodsMaps = [
+            'getName' => 'col_enum',
+            'getType' => 'enum',
+        ];
+        $enum = $this->getCreateColumnInstance($ccEnumMockMethodsMaps);
+        $enum->set('values', ['Y', 'N']);
+
         $columns = [
             'col_int' => $int,
-
             'col_time' => $time,
-
             'col_timestamp' => $timestamp,
+            'col_enum' => $enum,
         ];
 
         $ctMockMethodsMaps = [
@@ -265,7 +272,8 @@ class SQLiteTest extends PlatineTestCase
         $expectedSql = 'CREATE TABLE `bar`(
 `col_int` INTEGER PRIMARY KEY AUTOINCREMENT,
 `col_time` DATETIME,
-`col_timestamp` DATETIME)
+`col_timestamp` DATETIME,
+`col_enum`)
 ';
 
         $this->assertCommandOutput($expectedSql, $infos[0]['sql']);

@@ -289,6 +289,14 @@ class PostgreSQLTest extends PlatineTestCase
         //Timestamp
         $timestamp = $this->getCreateColumnInstance($ccTimestampSimpleMockMethodsMaps);
 
+        //Enum
+        $ccEnumMockMethodsMaps = [
+            'getName' => 'col_enum',
+            'getType' => 'enum',
+        ];
+        $enum = $this->getCreateColumnInstance($ccEnumMockMethodsMaps);
+        $enum->set('values', ['Y', 'N']);
+
         $columns = [
             'col_int' => $int,
             'col_tiny_int' => $tiny,
@@ -315,6 +323,7 @@ class PostgreSQLTest extends PlatineTestCase
             'col_double' => $double,
 
             'col_float' => $float,
+            'col_enum' => $enum,
 
         ];
 
@@ -355,7 +364,8 @@ class PostgreSQLTest extends PlatineTestCase
 "col_timestamp" TIMESTAMP(0) WITHOUT TIME ZONE,
 "col_datetime" TIMESTAMP(0) WITHOUT TIME ZONE,
 "col_double" DOUBLE PRECISION,
-"col_double" REAL)
+"col_double" REAL,
+"col_enum")
 ';
 
         $this->assertCommandOutput($expectedSql, $infos[0]['sql']);

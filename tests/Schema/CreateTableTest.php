@@ -350,7 +350,8 @@ class CreateTableTest extends PlatineTestCase
         $useLength = false,
         $usePrecision = false,
         $precision = 1,
-        $length = 100
+        $length = 100,
+        $params = null
     ): void {
         $table = 'foo';
         $name = 'my_column';
@@ -368,6 +369,8 @@ class CreateTableTest extends PlatineTestCase
         } elseif ($useLength) {
             $col = $e->{$method}($name, $length);
             $this->assertEquals($col->get('length'), $length);
+        } elseif ($params !== null) {
+            $col = $e->{$method}($name, $params);
         } else {
             $col = $e->{$method}($name);
         }
@@ -400,6 +403,7 @@ class CreateTableTest extends PlatineTestCase
             array('time', 'time', false, false, 1, 200),
             array('timestamp', 'timestamp', false, false, 1, 200),
             array('date', 'date', false, false, 1, 200),
+            array('enum', 'enum', false, false, 1, 200, ['Y', 'N']),
             array('datetime', 'datetime', false, false, 1, 200),
         );
     }

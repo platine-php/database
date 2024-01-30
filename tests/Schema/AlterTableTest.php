@@ -167,7 +167,8 @@ class AlterTableTest extends PlatineTestCase
         $useLength = false,
         $usePrecision = false,
         $precision = 1,
-        $length = 100
+        $length = 100,
+        $params = null
     ): void {
         $table = 'foo';
         $name = 'my_column';
@@ -185,6 +186,8 @@ class AlterTableTest extends PlatineTestCase
         } elseif ($useLength) {
             $col = $e->{$method}($name, $length);
             $this->assertEquals($col->get('length'), $length);
+        } elseif ($params !== null) {
+            $col = $e->{$method}($name, $params);
         } else {
             $col = $e->{$method}($name);
         }
@@ -212,7 +215,8 @@ class AlterTableTest extends PlatineTestCase
         $useLength = false,
         $usePrecision = false,
         $precision = 1,
-        $length = 100
+        $length = 1000,
+        $params = null
     ): void {
         $table = 'foo';
         $name = 'my_column';
@@ -230,6 +234,8 @@ class AlterTableTest extends PlatineTestCase
         } elseif ($useLength) {
             $col = $e->{$method}($name, $length);
             $this->assertEquals($col->get('length'), $length);
+        } elseif ($params !== null) {
+            $col = $e->{$method}($name, $params);
         } else {
             $col = $e->{$method}($name);
         }
@@ -303,6 +309,7 @@ class AlterTableTest extends PlatineTestCase
             array('toTime', 'time', false, false, 1, 200),
             array('toTimestamp', 'timestamp', false, false, 1, 200),
             array('toDate', 'date', false, false, 1, 200),
+            array('toEnum', 'enum', false, false, 1, 200, ['Y', 'N']),
             array('toDatetime', 'datetime', false, false, 1, 200),
         );
     }
@@ -324,6 +331,7 @@ class AlterTableTest extends PlatineTestCase
             array('string', 'string', true, false, 1, 200),
             array('fixed', 'fixed', true, false, 1, 200),
             array('text', 'text', false, false, 1, 200),
+            array('enum', 'enum', false, false, 1, 200, ['Y', 'N']),
             array('time', 'time', false, false, 1, 200),
             array('timestamp', 'timestamp', false, false, 1, 200),
             array('date', 'date', false, false, 1, 200),

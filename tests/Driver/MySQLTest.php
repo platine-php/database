@@ -189,6 +189,14 @@ class MySQLTest extends PlatineTestCase
         $binaryBig = $this->getCreateColumnInstance($ccBinaryBigMockMethodsMaps);
         $binaryBig->set('size', 'big');
 
+        //Enum
+        $ccEnumMockMethodsMaps = [
+            'getName' => 'col_enum',
+            'getType' => 'enum',
+        ];
+        $enum = $this->getCreateColumnInstance($ccEnumMockMethodsMaps);
+        $enum->set('values', ['Y', 'N']);
+
         $columns = [
             'col_int' => $int,
             'col_tiny_int' => $tiny,
@@ -213,6 +221,7 @@ class MySQLTest extends PlatineTestCase
             'col_dec_pre' => $decPrecision,
 
             'col_bool' => $bool,
+            'col_enum' => $enum,
         ];
 
         $ctMockMethodsMaps = [
@@ -252,7 +261,8 @@ class MySQLTest extends PlatineTestCase
 `col_dec_sim` DECIMAL,
 `col_dec_len` DECIMAL(10),
 `col_dec_pre` DECIMAL(10, 2),
-`col_bool` TINYINT(1))
+`col_bool` TINYINT(1),
+`col_enum` ENUM(\'Y\',\'N\'))
 ';
 
         $this->assertCommandOutput($expectedSql, $infos[0]['sql']);

@@ -560,6 +560,14 @@ class OracleTest extends PlatineTestCase
         $binaryBig = $this->getCreateColumnInstance($ccBinaryBigMockMethodsMaps);
         $binaryBig->set('size', 'big');
 
+        //Enum
+        $ccEnumMockMethodsMaps = [
+            'getName' => 'col_enum',
+            'getType' => 'enum',
+        ];
+        $enum = $this->getCreateColumnInstance($ccEnumMockMethodsMaps);
+        $enum->set('values', ['Y', 'N']);
+
         $columns = [
             'col_int' => $int,
             'col_tiny_int' => $tiny,
@@ -592,6 +600,7 @@ class OracleTest extends PlatineTestCase
             'col_time' => $time,
 
             'col_datetime' => $datetime,
+            'col_enum' => $enum,
         ];
 
         $ctMockMethodsMaps = [
@@ -635,7 +644,8 @@ class OracleTest extends PlatineTestCase
 "COL_DOUBLE" FLOAT(24),
 "COL_STR" VARCHAR2(255),
 "COL_TIME" DATE,
-"COL_DATETIME" DATE)
+"COL_DATETIME" DATE,
+"COL_ENUM" ENUM(\'Y\',\'N\'))
 ';
 
         $this->assertCommandOutput($expectedSql, $infos[0]['sql']);

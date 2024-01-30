@@ -144,12 +144,23 @@ class Connection
         $this->logger = $logger ?? new Logger();
         $this->logger->setChannel('db');
 
-        $driverClass = $this->config->getDriverClassName();
-        $this->driver = new $driverClass($this);
+        $this->createDriver();
 
         $this->schema = new Schema($this);
 
         $this->connect();
+    }
+
+    /**
+     * Create database driver
+     * @return $this
+     */
+    public function createDriver(): self
+    {
+        $driverClass = $this->config->getDriverClassName();
+        $this->driver = new $driverClass($this);
+
+        return $this;
     }
 
     /**
@@ -160,6 +171,13 @@ class Connection
     public function startTransaction(string $name = 'default'): bool
     {
         $this->logger->info('Start transaction [{name}]', ['name' => $name]);
+        if ($this->pdo->inTransaction()) {
+            $this->logger->warning(
+                'Can not start transaction [{name}], there is active transaction',
+                ['name' => $name]
+            );
+            return false;
+        }
 
         return $this->pdo->beginTransaction();
     }
@@ -173,6 +191,14 @@ class Connection
     {
         $this->logger->info('Commit transaction [{name}]', ['name' => $name]);
 
+        if ($this->pdo->inTransaction() === false) {
+            $this->logger->warning(
+                'Can not commit transaction [{name}], there is no active transaction',
+                ['name' => $name]
+            );
+            return false;
+        }
+
         return $this->pdo->commit();
     }
 
@@ -184,6 +210,13 @@ class Connection
     public function rollback(string $name = 'default'): bool
     {
         $this->logger->info('Rollback transaction [{name}]', ['name' => $name]);
+        if ($this->pdo->inTransaction() === false) {
+            $this->logger->warning(
+                'Can not rollback transaction [{name}], there is no active transaction',
+                ['name' => $name]
+            );
+            return false;
+        }
 
         return $this->pdo->rollBack();
     }

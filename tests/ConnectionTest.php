@@ -261,6 +261,42 @@ class ConnectionTest extends PlatineTestCaseDb
         $this->assertEquals('TNH', $rs->column(1));
     }
 
+    public function testStartTransactionAlreadyStarted(): void
+    {
+        $cfg = $this->getDbConnectionConfigOK();
+
+        $e = new Connection($cfg);
+
+        $this->loadTestsData($e->getPDO());
+
+        $e->startTransaction();
+        $this->assertFalse($e->startTransaction());
+        $e->commit();
+    }
+
+    public function testCommitTransactionNoActive(): void
+    {
+        $cfg = $this->getDbConnectionConfigOK();
+
+        $e = new Connection($cfg);
+
+        $this->loadTestsData($e->getPDO());
+
+        $this->assertFalse($e->commit());
+    }
+
+
+    public function testRollbackTransactionNoActive(): void
+    {
+        $cfg = $this->getDbConnectionConfigOK();
+
+        $e = new Connection($cfg);
+
+        $this->loadTestsData($e->getPDO());
+
+        $this->assertFalse($e->rollback());
+    }
+
     public function testStartRollbackTransaction(): void
     {
         $cfg = $this->getDbConnectionConfigOK();

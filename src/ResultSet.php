@@ -51,7 +51,7 @@ use PDO;
 use PDOStatement;
 
 /**
- * Class ResultSet
+ * @class ResultSet
  * @package Platine\Database
  */
 class ResultSet

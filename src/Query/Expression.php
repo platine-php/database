@@ -49,7 +49,7 @@ namespace Platine\Database\Query;
 use Closure;
 
 /**
- * Class Expression
+ * @class Expression
  * @package Platine\Database\Query
  */
 class Expression

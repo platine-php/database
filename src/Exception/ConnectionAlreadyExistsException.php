@@ -35,7 +35,7 @@ namespace Platine\Database\Exception;
 use Exception;
 
 /**
- * Class ConnectionAlreadyExistsException
+ * @class ConnectionAlreadyExistsException
  * @package Platine\Database\Exception
  */
 class ConnectionAlreadyExistsException extends Exception

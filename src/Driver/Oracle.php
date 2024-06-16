@@ -52,7 +52,7 @@ use Platine\Database\Schema\AlterTable;
 use Platine\Database\Schema\BaseColumn;
 
 /**
- * Class Oracle
+ * @class Oracle
  * @package Platine\Database\Driver
  */
 class Oracle extends Driver

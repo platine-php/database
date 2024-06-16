@@ -50,7 +50,7 @@ use Platine\Database\Schema\AlterTable;
 use Platine\Database\Schema\CreateTable;
 
 /**
- * Class Schema
+ * @class Schema
  * @package Platine\Database
  */
 class Schema

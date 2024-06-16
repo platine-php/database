@@ -50,7 +50,7 @@ use Platine\Database\Exception\ConnectionNotFoundException;
 use Platine\Logger\Logger;
 
 /**
- * Class Pool
+ * @class Pool
  * @package Platine\Database
  */
 class Pool

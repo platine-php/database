@@ -51,7 +51,7 @@ use Platine\Database\Connection;
 use Platine\Database\ResultSet;
 
 /**
- * Class Query
+ * @class Query
  * @package Platine\Database\Query
  */
 class Query extends BaseStatement

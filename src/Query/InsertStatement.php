@@ -47,7 +47,7 @@ declare(strict_types=1);
 namespace Platine\Database\Query;
 
 /**
- * Class InsertStatement
+ * @class InsertStatement
  * @package Platine\Database\Query
  */
 class InsertStatement

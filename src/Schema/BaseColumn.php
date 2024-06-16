@@ -47,7 +47,7 @@ declare(strict_types=1);
 namespace Platine\Database\Schema;
 
 /**
- * Class BaseColumn
+ * @class BaseColumn
  * @package Platine\Database\Schema
  */
 class BaseColumn

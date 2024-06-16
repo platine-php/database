@@ -51,7 +51,7 @@ use Platine\Database\Connection;
 use Platine\Database\ResultSet;
 
 /**
- * Class Select
+ * @class Select
  * @package Platine\Database\Query
  */
 class Select extends SelectStatement

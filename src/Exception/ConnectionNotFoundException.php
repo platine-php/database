@@ -35,7 +35,7 @@ namespace Platine\Database\Exception;
 use Exception;
 
 /**
- * Class ConnectionNotFoundException
+ * @class ConnectionNotFoundException
  * @package Platine\Database\Exception
  */
 class ConnectionNotFoundException extends Exception

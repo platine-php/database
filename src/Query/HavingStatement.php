@@ -49,7 +49,7 @@ namespace Platine\Database\Query;
 use Closure;
 
 /**
- * Class HavingStatement
+ * @class HavingStatement
  * @package Platine\Database\Query
  */
 class HavingStatement

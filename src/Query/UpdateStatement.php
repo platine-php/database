@@ -47,7 +47,7 @@ declare(strict_types=1);
 namespace Platine\Database\Query;
 
 /**
- * Class UpdateStatement
+ * @class UpdateStatement
  * @package Platine\Database\Query
  */
 class UpdateStatement extends BaseStatement

@@ -35,7 +35,7 @@ namespace Platine\Database\Exception;
 use Exception;
 
 /**
- * Class DatabaseException
+ * @class DatabaseException
  * @package Platine\Database\Exception
  */
 class DatabaseException extends Exception

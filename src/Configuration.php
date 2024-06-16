@@ -56,7 +56,7 @@ use Platine\Database\Driver\SQLServer;
 use Platine\Stdlib\Config\AbstractConfiguration;
 
 /**
- * Class Configuration
+ * @class Configuration
  * @package Platine\Database
  */
 class Configuration extends AbstractConfiguration
@@ -138,6 +138,12 @@ class Configuration extends AbstractConfiguration
      */
     protected bool $persistent = false;
 
+    /**
+     * The slow query time in second
+     * @var float
+     */
+    protected float $slowQueryTime = 1.0;
+
 
     /**
      * The PDO connection options
@@ -170,6 +176,27 @@ class Configuration extends AbstractConfiguration
     {
         return $this->driver;
     }
+
+    /**
+     * Return the slow query time in second
+     * @return float
+     */
+    public function getSlowQueryTime(): float
+    {
+        return $this->slowQueryTime;
+    }
+
+    /**
+     * Set the slow query time in second
+     * @param float $slowQueryTime
+     * @return $this
+     */
+    public function setSlowQueryTime(float $slowQueryTime): self
+    {
+        $this->slowQueryTime = $slowQueryTime;
+        return $this;
+    }
+
 
     /**
      * Return the name of the configuration connection
@@ -441,7 +468,8 @@ class Configuration extends AbstractConfiguration
             'appname' => 'string',
             'charset' => 'string',
             'name' => 'string',
-            'driver' => 'string'
+            'driver' => 'string',
+            'slow_query_time' => 'double',
         ];
     }
 

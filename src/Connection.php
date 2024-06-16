@@ -58,7 +58,7 @@ use Platine\Logger\Logger;
 use Platine\Logger\LoggerInterface;
 
 /**
- * Class Connection
+ * @class Connection
  * @package Platine\Database
  */
 class Connection
@@ -173,7 +173,7 @@ class Connection
         $this->logger->info('Start transaction [{name}]', ['name' => $name]);
         if ($this->pdo->inTransaction()) {
             $this->logger->warning(
-                'Can not start transaction [{name}], there is active transaction',
+                'Can not start transaction [{name}], there is an active transaction',
                 ['name' => $name]
             );
             return false;
@@ -661,9 +661,11 @@ class Connection
                 $sqlLog
             );
 
-            if ($executionTime >= 1) { // TODO use configuration
+            $slowQueryTime = $this->config->getSlowQueryTime();
+
+            if ($executionTime >= $slowQueryTime) {
                 $this->logger->warning(
-                    'Query: [{query}] cost too much time: [{time}]',
+                    'Query: [{query}], parameters: [{parameters}] cost too much time: [{time}]',
                     $sqlLog
                 );
             }

@@ -47,7 +47,7 @@ declare(strict_types=1);
 namespace Platine\Database\Schema;
 
 /**
- * Class AlterTable
+ * @class AlterTable
  * @package Platine\Database\Schema
  */
 class AlterTable

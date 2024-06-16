@@ -33,7 +33,7 @@ declare(strict_types=1);
 namespace Platine\Database\Exception;
 
 /**
- * Class TransactionException
+ * @class TransactionException
  * @package Platine\Database\Exception
  */
 class TransactionException extends DatabaseException

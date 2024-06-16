@@ -49,7 +49,7 @@ namespace Platine\Database\Query;
 use Closure;
 
 /**
- * Class Join
+ * @class Join
  * @package Platine\Database\Query
  */
 class Join

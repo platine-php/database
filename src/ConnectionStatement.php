@@ -49,7 +49,7 @@ namespace Platine\Database;
 use PDOStatement;
 
 /**
- * Class ConnectionStatement
+ * @class ConnectionStatement
  * @package Platine\Database
  */
 class ConnectionStatement extends PDOStatement

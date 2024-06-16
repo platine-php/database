@@ -47,7 +47,7 @@ declare(strict_types=1);
 namespace Platine\Database\Schema;
 
 /**
- * Class ForeignKey
+ * @class ForeignKey
  * @package Platine\Database\Schema
  */
 class ForeignKey

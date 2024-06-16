@@ -52,7 +52,7 @@ use Platine\Database\Schema\BaseColumn;
 use Platine\Database\Schema\CreateTable;
 
 /**
- * Class SQLServer
+ * @class SQLServer
  * @package Platine\Database\Driver
  */
 class SQLServer extends Driver

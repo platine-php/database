@@ -49,7 +49,7 @@ namespace Platine\Database\Query;
 use Platine\Database\Connection;
 
 /**
- * Class Insert
+ * @class Insert
  * @package Platine\Database\Query
  */
 class Insert extends InsertStatement

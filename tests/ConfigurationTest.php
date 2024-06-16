@@ -38,6 +38,7 @@ class ConfigurationTest extends PlatineTestCase
         $this->assertFalse($e->isPersistent());
         $this->assertFalse($e->hasAttribute('foo'));
 
+        $this->assertEquals(1.0, $e->getSlowQueryTime());
         $this->assertEquals('mysql', $e->getDriverName());
         $this->assertEquals('default', $e->getName());
         $this->assertEquals('UTF8', $e->getCharset());
@@ -50,6 +51,7 @@ class ConfigurationTest extends PlatineTestCase
     {
         $cfg = [
             'name' => 'foo_name',
+            'slow_query_time' => 5.6,
             'driver' => 'mysql',
             'database' => 'db_test',
             'hostname' => '127.0.0.1',
@@ -86,6 +88,7 @@ class ConfigurationTest extends PlatineTestCase
         $this->assertArrayHasKey('foo', $e->getOptions());
         $this->assertArrayHasKey('foo', $e->getAttributes());
 
+        $this->assertEquals(5.6, $e->getSlowQueryTime());
         $this->assertEquals('bar', $e->getAttribute('foo'));
         $this->assertEquals(123, $e->getAttribute('fooz', 123));
 

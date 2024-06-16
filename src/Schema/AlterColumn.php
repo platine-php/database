@@ -47,7 +47,7 @@ declare(strict_types=1);
 namespace Platine\Database\Schema;
 
 /**
- * Class AlterColumn
+ * @class AlterColumn
  * @package Platine\Database\Schema
  */
 class AlterColumn extends BaseColumn

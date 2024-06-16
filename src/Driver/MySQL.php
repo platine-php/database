@@ -49,7 +49,7 @@ use Platine\Database\Schema\AlterTable;
 use Platine\Database\Schema\BaseColumn;
 
 /**
- * Class MySQL
+ * @class MySQL
  * @package Platine\Database\Driver
  */
 class MySQL extends Driver

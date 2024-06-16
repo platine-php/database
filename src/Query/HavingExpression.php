@@ -52,7 +52,7 @@ use Platine\Database\Query\Having;
 use Platine\Database\Query\QueryStatement;
 
 /**
- * Class HavingExpression
+ * @class HavingExpression
  * @package Platine\Database\Query
  */
 class HavingExpression

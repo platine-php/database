@@ -51,7 +51,7 @@ use Platine\Database\Schema\BaseColumn;
 use Platine\Database\Schema\CreateTable;
 
 /**
- * Class SQLite
+ * @class SQLite
  * @package Platine\Database\Driver
  */
 class SQLite extends Driver

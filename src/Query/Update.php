@@ -49,7 +49,7 @@ namespace Platine\Database\Query;
 use Platine\Database\Connection;
 
 /**
- * Class Update
+ * @class Update
  * @package Platine\Database\Query
  */
 class Update extends UpdateStatement

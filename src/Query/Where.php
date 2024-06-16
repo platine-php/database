@@ -49,7 +49,7 @@ namespace Platine\Database\Query;
 use Closure;
 
 /**
- * Class Where
+ * @class Where
  * @package Platine\Database\Query
  */
 class Where

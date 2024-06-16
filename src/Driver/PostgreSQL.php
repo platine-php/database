@@ -51,7 +51,7 @@ use Platine\Database\Schema\BaseColumn;
 use Platine\Database\Schema\CreateTable;
 
 /**
- * Class PostgreSQL
+ * @class PostgreSQL
  * @package Platine\Database\Driver
  */
 class PostgreSQL extends Driver

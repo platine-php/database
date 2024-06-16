@@ -33,7 +33,7 @@ declare(strict_types=1);
 namespace Platine\Database\Exception;
 
 /**
- * Class QueryPrepareException
+ * @class QueryPrepareException
  * @package Platine\Database\Exception
  */
 class QueryPrepareException extends DatabaseException

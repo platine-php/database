@@ -59,7 +59,7 @@ use Platine\Database\Schema\ForeignKey;
 
 
 /**
- * Class Driver
+ * @class Driver
  *
  * @package Platine\Database\Driver
  */
@@ -127,7 +127,7 @@ class Driver
     protected Connection $connection;
 
     /**
-     * Class constructor
+     * @class constructor
      * @param Connection $connection
      */
     public function __construct(Connection $connection)

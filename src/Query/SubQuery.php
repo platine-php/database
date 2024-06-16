@@ -47,7 +47,7 @@ declare(strict_types=1);
 namespace Platine\Database\Query;
 
 /**
- * Class SubQuery
+ * @class SubQuery
  * @package Platine\Database\Query
  */
 class SubQuery

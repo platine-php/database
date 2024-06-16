@@ -50,7 +50,7 @@ use Platine\Database\Connection;
 use Platine\Database\Exception\QueryException;
 
 /**
- * Class Delete
+ * @class Delete
  * @package Platine\Database\Query
  */
 class Delete extends DeleteStatement

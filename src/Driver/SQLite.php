@@ -246,7 +246,7 @@ class SQLite extends Driver
     /**
      * @inheritdoc
      */
-    protected function getAddUnique(AlterTable $schema, $data): string
+    protected function getAddUnique(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'CREATE UNIQUE INDEX %s ON %s (%s)',
@@ -259,7 +259,7 @@ class SQLite extends Driver
     /**
      * @inheritdoc
      */
-    protected function getAddIndex(AlterTable $schema, $data): string
+    protected function getAddIndex(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'CREATE INDEX %s ON %s (%s)',
@@ -277,6 +277,7 @@ class SQLite extends Driver
         //TODO add a way to delete the table sequence information in
         //"sqlite_sequence table"
         //DELETE FROM `sqlite_sequence` WHERE `name` = 'TABLE_NAME';
+
         return [
             'sql' => 'DELETE FROM ' . $this->quoteIdentifier($table),
             'params' => []

@@ -60,7 +60,7 @@ class BaseStatement extends WhereStatement
      *
      * @return Delete|Select|BaseStatement
      */
-    public function join($table, Closure $closure)
+    public function join(array|string $table, Closure $closure): Delete|Select|BaseStatement
     {
         $this->queryStatement->addJoinClause('INNER', $table, $closure);
 
@@ -73,7 +73,7 @@ class BaseStatement extends WhereStatement
      *
      * @return Delete|Select|BaseStatement
      */
-    public function leftJoin($table, Closure $closure)
+    public function leftJoin(array|string $table, Closure $closure): Delete|Select|BaseStatement
     {
         $this->queryStatement->addJoinClause('LEFT', $table, $closure);
 
@@ -86,7 +86,7 @@ class BaseStatement extends WhereStatement
      *
      * @return Delete|Select|BaseStatement
      */
-    public function rightJoin($table, Closure $closure)
+    public function rightJoin(array|string $table, Closure $closure): Delete|Select|BaseStatement
     {
         $this->queryStatement->addJoinClause('RIGHT', $table, $closure);
 
@@ -99,7 +99,7 @@ class BaseStatement extends WhereStatement
      *
      * @return Delete|Select|BaseStatement
      */
-    public function fullJoin($table, Closure $closure)
+    public function fullJoin(array|string $table, Closure $closure): Delete|Select|BaseStatement
     {
         $this->queryStatement->addJoinClause('FULL', $table, $closure);
 
@@ -112,7 +112,7 @@ class BaseStatement extends WhereStatement
      *
      * @return Delete|Select|BaseStatement
      */
-    public function crossJoin($table, Closure $closure)
+    public function crossJoin(array|string $table, Closure $closure): Delete|Select|BaseStatement
     {
         $this->queryStatement->addJoinClause('CROSS', $table, $closure);
 

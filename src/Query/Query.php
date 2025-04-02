@@ -64,7 +64,7 @@ class Query extends BaseStatement
     /**
      * @var string|array<string>
      */
-    protected $tables;
+    protected string|array $tables;
 
     /**
      * Query constructor.
@@ -74,8 +74,8 @@ class Query extends BaseStatement
      */
     public function __construct(
         Connection $connection,
-        $tables,
-        QueryStatement $queryStatement = null
+        string|array $tables,
+        ?QueryStatement $queryStatement = null
     ) {
         parent::__construct($queryStatement);
 
@@ -88,7 +88,7 @@ class Query extends BaseStatement
      *
      * @return Select|SelectStatement
      */
-    public function distinct(bool $value = true)
+    public function distinct(bool $value = true): Select|SelectStatement
     {
         return $this->buildSelect()->distinct($value);
     }
@@ -98,7 +98,7 @@ class Query extends BaseStatement
      *
      * @return Select|SelectStatement
      */
-    public function groupBy($columns)
+    public function groupBy(string|array|Closure|Expression $columns): Select|SelectStatement
     {
         return $this->buildSelect()->groupBy($columns);
     }
@@ -109,7 +109,7 @@ class Query extends BaseStatement
      *
      * @return Select|SelectStatement
      */
-    public function having($column, Closure $value = null)
+    public function having(string|Expression $column, ?Closure $value = null): Select|SelectStatement
     {
         return $this->buildSelect()->having($column, $value);
     }
@@ -120,7 +120,7 @@ class Query extends BaseStatement
      *
      * @return Select|SelectStatement
      */
-    public function orHaving($column, Closure $value = null)
+    public function orHaving(string|Expression $column, ?Closure $value = null): Select|SelectStatement
     {
         return $this->buildSelect()->orHaving($column, $value);
     }
@@ -131,8 +131,10 @@ class Query extends BaseStatement
      *
      * @return Select|SelectStatement
      */
-    public function orderBy($columns, string $order = 'ASC')
-    {
+    public function orderBy(
+        string|array|Closure|Expression $columns,
+        string $order = 'ASC'
+    ): Select|SelectStatement {
         return $this->buildSelect()->orderBy($columns, $order);
     }
 
@@ -141,7 +143,7 @@ class Query extends BaseStatement
      *
      * @return Select|SelectStatement
      */
-    public function limit(int $value)
+    public function limit(int $value): Select|SelectStatement
     {
         return $this->buildSelect()->limit($value);
     }
@@ -151,7 +153,7 @@ class Query extends BaseStatement
      *
      * @return Select|SelectStatement
      */
-    public function offset(int $value)
+    public function offset(int $value): Select|SelectStatement
     {
         return $this->buildSelect()->offset($value);
     }
@@ -160,7 +162,7 @@ class Query extends BaseStatement
      * @param string $table
      * @return Select|SelectStatement
      */
-    public function into(string $table)
+    public function into(string $table): Select|SelectStatement
     {
         return $this->buildSelect()->into($table);
     }
@@ -170,7 +172,7 @@ class Query extends BaseStatement
      *
      * @return ResultSet
      */
-    public function select($columns = [])
+    public function select(string|array|Expression|Closure $columns = []): ResultSet
     {
         return $this->buildSelect()->select($columns);
     }
@@ -179,7 +181,7 @@ class Query extends BaseStatement
      * @param string|array<string> $tables
      * @return int
      */
-    public function delete($tables): int
+    public function delete(string|array $tables): int
     {
         return $this->buildDelete()->delete($tables);
     }
@@ -189,7 +191,7 @@ class Query extends BaseStatement
      *
      * @return mixed
      */
-    public function column($name)
+    public function column(string|Closure|Expression $name): mixed
     {
         return $this->buildSelect()->column($name);
     }
@@ -211,7 +213,7 @@ class Query extends BaseStatement
      *
      * @return int|float
      */
-    public function avg($column, bool $distinct = false)
+    public function avg($column, bool $distinct = false): int|float
     {
         return $this->buildSelect()->avg($column, $distinct);
     }
@@ -222,7 +224,7 @@ class Query extends BaseStatement
      *
      * @return int|float
      */
-    public function sum($column, bool $distinct = false)
+    public function sum($column, bool $distinct = false): int|float
     {
         return $this->buildSelect()->sum($column, $distinct);
     }
@@ -233,7 +235,7 @@ class Query extends BaseStatement
      *
      * @return mixed
      */
-    public function min($column, bool $distinct = false)
+    public function min(string|Expression|Closure $column, bool $distinct = false): mixed
     {
         return $this->buildSelect()->min($column, $distinct);
     }
@@ -244,7 +246,7 @@ class Query extends BaseStatement
      *
      * @return mixed
      */
-    public function max($column, bool $distinct = false)
+    public function max(string|Expression|Closure $column, bool $distinct = false)
     {
         return $this->buildSelect()->max($column, $distinct);
     }
@@ -254,7 +256,11 @@ class Query extends BaseStatement
      */
     protected function buildSelect(): Select
     {
-        return new Select($this->connection, $this->tables, $this->queryStatement);
+        return new Select(
+            $this->connection,
+            $this->tables,
+            $this->queryStatement
+        );
     }
 
     /**
@@ -262,6 +268,10 @@ class Query extends BaseStatement
      */
     protected function buildDelete(): Delete
     {
-        return new Delete($this->connection, $this->tables, $this->queryStatement);
+        return new Delete(
+            $this->connection,
+            $this->tables,
+            $this->queryStatement
+        );
     }
 }

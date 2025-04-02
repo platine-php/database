@@ -62,7 +62,7 @@ class InsertStatement
      * InsertStatement constructor.
      * @param QueryStatement|null $queryStatement
      */
-    public function __construct(QueryStatement $queryStatement = null)
+    public function __construct(?QueryStatement $queryStatement = null)
     {
         if ($queryStatement === null) {
             $queryStatement = new QueryStatement();
@@ -82,7 +82,7 @@ class InsertStatement
     /**
      * @param array<string, mixed> $values
      *
-     * @return self
+     * @return $this
      */
     public function insert(array $values): self
     {
@@ -98,15 +98,17 @@ class InsertStatement
      * @param string $table
      * @return mixed
      */
-    public function into(string $table)
+    public function into(string $table): mixed
     {
         $this->queryStatement->addTables([$table]);
+
+        return true;
     }
 
     /**
      * @inheritDoc
      */
-    public function __clone()
+    public function __clone(): void
     {
         $this->queryStatement = clone $this->queryStatement;
     }

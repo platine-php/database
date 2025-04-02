@@ -303,7 +303,7 @@ class Configuration extends AbstractConfiguration
      * @param mixed $value
      * @return $this
      */
-    public function setOption($name, $value): self
+    public function setOption(mixed $name, mixed $value): self
     {
         $this->options[$name] = $value;
 
@@ -339,7 +339,7 @@ class Configuration extends AbstractConfiguration
      * @param mixed $value
      * @return $this
      */
-    public function setAttribute(string $name, $value): self
+    public function setAttribute(string $name, mixed $value): self
     {
         $this->attributes[$name] = $value;
 
@@ -377,7 +377,7 @@ class Configuration extends AbstractConfiguration
      *
      * @return mixed
      */
-    public function getAttribute(string $name, $default = null)
+    public function getAttribute(string $name, mixed $default = null): mixed
     {
         return $this->hasAttribute($name)
                        ? $this->attributes[$name]

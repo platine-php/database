@@ -72,9 +72,9 @@ class ColumnExpression
     /**
      * @param string|Expression|Closure $name
      * @param string|null $alias
-     * @return self
+     * @return $this
      */
-    public function column($name, string $alias = null): self
+    public function column(string|Expression|Closure $name, string $alias = null): self
     {
         $this->queryStatement->addColumn($name, $alias);
 
@@ -84,7 +84,7 @@ class ColumnExpression
     /**
      * Add multiple columns
      * @param array<int|string, mixed> $columns
-     * @return self
+     * @return $this
      */
     public function columns(array $columns): self
     {
@@ -108,10 +108,13 @@ class ColumnExpression
      * @param string|array<int, mixed>|Expression|Closure $column
      * @param string|null $alias
      * @param bool $distinct
-     * @return self
+     * @return $this
      */
-    public function count($column = '*', string $alias = null, bool $distinct = false): self
-    {
+    public function count(
+        string|array|Expression|Closure $column = '*',
+        string $alias = null,
+        bool $distinct = false
+    ): self {
         return $this->column((new Expression())->count($column, $distinct), $alias);
     }
 
@@ -119,10 +122,13 @@ class ColumnExpression
      * @param string|Expression|Closure $column
      * @param string|null $alias
      * @param bool $distinct
-     * @return self
+     * @return $this
      */
-    public function avg($column, string $alias = null, bool $distinct = false): self
-    {
+    public function avg(
+        string|Expression|Closure $column,
+        string $alias = null,
+        bool $distinct = false
+    ): self {
         return $this->column((new Expression())->avg($column, $distinct), $alias);
     }
 
@@ -130,10 +136,13 @@ class ColumnExpression
      * @param string|Expression|Closure $column
      * @param string|null $alias
      * @param bool $distinct
-     * @return self
+     * @return $this
      */
-    public function sum($column, string $alias = null, bool $distinct = false): self
-    {
+    public function sum(
+        string|Expression|Closure $column,
+        string $alias = null,
+        bool $distinct = false
+    ): self {
         return $this->column((new Expression())->sum($column, $distinct), $alias);
     }
 
@@ -141,10 +150,13 @@ class ColumnExpression
      * @param string|Expression|Closure $column
      * @param string|null $alias
      * @param bool $distinct
-     * @return self
+     * @return $this
      */
-    public function min($column, string $alias = null, bool $distinct = false): self
-    {
+    public function min(
+        string|Expression|Closure $column,
+        string $alias = null,
+        bool $distinct = false
+    ): self {
         return $this->column((new Expression())->min($column, $distinct), $alias);
     }
 
@@ -152,10 +164,13 @@ class ColumnExpression
      * @param string|Expression|Closure $column
      * @param string|null $alias
      * @param bool $distinct
-     * @return self
+     * @return $this
      */
-    public function max($column, string $alias = null, bool $distinct = false): self
-    {
+    public function max(
+        string|Expression|Closure $column,
+        string $alias = null,
+        bool $distinct = false
+    ): self {
         return $this->column((new Expression())->max($column, $distinct), $alias);
     }
 

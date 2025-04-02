@@ -46,7 +46,7 @@ class Connection extends RealConnection
         return new ResultSet($stmt);
     }
 
-    public function column(string $sql, array $params = [])
+    public function column(string $sql, array $params = []): mixed
     {
         $this->rawSql =  $this->replaceParameters($sql, $params);
 
@@ -74,8 +74,8 @@ class Connection extends RealConnection
 
     public function transaction(
         callable $callback,
-        $that = null
-    ) {
+        mixed $that = null
+    ): mixed {
         return $callback($that);
     }
 }
@@ -99,6 +99,7 @@ class PlatineTestCaseDb extends PlatineTestCase
                     'driver' => 'sqlite',
                     'database' => ':memory:',
                     'persistent' => true,
+                    'slow_query_time' => -1.0,
                     'commands' => [
                         'PRAGMA sqlite_master'
                     ]

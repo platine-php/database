@@ -126,7 +126,7 @@ class BaseColumn
      * @param mixed $value
      * @return $this
      */
-    public function set(string $name, $value): self
+    public function set(string $name, mixed $value): self
     {
         $this->properties[$name] = $value;
 
@@ -148,10 +148,10 @@ class BaseColumn
      * Get the property value for the given name
      * if not exist the value of $default will be returned
      * @param string $name
-     * @param mixed|null $default
+     * @param mixed $default
      * @return mixed
      */
-    public function get(string $name, $default = null)
+    public function get(string $name, mixed $default = null)
     {
         return isset($this->properties[$name])
                     ? $this->properties[$name]
@@ -165,12 +165,12 @@ class BaseColumn
      */
     public function size(string $value): self
     {
-        $value = strtolower($value);
-        if (!in_array($value, ['tiny', 'normal', 'small', 'medium', 'big'])) {
+        $name = strtolower($value);
+        if (!in_array($name, ['tiny', 'normal', 'small', 'medium', 'big'])) {
             return $this;
         }
 
-        return $this->set('size', $value);
+        return $this->set('size', $name);
     }
 
     /**
@@ -197,7 +197,7 @@ class BaseColumn
      * @param mixed $value
      * @return $this
      */
-    public function defaultValue($value): self
+    public function defaultValue(mixed $value): self
     {
         return $this->set('default', $value);
     }
@@ -217,7 +217,7 @@ class BaseColumn
      * @param mixed $value
      * @return $this
      */
-    public function length($value): self
+    public function length(mixed $value): self
     {
         return $this->set('length', $value);
     }

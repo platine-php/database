@@ -63,9 +63,9 @@ class ConnectionStatement extends PDOStatement
     }
 
     /**
-     * {@inheritdoc}
+     * @param array<int|string, mixed>|null $params
      */
-    public function execute($input_parameters = null): bool
+    public function execute(?array $params = null): bool
     {
         return false;
     }
@@ -81,7 +81,7 @@ class ConnectionStatement extends PDOStatement
     /**
      * {@inheritdoc}
      */
-    public function fetchColumn($column = null)
+    public function fetchColumn(int $column = null): mixed
     {
         return false;
     }

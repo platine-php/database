@@ -91,11 +91,11 @@ class ResultSet
 
     /**
      * Fetch all record
-     * @param callable $callable
+     * @param callable|null $callable
      * @param int $fetchStyle the PDO fetch style
      * @return array<int, mixed>|false
      */
-    public function all(callable $callable = null, int $fetchStyle = 0)
+    public function all(?callable $callable = null, int $fetchStyle = 0): array|false
     {
         if ($callable === null) {
             return $this->statement->fetchAll($fetchStyle);
@@ -106,25 +106,26 @@ class ResultSet
     /**
      * Fetch all record per group
      * @param bool $uniq
-     * @param callable $callable
+     * @param callable|null $callable
      * @return array<int, mixed>|false
      */
-    public function allGroup(bool $uniq = false, callable $callable = null)
+    public function allGroup(bool $uniq = false, ?callable $callable = null): array|false
     {
         $fetchStyle = PDO::FETCH_GROUP | ($uniq ? PDO::FETCH_UNIQUE : 0);
 
         if ($callable === null) {
             return $this->statement->fetchAll($fetchStyle);
         }
+
         return $this->statement->fetchAll($fetchStyle | PDO::FETCH_FUNC, $callable);
     }
 
     /**
      * Fetch one record
-     * @param callable $callable
+     * @param callable|null $callable
      * @return mixed
      */
-    public function get(callable $callable = null)
+    public function get(?callable $callable = null): mixed
     {
         $result = $this->statement->fetch();
         $this->statement->closeCursor();
@@ -140,7 +141,7 @@ class ResultSet
      *
      * @return mixed
      */
-    public function next()
+    public function next(): mixed
     {
         return $this->statement->fetch();
     }
@@ -149,7 +150,7 @@ class ResultSet
      * Close the cursor
      * @return mixed
      */
-    public function flush()
+    public function flush(): mixed
     {
         return $this->statement->closeCursor();
     }
@@ -160,14 +161,14 @@ class ResultSet
      *
      * @return mixed
      */
-    public function column(int $col = 0)
+    public function column(int $col = 0): mixed
     {
         return $this->statement->fetchColumn($col);
     }
 
     /**
      * Fetch each result as an associative array
-     * @return self
+     * @return $this
      */
     public function fetchAssoc(): self
     {
@@ -178,7 +179,7 @@ class ResultSet
 
     /**
      * Fetch each result as an stdClass
-     * @return self
+     * @return $this
      */
     public function fetchObject(): self
     {
@@ -189,7 +190,7 @@ class ResultSet
 
     /**
      * Fetch each result as an named
-     * @return self
+     * @return $this
      */
     public function fetchNamed(): self
     {
@@ -200,7 +201,7 @@ class ResultSet
 
     /**
      * Fetch each result as indexed column
-     * @return self
+     * @return $this
      */
     public function fetchNum(): self
     {
@@ -211,7 +212,7 @@ class ResultSet
 
     /**
      * Fetch each result as key/pair
-     * @return self
+     * @return $this
      */
     public function fetchKeyPair(): self
     {
@@ -224,7 +225,7 @@ class ResultSet
      * Fetch each result as an instance of the given class
      * @param string $class the name of the class
      * @param array<int, mixed> $cargs the constructor arguments
-     * @return self
+     * @return $this
      */
     public function fetchClass(string $class, array $cargs = []): self
     {
@@ -236,7 +237,7 @@ class ResultSet
     /**
      * Fetch each result and pass to given function
      * @param Closure $closure
-     * @return self
+     * @return $this
      */
     public function fetchCustom(Closure $closure): self
     {

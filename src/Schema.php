@@ -209,7 +209,7 @@ class Schema
         string $table,
         bool $skipCache = false,
         bool $names = true
-    ) {
+    ): array {
         if ($skipCache) {
             unset($this->columns[$table]);
         }
@@ -257,7 +257,7 @@ class Schema
         string $view,
         bool $skipCache = false,
         bool $names = true
-    ) {
+    ): array {
         if ($skipCache) {
             unset($this->columns[$view]);
         }

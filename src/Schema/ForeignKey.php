@@ -125,7 +125,7 @@ class ForeignKey
      * Set the references
      * @param string $table
      * @param string ...$columns
-     * @return self
+     * @return $this
      */
     public function references(string $table, string ...$columns): self
     {
@@ -138,7 +138,7 @@ class ForeignKey
     /**
      *
      * @param string $action
-     * @return self
+     * @return $this
      */
     public function onDelete(string $action): self
     {
@@ -148,7 +148,7 @@ class ForeignKey
     /**
      *
      * @param string $action
-     * @return self
+     * @return $this
      */
     public function onUpdate(string $action): self
     {
@@ -159,7 +159,7 @@ class ForeignKey
      * Add the action
      * @param string $on the type of action DELETE, UPDATE
      * @param string $action
-     * @return self
+     * @return $this
      */
     protected function addAction(string $on, string $action): self
     {

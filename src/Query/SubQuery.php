@@ -62,7 +62,7 @@ class SubQuery
      * @param string|array<int, string> $tables
      * @return SelectStatement
      */
-    public function from($tables): SelectStatement
+    public function from(string|array $tables): SelectStatement
     {
         return $this->select = new SelectStatement($tables);
     }
@@ -78,7 +78,7 @@ class SubQuery
     /**
      * @inheritDoc
      */
-    public function __clone()
+    public function __clone(): void
     {
         $this->select = clone $this->select;
     }

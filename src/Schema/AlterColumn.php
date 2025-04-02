@@ -82,7 +82,7 @@ class AlterColumn extends BaseColumn
     /**
      * @inheritdoc
      */
-    public function defaultValue($value): BaseColumn
+    public function defaultValue(mixed $value): BaseColumn
     {
         if ($this->get('handleDefault', true)) {
             return parent::defaultValue($value);
@@ -103,7 +103,7 @@ class AlterColumn extends BaseColumn
 
     /**
      *
-     * @return self
+     * @return $this
      */
     public function autoincrement(): self
     {

@@ -124,10 +124,10 @@ class ConnectionTest extends PlatineTestCaseDb
         $cfg = $this->getDbConnectionConfigOK();
 
         $e = new Connection($cfg);
-        $this->assertFalse($e->getEmulate());
+        $this->assertFalse($e->isEmulate());
 
         $e->setEmulate(true);
-        $this->assertTrue($e->getEmulate());
+        $this->assertTrue($e->isEmulate());
     }
 
     public function testQuery(): void

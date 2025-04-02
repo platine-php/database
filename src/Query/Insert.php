@@ -64,8 +64,10 @@ class Insert extends InsertStatement
      * @param Connection $connection
      * @param QueryStatement|null $queryStatement
      */
-    public function __construct(Connection $connection, QueryStatement $queryStatement = null)
-    {
+    public function __construct(
+        Connection $connection,
+        ?QueryStatement $queryStatement = null
+    ) {
         parent::__construct($queryStatement);
 
         $this->connection = $connection;

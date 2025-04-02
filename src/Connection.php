@@ -142,7 +142,9 @@ class Connection
         $this->config = $config;
 
         $this->logger = $logger ?? new Logger();
-        $this->logger->setChannel('db');
+        if ($this->logger instanceof Logger) {
+            $this->logger->setChannel('db');
+        }
 
         $this->createDriver();
 
@@ -157,7 +159,9 @@ class Connection
      */
     public function createDriver(): self
     {
+        /** @var class-string<Driver> $driverClass */
         $driverClass = $this->config->getDriverClassName();
+
         $this->driver = new $driverClass($this);
 
         return $this;
@@ -235,7 +239,7 @@ class Connection
 
         $attr = $this->params;
 
-        if (empty($attr)) {
+        if (count($attr) === 0) {
             throw new InvalidArgumentException('Invalid database options supplied');
         }
 
@@ -322,7 +326,7 @@ class Connection
     /**
      * Set connection to be persistent
      * @param bool $value
-     * @return self
+     * @return $this
      */
     public function persistent(bool $value = true): self
     {
@@ -401,7 +405,7 @@ class Connection
      * @return mixed
      * @throws QueryException
      */
-    public function column(string $sql, array $params = [])
+    public function column(string $sql, array $params = []): mixed
     {
         $prepared = $this->prepare($sql, $params);
         $this->execute($prepared);
@@ -414,7 +418,7 @@ class Connection
 
     /**
      * @param callable $callback
-     * @param mixed|null $that
+     * @param mixed $that
      *
      * @return mixed
      *
@@ -422,8 +426,8 @@ class Connection
      */
     public function transaction(
         callable $callback,
-        $that = null
-    ) {
+        mixed $that = null
+    ): mixed {
         if ($that === null) {
             $that = $this;
         }
@@ -454,7 +458,7 @@ class Connection
     /**
      * {@inheritdoc}
      */
-    public function __sleep()
+    public function __sleep(): array
     {
         return [
             'dsn',
@@ -469,7 +473,7 @@ class Connection
     /**
      * {@inheritdoc}
      */
-    public function __wakeup()
+    public function __wakeup(): void
     {
         $this->createPDO();
     }
@@ -494,7 +498,7 @@ class Connection
 
     /**
      * Reset the last query SQL and parameters
-     * @return $this;
+     * @return $this
      */
     public function resetSqlValues(): self
     {
@@ -508,7 +512,7 @@ class Connection
      * Return the emulation status
      * @return bool
      */
-    public function getEmulate(): bool
+    public function isEmulate(): bool
     {
         return $this->emulate;
     }
@@ -688,6 +692,8 @@ class Connection
      * Bind the parameters values
      * @param PDOStatement $statement
      * @param array<int, mixed> $values
+     *
+     * @return void
      */
     protected function bindValues(PDOStatement $statement, array $values): void
     {

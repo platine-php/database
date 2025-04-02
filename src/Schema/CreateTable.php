@@ -60,9 +60,9 @@ class CreateTable
 
     /**
      * The primary or list of primary key
-     * @var string|array<string, mixed>
+     * @var array<string, mixed>
      */
-    protected $primaryKey;
+    protected array $primaryKey = [];
 
     /**
      * The list of unique keys
@@ -129,9 +129,9 @@ class CreateTable
 
     /**
      *
-     * @return mixed
+     * @return array<string, mixed>
      */
-    public function getPrimaryKey()
+    public function getPrimaryKey(): array
     {
         return $this->primaryKey;
     }
@@ -184,7 +184,7 @@ class CreateTable
     /**
      *
      * @param string|null $name
-     * @return self
+     * @return $this
      */
     public function engine(?string $name): self
     {
@@ -197,9 +197,9 @@ class CreateTable
      *
      * @param string|array<int, string> $columns
      * @param string|null $name
-     * @return self
+     * @return $this
      */
-    public function primary($columns, ?string $name = null): self
+    public function primary(string|array $columns, ?string $name = null): self
     {
         if (!is_array($columns)) {
             $columns = [$columns];
@@ -221,9 +221,9 @@ class CreateTable
      *
      * @param string|array<int, string> $columns
      * @param string|null $name
-     * @return self
+     * @return $this
      */
-    public function unique($columns, ?string $name = null): self
+    public function unique(string|array $columns, ?string $name = null): self
     {
         if (!is_array($columns)) {
             $columns = [$columns];
@@ -242,9 +242,9 @@ class CreateTable
      *
      * @param string|array<int, string> $columns
      * @param string|null $name
-     * @return self
+     * @return $this
      */
-    public function index($columns, ?string $name = null): self
+    public function index(string|array $columns, ?string $name = null): self
     {
         if (!is_array($columns)) {
             $columns = [$columns];
@@ -265,7 +265,7 @@ class CreateTable
      * @param string|null $name
      * @return ForeignKey
      */
-    public function foreign($columns, ?string $name = null): ForeignKey
+    public function foreign(string|array $columns, ?string $name = null): ForeignKey
     {
         if (!is_array($columns)) {
             $columns = [$columns];
@@ -282,7 +282,7 @@ class CreateTable
      *
      * @param CreateColumn $column
      * @param string|null $name
-     * @return self
+     * @return $this
      */
     public function autoincrement(CreateColumn $column, ?string $name = null): self
     {
@@ -455,7 +455,7 @@ class CreateTable
     /**
      *
      * @param string $column
-     * @return self
+     * @return $this
      */
     public function softDelete(string $column = 'deleted_at'): self
     {
@@ -468,7 +468,7 @@ class CreateTable
      *
      * @param string $createColumn
      * @param string $updateColumn
-     * @return self
+     * @return $this
      */
     public function timestamps(
         string $createColumn = 'created_at',

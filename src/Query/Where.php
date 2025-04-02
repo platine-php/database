@@ -57,7 +57,7 @@ class Where
     /**
      * @var string|Expression
      */
-    protected $column;
+    protected string|Expression $column;
 
     /**
      * @var string
@@ -92,9 +92,9 @@ class Where
     /**
      * @param string|Expression|Closure $column
      * @param string $separator
-     * @return self
+     * @return $this
      */
-    public function init($column, string $separator): self
+    public function init(string|Expression|Closure $column, string $separator): self
     {
         if ($column instanceof Closure) {
             $column = Expression::fromClosure($column);
@@ -110,7 +110,7 @@ class Where
      * @param bool $isColumn
      * @return WhereStatement|Select|Delete|Update
      */
-    public function is($value, bool $isColumn = false): WhereStatement
+    public function is(mixed $value, bool $isColumn = false): WhereStatement|Select|Delete|Update
     {
         return $this->addCondition($value, '=', $isColumn);
     }
@@ -120,7 +120,7 @@ class Where
      * @param bool $isColumn
      * @return WhereStatement|Select|Delete|Update
      */
-    public function eq($value, bool $isColumn = false): WhereStatement
+    public function eq(mixed $value, bool $isColumn = false): WhereStatement|Select|Delete|Update
     {
         return $this->is($value, $isColumn);
     }
@@ -130,7 +130,7 @@ class Where
      * @param bool $isColumn
      * @return WhereStatement|Select|Delete|Update
      */
-    public function isNot($value, bool $isColumn = false): WhereStatement
+    public function isNot(mixed $value, bool $isColumn = false): WhereStatement|Select|Delete|Update
     {
         return $this->addCondition($value, '!=', $isColumn);
     }
@@ -140,7 +140,7 @@ class Where
      * @param bool $isColumn
      * @return WhereStatement|Select|Delete|Update
      */
-    public function neq($value, bool $isColumn = false): WhereStatement
+    public function neq(mixed $value, bool $isColumn = false): WhereStatement|Select|Delete|Update
     {
         return $this->isNot($value, $isColumn);
     }
@@ -150,7 +150,7 @@ class Where
      * @param bool $isColumn
      * @return WhereStatement|Select|Delete|Update
      */
-    public function lt($value, bool $isColumn = false): WhereStatement
+    public function lt(mixed $value, bool $isColumn = false): WhereStatement|Select|Delete|Update
     {
         return $this->addCondition($value, '<', $isColumn);
     }
@@ -160,7 +160,7 @@ class Where
      * @param bool $isColumn
      * @return WhereStatement|Select|Delete|Update
      */
-    public function gt($value, bool $isColumn = false): WhereStatement
+    public function gt(mixed $value, bool $isColumn = false): WhereStatement|Select|Delete|Update
     {
         return $this->addCondition($value, '>', $isColumn);
     }
@@ -170,7 +170,7 @@ class Where
      * @param bool $isColumn
      * @return WhereStatement|Select|Delete|Update
      */
-    public function lte($value, bool $isColumn = false): WhereStatement
+    public function lte(mixed $value, bool $isColumn = false): WhereStatement|Select|Delete|Update
     {
         return $this->addCondition($value, '<=', $isColumn);
     }
@@ -180,7 +180,7 @@ class Where
      * @param bool $isColumn
      * @return WhereStatement|Select|Delete|Update
      */
-    public function gte($value, bool $isColumn = false): WhereStatement
+    public function gte(mixed $value, bool $isColumn = false): WhereStatement|Select|Delete|Update
     {
         return $this->addCondition($value, '>=', $isColumn);
     }
@@ -190,7 +190,7 @@ class Where
      * @param mixed $value2
      * @return WhereStatement|Select|Delete|Update
      */
-    public function between($value1, $value2): WhereStatement
+    public function between(mixed $value1, mixed $value2): WhereStatement|Select|Delete|Update
     {
         return $this->addBetweenCondition($value1, $value2, false);
     }
@@ -200,7 +200,7 @@ class Where
      * @param mixed $value2
      * @return WhereStatement|Select|Delete|Update
      */
-    public function notBetween($value1, $value2): WhereStatement
+    public function notBetween(mixed $value1, mixed $value2): WhereStatement|Select|Delete|Update
     {
         return $this->addBetweenCondition($value1, $value2, true);
     }
@@ -209,7 +209,7 @@ class Where
      * @param mixed $value
      * @return WhereStatement|Select|Delete|Update
      */
-    public function like($value): WhereStatement
+    public function like(mixed $value): WhereStatement|Select|Delete|Update
     {
         return $this->addLikeCondition($value, false);
     }
@@ -218,7 +218,7 @@ class Where
      * @param mixed $value
      * @return WhereStatement|Select|Delete|Update
      */
-    public function notLike($value): WhereStatement
+    public function notLike(mixed $value): WhereStatement|Select|Delete|Update
     {
         return $this->addLikeCondition($value, true);
     }
@@ -227,7 +227,7 @@ class Where
      * @param array<int, mixed>|Closure $value
      * @return WhereStatement
      */
-    public function in($value): WhereStatement
+    public function in(array|Closure $value): WhereStatement
     {
         return $this->addInCondition($value, false);
     }
@@ -236,7 +236,7 @@ class Where
      * @param array<int, mixed>|Closure $value
      * @return WhereStatement
      */
-    public function notIn($value): WhereStatement
+    public function notIn(array|Closure $value): WhereStatement
     {
         return $this->addInCondition($value, true);
     }
@@ -244,7 +244,7 @@ class Where
     /**
      * @return WhereStatement|Select|Delete|Update
      */
-    public function isNull(): WhereStatement
+    public function isNull(): WhereStatement|Select|Delete|Update
     {
         return $this->addNullCondition(false);
     }
@@ -252,7 +252,7 @@ class Where
     /**
      * @return WhereStatement|Select|Delete|Update
      */
-    public function isNotNull(): WhereStatement
+    public function isNotNull(): WhereStatement|Select|Delete|Update
     {
         return $this->addNullCondition(true);
     }
@@ -260,7 +260,7 @@ class Where
     /**
      * @return WhereStatement|Select|Delete|Update
      */
-    public function nop(): WhereStatement
+    public function nop(): WhereStatement|Select|Delete|Update
     {
         $this->queryStatement->addWhereNop($this->column, $this->separator);
 
@@ -270,7 +270,7 @@ class Where
     /**
      * @inheritDoc
      */
-    public function __clone()
+    public function __clone(): void
     {
         if ($this->column instanceof Expression) {
             $this->column = clone $this->column;
@@ -286,10 +286,10 @@ class Where
      * @return WhereStatement|Select|Delete|Update
      */
     protected function addCondition(
-        $value,
+        mixed $value,
         string $operator,
         bool $isColumn = false
-    ): WhereStatement {
+    ): WhereStatement|Select|Delete|Update {
         if ($isColumn && is_string($value)) {
             $value = function (Expression $expr) use ($value) {
                 return $expr->column($value);
@@ -311,7 +311,7 @@ class Where
      * @param bool $not
      * @return WhereStatement|Select|Delete|update
      */
-    protected function addBetweenCondition($value1, $value2, bool $not): WhereStatement
+    protected function addBetweenCondition(mixed $value1, mixed $value2, bool $not): WhereStatement|Select|Delete|update
     {
         $this->queryStatement->addWhereBetween(
             $this->column,
@@ -329,7 +329,7 @@ class Where
      * @param bool $not
      * @return WhereStatement|Select|Delete|update
      */
-    protected function addLikeCondition(string $pattern, bool $not): WhereStatement
+    protected function addLikeCondition(string $pattern, bool $not): WhereStatement|Select|Delete|update
     {
         $this->queryStatement->addWhereLike(
             $this->column,
@@ -346,7 +346,7 @@ class Where
      * @param bool $not
      * @return WhereStatement|Select|Delete|update
      */
-    protected function addInCondition($value, bool $not): WhereStatement
+    protected function addInCondition(mixed $value, bool $not): WhereStatement|Select|Delete|update
     {
         $this->queryStatement->addWhereIn($this->column, $value, $this->separator, $not);
 
@@ -357,7 +357,7 @@ class Where
      * @param bool $not
      * @return WhereStatement|Select|Delete|Update
      */
-    protected function addNullCondition(bool $not): WhereStatement
+    protected function addNullCondition(bool $not): WhereStatement|Select|Delete|Update
     {
         $this->queryStatement->addWhereNull($this->column, $this->separator, $not);
 

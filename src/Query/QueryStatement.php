@@ -155,8 +155,12 @@ class QueryStatement
      * @param string $operator
      * @param string $separator
      */
-    public function addWhere($column, $value, string $operator, string $separator): void
-    {
+    public function addWhere(
+        string|Closure|Expression $column,
+        mixed $value,
+        string $operator,
+        string $separator
+    ): void {
         $this->wheres[] = [
             'type' => 'whereColumn',
             'column' => $this->closureToExpression($column),
@@ -171,9 +175,15 @@ class QueryStatement
      * @param string $pattern
      * @param string $separator
      * @param bool $not
+     *
+     * @return void
      */
-    public function addWhereLike($column, string $pattern, string $separator, bool $not): void
-    {
+    public function addWhereLike(
+        string|Closure|Expression $column,
+        string $pattern,
+        string $separator,
+        bool $not
+    ): void {
         $this->wheres[] = [
             'type' => 'whereLike',
             'column' => $this->closureToExpression($column),
@@ -189,9 +199,16 @@ class QueryStatement
      * @param mixed $value2
      * @param string $separator
      * @param bool $not
+     *
+     * @return void
      */
-    public function addWhereBetween($column, $value1, $value2, string $separator, bool $not): void
-    {
+    public function addWhereBetween(
+        string|Closure|Expression $column,
+        mixed $value1,
+        mixed $value2,
+        string $separator,
+        bool $not
+    ): void {
         $this->wheres[] = [
             'type' => 'whereBetween',
             'column' => $this->closureToExpression($column),
@@ -207,10 +224,16 @@ class QueryStatement
      * @param mixed $value
      * @param string $separator
      * @param bool $not
+     *
+     * @return void
      */
-    public function addWhereIn($column, $value, string $separator, bool $not): void
-    {
-        $column = $this->closureToExpression($column);
+    public function addWhereIn(
+        string|Closure|Expression $column,
+        mixed $value,
+        string $separator,
+        bool $not
+    ): void {
+        $columnName = $this->closureToExpression($column);
 
         if ($value instanceof Closure) {
             $select = new SubQuery();
@@ -218,7 +241,7 @@ class QueryStatement
 
             $this->wheres[] = [
                 'type' => 'whereInSelect',
-                'column' => $column,
+                'column' => $columnName,
                 'subquery' => $select,
                 'separator' => $separator,
                 'not' => $not
@@ -226,7 +249,7 @@ class QueryStatement
         } else {
             $this->wheres[] = [
                 'type' => 'whereIn',
-                'column' => $column,
+                'column' => $columnName,
                 'value' => $value,
                 'separator' => $separator,
                 'not' => $not
@@ -238,9 +261,14 @@ class QueryStatement
      * @param string|Closure|Expression $column
      * @param string $separator
      * @param bool $not
+     *
+     * @return void
      */
-    public function addWhereNull($column, string $separator, bool $not): void
-    {
+    public function addWhereNull(
+        string|Closure|Expression $column,
+        string $separator,
+        bool $not
+    ): void {
         $this->wheres[] = [
             'type' => 'whereNull',
             'column' => $this->closureToExpression($column),
@@ -252,9 +280,13 @@ class QueryStatement
     /**
      * @param string|Closure|Expression $column
      * @param string $separator
+     *
+     * @return void
      */
-    public function addWhereNop($column, string $separator): void
-    {
+    public function addWhereNop(
+        string|Closure|Expression $column,
+        string $separator
+    ): void {
         $this->wheres[] = [
             'type' => 'whereNop',
             'column' => $column,
@@ -266,6 +298,8 @@ class QueryStatement
      * @param Closure $closure
      * @param string $separator
      * @param bool $not
+     *
+     * @return void
      */
     public function addWhereExists(Closure $closure, string $separator, bool $not): void
     {
@@ -285,8 +319,11 @@ class QueryStatement
      * @param string|array<int, string>|Closure $table
      * @param Closure|null $closure
      */
-    public function addJoinClause(string $type, $table, Closure $closure = null): void
-    {
+    public function addJoinClause(
+        string $type,
+        string|array|Closure $table,
+        ?Closure $closure = null
+    ): void {
         $join = null;
         if ($closure !== null) {
             $join = new Join();
@@ -311,6 +348,8 @@ class QueryStatement
     /**
      * @param Closure $closure
      * @param string $separator
+     *
+     * @return void
      */
     public function addHavingGroup(Closure $closure, string $separator): void
     {
@@ -329,9 +368,15 @@ class QueryStatement
      * @param mixed $value
      * @param string $operator
      * @param string $separator
+     *
+     * @return void
      */
-    public function addHaving($aggregate, $value, string $operator, string $separator): void
-    {
+    public function addHaving(
+        string|Closure|Expression $aggregate,
+        mixed $value,
+        string $operator,
+        string $separator
+    ): void {
         $this->having[] = [
             'type' => 'havingCondition',
             'aggregate' => $this->closureToExpression($aggregate),
@@ -346,11 +391,16 @@ class QueryStatement
      * @param mixed $value
      * @param string $separator
      * @param bool $not
-     * @return mixed
+     *
+     * @return void
      */
-    public function addHavingIn($aggregate, $value, string $separator, bool $not)
-    {
-        $aggregate = $this->closureToExpression($aggregate);
+    public function addHavingIn(
+        string|Closure|Expression $aggregate,
+        $value,
+        string $separator,
+        bool $not
+    ): void {
+        $aggregateName = $this->closureToExpression($aggregate);
 
         if ($value instanceof Closure) {
             $select = new SubQuery();
@@ -358,7 +408,7 @@ class QueryStatement
 
             $this->having[] = [
                 'type' => 'havingInSelect',
-                'aggregate' => $aggregate,
+                'aggregate' => $aggregateName,
                 'subquery' => $select,
                 'separator' => $separator,
                 'not' => $not
@@ -366,7 +416,7 @@ class QueryStatement
         } else {
             $this->having[] = [
                 'type' => 'havingIn',
-                'aggregate' => $aggregate,
+                'aggregate' => $aggregateName,
                 'value' => $value,
                 'separator' => $separator,
                 'not' => $not
@@ -380,9 +430,16 @@ class QueryStatement
      * @param mixed $value2
      * @param string $separator
      * @param bool $not
+     *
+     * @return void
      */
-    public function addHavingBetween($aggregate, $value1, $value2, string $separator, bool $not): void
-    {
+    public function addHavingBetween(
+        string|Closure|Expression $aggregate,
+        mixed $value1,
+        mixed $value2,
+        string $separator,
+        bool $not
+    ): void {
         $this->having[] = [
             'type' => 'havingBetween',
             'aggregate' => $this->closureToExpression($aggregate),
@@ -417,26 +474,30 @@ class QueryStatement
     /**
      * @param string[]|Expression[]|Closure[] $columns
      * @param string $order
+     *
+     * @return void
      */
     public function addOrder(array $columns, string $order): void
     {
         foreach ($columns as &$column) {
             $column = $this->closureToExpression($column);
         }
-        $order = strtoupper($order);
+        $orderValue = strtoupper($order);
 
-        if (!in_array($order, ['ASC', 'DESC'])) {
-            $order = 'ASC';
+        if (!in_array($orderValue, ['ASC', 'DESC'])) {
+            $orderValue = 'ASC';
         }
 
         $this->order[] = [
             'columns' => $columns,
-            'order' => $order
+            'order' => $orderValue
         ];
     }
 
     /**
      * @param string[]|Expression[]|Closure[] $columns
+     *
+     * @return void
      */
     public function addGroupBy(array $columns): void
     {
@@ -451,9 +512,13 @@ class QueryStatement
     /**
      * @param string|Expression|Closure $column
      * @param string|null $alias
+     *
+     * @return void
      */
-    public function addColumn($column, ?string $alias = null): void
-    {
+    public function addColumn(
+        string|Expression|Closure $column,
+        ?string $alias = null
+    ): void {
         $this->columns[] = [
             'name' => $this->closureToExpression($column),
             'alias' => $alias
@@ -503,7 +568,7 @@ class QueryStatement
     /**
      * @param mixed $value
      */
-    public function addValue($value): void
+    public function addValue(mixed $value): void
     {
         $this->values[] = $this->closureToExpression($value);
     }
@@ -617,7 +682,7 @@ class QueryStatement
      *
      * @return mixed|Expression
      */
-    protected function closureToExpression($value)
+    protected function closureToExpression(mixed $value): mixed
     {
         if ($value instanceof Closure) {
             return Expression::fromClosure($value);

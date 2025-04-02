@@ -60,7 +60,6 @@ use Platine\Database\Schema\ForeignKey;
 
 /**
  * @class Driver
- *
  * @package Platine\Database\Driver
  */
 class Driver
@@ -501,7 +500,7 @@ class Driver
      *
      * @return string
      */
-    protected function param($value): string
+    protected function param(mixed $value): string
     {
         if ($value instanceof Expression) {
             return $this->getExpressions($value->getExpressions());
@@ -520,7 +519,7 @@ class Driver
      * @return mixed
      *
      */
-    protected function value($value)
+    protected function value(mixed $value): mixed
     {
         if (is_numeric($value)) {
             return $value;
@@ -543,7 +542,7 @@ class Driver
      *
      * @return string
      */
-    protected function quoteIdentifier($value): string
+    protected function quoteIdentifier(mixed $value): string
     {
         if ($value instanceof Expression) {
             return $this->getExpressions($value->getExpressions());
@@ -632,7 +631,7 @@ class Driver
      */
     protected function getColumnList(array $columns): string
     {
-        if (empty($columns)) {
+        if (count($columns) === 0) {
             return '*';
         }
         $sql = [];
@@ -890,7 +889,8 @@ class Driver
      */
     protected function getModifierDescription(BaseColumn $column): string
     {
-        return $column->get('description', null) === null ? '' : 'COMMENT ' . $this->value($column->get('description'));
+        return $column->get('description', null) === null ? '' : 'COMMENT '
+                . $this->value($column->get('description'));
     }
 
     /**
@@ -900,7 +900,8 @@ class Driver
      */
     protected function getModifierAfter(BaseColumn $column): string
     {
-        return $column->get('after', null) === null ? '' : 'AFTER ' . $this->quoteIdentifier($column->get('after'));
+        return $column->get('after', null) === null ? '' : 'AFTER '
+                . $this->quoteIdentifier($column->get('after'));
     }
 
     /**
@@ -927,7 +928,7 @@ class Driver
     protected function getPrimaryKey(CreateTable $schema): string
     {
         $primaryKey = $schema->getPrimaryKey();
-        if (empty($primaryKey)) {
+        if (count($primaryKey) === 0) {
             return '';
         }
 
@@ -944,7 +945,7 @@ class Driver
     {
         $indexes = $schema->getUniqueKeys();
 
-        if (empty($indexes)) {
+        if (count($indexes) === 0) {
             return '';
         }
 
@@ -967,7 +968,7 @@ class Driver
     {
         $indexes = $schema->getIndexes();
 
-        if (empty($indexes)) {
+        if (count($indexes) === 0) {
             return [];
         }
 
@@ -991,7 +992,7 @@ class Driver
     {
         $keys = $schema->getForeignKeys();
 
-        if (empty($keys)) {
+        if (count($keys) === 0) {
             return '';
         }
 
@@ -1033,7 +1034,7 @@ class Driver
      * @param mixed $data
      * @return string
      */
-    protected function getDropPrimaryKey(AlterTable $schema, $data): string
+    protected function getDropPrimaryKey(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s DROP CONSTRAINT %s',
@@ -1048,7 +1049,7 @@ class Driver
      * @param mixed $data
      * @return string
      */
-    protected function getDropUniqueKey(AlterTable $schema, $data): string
+    protected function getDropUniqueKey(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s DROP CONSTRAINT %s',
@@ -1063,7 +1064,7 @@ class Driver
      * @param mixed $data
      * @return string
      */
-    protected function getDropIndex(AlterTable $schema, $data): string
+    protected function getDropIndex(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'DROP INDEX %s.%s',
@@ -1078,7 +1079,7 @@ class Driver
      * @param mixed $data
      * @return string
      */
-    protected function getDropForeignKey(AlterTable $schema, $data): string
+    protected function getDropForeignKey(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s DROP CONSTRAINT %s',
@@ -1093,7 +1094,7 @@ class Driver
      * @param mixed $data
      * @return string
      */
-    protected function getDropColumn(AlterTable $schema, $data): string
+    protected function getDropColumn(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s DROP COLUMN %s',
@@ -1108,7 +1109,7 @@ class Driver
      * @param mixed $data
      * @return string
      */
-    protected function getRenameColumn(AlterTable $schema, $data): string
+    protected function getRenameColumn(AlterTable $schema, mixed $data): string
     {
         //TODO: please implement it in subclass
         return '';
@@ -1120,7 +1121,7 @@ class Driver
      * @param mixed $data
      * @return string
      */
-    protected function getModifyColumn(AlterTable $schema, $data): string
+    protected function getModifyColumn(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s MODIFY COLUMN %s',
@@ -1135,7 +1136,7 @@ class Driver
      * @param mixed $data
      * @return string
      */
-    protected function getAddColumn(AlterTable $schema, $data): string
+    protected function getAddColumn(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s ADD COLUMN %s',
@@ -1150,7 +1151,7 @@ class Driver
      * @param mixed $data
      * @return string
      */
-    protected function getAddPrimary(AlterTable $schema, $data): string
+    protected function getAddPrimary(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s ADD CONSTRAINT %s PRIMARY KEY (%s)',
@@ -1166,7 +1167,7 @@ class Driver
      * @param mixed $data
      * @return string
      */
-    protected function getAddUnique(AlterTable $schema, $data): string
+    protected function getAddUnique(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s ADD CONSTRAINT %s UNIQUE (%s)',
@@ -1182,7 +1183,7 @@ class Driver
      * @param mixed $data
      * @return string
      */
-    protected function getAddIndex(AlterTable $schema, $data): string
+    protected function getAddIndex(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'CREATE INDEX %s ON %s (%s)',
@@ -1198,7 +1199,7 @@ class Driver
      * @param mixed $data
      * @return string
      */
-    protected function getAddForeign(AlterTable $schema, $data): string
+    protected function getAddForeign(AlterTable $schema, mixed $data): string
     {
         /** @var ForeignKey $key */
         $key = $data['foreign'];
@@ -1218,7 +1219,7 @@ class Driver
      * @param mixed $data
      * @return string
      */
-    protected function getSetDefaultValue(AlterTable $schema, $data): string
+    protected function getSetDefaultValue(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s ALTER COLUMN %s SET DEFAULT (%s)',
@@ -1234,7 +1235,7 @@ class Driver
      * @param mixed $data
      * @return string
      */
-    protected function getDropDefaultValue(AlterTable $schema, $data): string
+    protected function getDropDefaultValue(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s ALTER COLUMN %s DROP DEFAULT',
@@ -1266,7 +1267,7 @@ class Driver
      */
     protected function getTableList(array $tables): string
     {
-        if (empty($tables)) {
+        if (count($tables) === 0) {
             return '';
         }
         $sql = [];
@@ -1289,7 +1290,7 @@ class Driver
      */
     protected function getJoins(array $joins): string
     {
-        if (empty($joins)) {
+        if (count($joins) === 0) {
             return '';
         }
         $sql = [];
@@ -1319,7 +1320,7 @@ class Driver
      */
     protected function getJoinConditions(array $conditions): string
     {
-        if (empty($conditions)) {
+        if (count($conditions) === 0) {
             return '';
         }
 
@@ -1329,7 +1330,8 @@ class Driver
 
         $count = count($conditions);
         for ($i = 1; $i < $count; $i++) {
-            $sql[] = $conditions[$i]['separator'] . ' ' . $this->{$conditions[$i]['type']}($conditions[$i]);
+            $sql[] = $conditions[$i]['separator'] . ' '
+                    . $this->{$conditions[$i]['type']}($conditions[$i]);
         }
 
         return implode(' ', $sql);
@@ -1343,7 +1345,7 @@ class Driver
      */
     protected function getGroupBy(array $groupBy): string
     {
-        return empty($groupBy) ? '' : ' GROUP BY ' . $this->columns($groupBy);
+        return count($groupBy) === 0 ? '' : ' GROUP BY ' . $this->columns($groupBy);
     }
 
     /**
@@ -1353,7 +1355,7 @@ class Driver
      */
     protected function getOrders(array $orders): string
     {
-        if (empty($orders)) {
+        if (count($orders) === 0) {
             return '';
         }
         $sql = [];
@@ -1371,7 +1373,7 @@ class Driver
      */
     protected function getSetColumns(array $columns): string
     {
-        if (empty($columns)) {
+        if (count($columns) === 0) {
             return '';
         }
         $sql = [];
@@ -1422,7 +1424,7 @@ class Driver
      */
     protected function getWheresHaving(array $values): string
     {
-        if (empty($values)) {
+        if (count($values) === 0) {
             return '';
         }
         $sql = [];

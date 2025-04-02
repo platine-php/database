@@ -311,7 +311,7 @@ class SQLServer extends Driver
     /**
      * @inheritdoc
      */
-    protected function getRenameColumn(AlterTable $schema, $data): string
+    protected function getRenameColumn(AlterTable $schema, mixed $data): string
     {
         $column = $data['column'];
         return sprintf(

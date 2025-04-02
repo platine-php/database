@@ -238,7 +238,7 @@ class PostgreSQL extends Driver
     /**
      * @inheritdoc
      */
-    protected function getRenameColumn(AlterTable $schema, $data): string
+    protected function getRenameColumn(AlterTable $schema, mixed $data): string
     {
         $column = $data['column'];
         return sprintf(
@@ -252,7 +252,7 @@ class PostgreSQL extends Driver
     /**
      * @inheritdoc
      */
-    protected function getAddIndex(AlterTable $schema, $data): string
+    protected function getAddIndex(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'CREATE INDEX %s ON %s (%s)',
@@ -265,7 +265,7 @@ class PostgreSQL extends Driver
     /**
      * @inheritdoc
      */
-    protected function getDropIndex(AlterTable $schema, $data): string
+    protected function getDropIndex(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'DROP INDEX %s',

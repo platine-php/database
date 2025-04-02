@@ -1,4 +1,7 @@
-## v1.0.0
+## v2.0.x
+Migrate code to support minimum PHP version 8.0  
+
+## v1.0.x
 ### Change make to opis/database version 4.1.x-dev
 **Platine Database** get inspiration from **opis/database**. 
 All notable changes to [opis/database](https://github.com/opis/database) are documented below.

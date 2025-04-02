@@ -173,7 +173,7 @@ class MySQL extends Driver
     /**
      * @inheritdoc
      */
-    protected function getDropPrimaryKey(AlterTable $schema, $data): string
+    protected function getDropPrimaryKey(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s DROP PRIMARY KEY',
@@ -184,7 +184,7 @@ class MySQL extends Driver
     /**
      * @inheritdoc
      */
-    protected function getDropUniqueKey(AlterTable $schema, $data): string
+    protected function getDropUniqueKey(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s DROP INDEX %s',
@@ -196,7 +196,7 @@ class MySQL extends Driver
     /**
      * @inheritdoc
      */
-    protected function getDropIndex(AlterTable $schema, $data): string
+    protected function getDropIndex(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s DROP INDEX %s',
@@ -208,7 +208,7 @@ class MySQL extends Driver
     /**
      * @inheritdoc
      */
-    protected function getDropForeignKey(AlterTable $schema, $data): string
+    protected function getDropForeignKey(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s DROP FOREIGN KEY %s',
@@ -220,7 +220,7 @@ class MySQL extends Driver
     /**
      * @inheritdoc
      */
-    protected function getSetDefaultValue(AlterTable $schema, $data): string
+    protected function getSetDefaultValue(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s ALTER %s SET DEFAULT %s',
@@ -233,7 +233,7 @@ class MySQL extends Driver
     /**
      * @inheritdoc
      */
-    protected function getDropDefaultValue(AlterTable $schema, $data): string
+    protected function getDropDefaultValue(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s ALTER %s DROP DEFAULT',
@@ -245,7 +245,7 @@ class MySQL extends Driver
     /**
      * @inheritdoc
      */
-    protected function getRenameColumn(AlterTable $schema, $data): string
+    protected function getRenameColumn(AlterTable $schema, mixed $data): string
     {
         $tableName = $schema->getTableName();
         $columnName = $data['from'];

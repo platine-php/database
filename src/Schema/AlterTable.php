@@ -94,7 +94,7 @@ class AlterTable
     /**
      *
      * @param string $name
-     * @return self
+     * @return $this
      */
     public function dropIndex(string $name): self
     {
@@ -104,7 +104,7 @@ class AlterTable
     /**
      *
      * @param string $name
-     * @return self
+     * @return $this
      */
     public function dropUnique(string $name): self
     {
@@ -114,7 +114,7 @@ class AlterTable
     /**
      *
      * @param string $name
-     * @return self
+     * @return $this
      */
     public function dropPrimary(string $name): self
     {
@@ -124,7 +124,7 @@ class AlterTable
     /**
      *
      * @param string $name
-     * @return self
+     * @return $this
      */
     public function dropForeign(string $name): self
     {
@@ -134,7 +134,7 @@ class AlterTable
     /**
      *
      * @param string $name
-     * @return self
+     * @return $this
      */
     public function dropColumn(string $name): self
     {
@@ -144,7 +144,7 @@ class AlterTable
     /**
      *
      * @param string $column
-     * @return self
+     * @return $this
      */
     public function dropDefaultValue(string $column): self
     {
@@ -155,7 +155,7 @@ class AlterTable
      *
      * @param string $oldName
      * @param string $newName
-     * @return self
+     * @return $this
      */
     public function renameColumn(string $oldName, string $newName): self
     {
@@ -169,9 +169,9 @@ class AlterTable
      *
      * @param string|array<int, string> $columns
      * @param string|null $name
-     * @return self
+     * @return $this
      */
-    public function primary($columns, ?string $name = null): self
+    public function primary(string|array $columns, ?string $name = null): self
     {
         return $this->addKey('addPrimary', $columns, $name);
     }
@@ -180,9 +180,9 @@ class AlterTable
      *
      * @param string|array<int, string> $columns
      * @param string|null $name
-     * @return self
+     * @return $this
      */
-    public function unique($columns, ?string $name = null): self
+    public function unique(string|array $columns, ?string $name = null): self
     {
         return $this->addKey('addUnique', $columns, $name);
     }
@@ -191,9 +191,9 @@ class AlterTable
      *
      * @param string|array<int, string> $columns
      * @param string|null $name
-     * @return self
+     * @return $this
      */
-    public function index($columns, ?string $name = null): self
+    public function index(string|array $columns, ?string $name = null): self
     {
         return $this->addKey('addIndex', $columns, $name);
     }
@@ -204,7 +204,7 @@ class AlterTable
      * @param string|null $name
      * @return ForeignKey
      */
-    public function foreign($columns, ?string $name = null): ForeignKey
+    public function foreign(string|array $columns, ?string $name = null): ForeignKey
     {
         if (!is_array($columns)) {
             $columns = [$columns];
@@ -225,9 +225,9 @@ class AlterTable
      *
      * @param string $column
      * @param mixed $value
-     * @return self
+     * @return $this
      */
-    public function setDefaultValue(string $column, $value): self
+    public function setDefaultValue(string $column, mixed $value): self
     {
         return $this->addCommand('setDefaultValue', [
                     'column' => $column,
@@ -547,9 +547,9 @@ class AlterTable
      *
      * @param string $name
      * @param mixed $data
-     * @return self
+     * @return $this
      */
-    protected function addCommand(string $name, $data): self
+    protected function addCommand(string $name, mixed $data): self
     {
         $this->commands[] = [
             'type' => $name,
@@ -564,9 +564,9 @@ class AlterTable
      * @param string $type
      * @param string|array<int, string> $columns
      * @param string|null $name
-     * @return self
+     * @return $this
      */
-    protected function addKey(string $type, $columns, ?string $name = null): self
+    protected function addKey(string $type, string|array $columns, ?string $name = null): self
     {
         static $maps = [
             'addPrimary' => 'pk',

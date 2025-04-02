@@ -65,8 +65,11 @@ class Update extends UpdateStatement
      * @param string|array<int, string> $table
      * @param QueryStatement|null $queryStatement
      */
-    public function __construct(Connection $connection, $table, QueryStatement $queryStatement = null)
-    {
+    public function __construct(
+        Connection $connection,
+        string|array $table,
+        ?QueryStatement $queryStatement = null
+    ) {
         parent::__construct($table, $queryStatement);
 
         $this->connection = $connection;
@@ -93,7 +96,7 @@ class Update extends UpdateStatement
      * @param mixed $value
      * @return int
      */
-    public function increment($column, $value = 1): int
+    public function increment($column, mixed $value = 1): int
     {
         return $this->incrementOrDecrement('+', $column, $value);
     }
@@ -103,7 +106,7 @@ class Update extends UpdateStatement
      * @param mixed $value
      * @return int
      */
-    public function decrement($column, $value = 1): int
+    public function decrement($column, mixed $value = 1): int
     {
         return $this->incrementOrDecrement('-', $column, $value);
     }
@@ -114,7 +117,7 @@ class Update extends UpdateStatement
      * @param mixed $value
      * @return int
      */
-    protected function incrementOrDecrement(string $sign, $columns, $value): int
+    protected function incrementOrDecrement(string $sign, string|array $columns, mixed $value): int
     {
         if (!is_array($columns)) {
             $columns = [$columns];

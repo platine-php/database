@@ -57,8 +57,10 @@ class DeleteStatement extends BaseStatement
      * @param string|array<string> $from
      * @param QueryStatement|null $queryStatement
      */
-    public function __construct($from, QueryStatement $queryStatement = null)
-    {
+    public function __construct(
+        string|array $from,
+        ?QueryStatement $queryStatement = null
+    ) {
         parent::__construct($queryStatement);
 
         if (!is_array($from)) {
@@ -72,10 +74,9 @@ class DeleteStatement extends BaseStatement
      * @param string|array<string> $tables
      * @return mixed
      */
-    public function delete($tables = [])
+    public function delete(string|array $tables = [])
     {
         if (!is_array($tables)) {
-            /** @var array<string> $tables */
             $tables = [$tables];
         }
         $this->queryStatement->addTables($tables);

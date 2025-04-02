@@ -70,7 +70,7 @@ class Select extends SelectStatement
     public function __construct(
         Connection $connection,
         $tables,
-        QueryStatement $queryStatement = null
+        ?QueryStatement $queryStatement = null
     ) {
         parent::__construct($tables, $queryStatement);
         $this->connection = $connection;
@@ -81,7 +81,7 @@ class Select extends SelectStatement
      *
      * @return ResultSet
      */
-    public function select($columns = [])
+    public function select(string|Expression|Closure|array $columns = []): ResultSet
     {
         parent::select($columns);
         $driver = $this->connection->getDriver();
@@ -95,11 +95,12 @@ class Select extends SelectStatement
     /**
      * @param string|Expression|Closure $name
      *
-     * @return mixed|false
+     * @return mixed
      */
-    public function column($name)
+    public function column(string|Expression|Closure $name): mixed
     {
         parent::column($name);
+
         return $this->getColumnResult();
     }
 
@@ -109,8 +110,10 @@ class Select extends SelectStatement
      *
      * @return int
      */
-    public function count($column = '*', bool $distinct = false): int
-    {
+    public function count(
+        string|Expression|Closure $column = '*',
+        bool $distinct = false
+    ): int {
         parent::count($column, $distinct);
         return (int) $this->getColumnResult();
     }
@@ -121,7 +124,7 @@ class Select extends SelectStatement
      *
      * @return int|float
      */
-    public function avg($column, bool $distinct = false)
+    public function avg(string|Expression|Closure $column, bool $distinct = false): int|float
     {
         parent::avg($column, $distinct);
         return $this->getColumnResult();
@@ -133,7 +136,7 @@ class Select extends SelectStatement
      *
      * @return int|float
      */
-    public function sum($column, bool $distinct = false)
+    public function sum(string|Expression|Closure $column, bool $distinct = false): int|float
     {
         parent::sum($column, $distinct);
         return $this->getColumnResult();
@@ -145,7 +148,7 @@ class Select extends SelectStatement
      *
      * @return int|float
      */
-    public function min($column, bool $distinct = false)
+    public function min(string|Expression|Closure $column, bool $distinct = false): int|float
     {
         parent::min($column, $distinct);
         return $this->getColumnResult();
@@ -157,7 +160,7 @@ class Select extends SelectStatement
      *
      * @return int|float
      */
-    public function max($column, bool $distinct = false)
+    public function max(string|Expression|Closure $column, bool $distinct = false): int|float
     {
         parent::max($column, $distinct);
         return $this->getColumnResult();
@@ -167,7 +170,7 @@ class Select extends SelectStatement
      * Return the result set for column
      * @return mixed
      */
-    protected function getColumnResult()
+    protected function getColumnResult(): mixed
     {
         $driver = $this->connection->getDriver();
 

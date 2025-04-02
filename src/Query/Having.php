@@ -57,7 +57,7 @@ class Having
     /**
      * @var string|Expression
      */
-    protected $aggregate;
+    protected string|Expression $aggregate;
 
     /**
      * @var string
@@ -84,7 +84,7 @@ class Having
      * @param string $separator
      * @return self
      */
-    public function init($aggregate, string $separator): self
+    public function init(string|Expression|Closure $aggregate, string $separator): self
     {
         if ($aggregate instanceof Closure) {
             $aggregate = Expression::fromClosure($aggregate);
@@ -100,7 +100,7 @@ class Having
      * @param bool $isColumn
      * @return void
      */
-    public function is($value, bool $isColumn = false): void
+    public function is(mixed $value, bool $isColumn = false): void
     {
         $this->addCondition($value, '=', $isColumn);
     }
@@ -110,7 +110,7 @@ class Having
      * @param bool $isColumn
      * @return void
      */
-    public function eq($value, bool $isColumn = false): void
+    public function eq(mixed $value, bool $isColumn = false): void
     {
         $this->is($value, $isColumn);
     }
@@ -120,7 +120,7 @@ class Having
      * @param bool $isColumn
      * @return void
      */
-    public function isNot($value, bool $isColumn = false): void
+    public function isNot(mixed $value, bool $isColumn = false): void
     {
         $this->addCondition($value, '!=', $isColumn);
     }
@@ -130,7 +130,7 @@ class Having
      * @param bool $isColumn
      * @return void
      */
-    public function neq($value, bool $isColumn = false): void
+    public function neq(mixed $value, bool $isColumn = false): void
     {
         $this->isNot($value, $isColumn);
     }
@@ -140,7 +140,7 @@ class Having
      * @param bool $isColumn
      * @return void
      */
-    public function lt($value, bool $isColumn = false): void
+    public function lt(mixed $value, bool $isColumn = false): void
     {
         $this->addCondition($value, '<', $isColumn);
     }
@@ -150,7 +150,7 @@ class Having
      * @param bool $isColumn
      * @return void
      */
-    public function gt($value, bool $isColumn = false): void
+    public function gt(mixed $value, bool $isColumn = false): void
     {
         $this->addCondition($value, '>', $isColumn);
     }
@@ -160,7 +160,7 @@ class Having
      * @param bool $isColumn
      * @return void
      */
-    public function lte($value, bool $isColumn = false): void
+    public function lte(mixed $value, bool $isColumn = false): void
     {
         $this->addCondition($value, '<=', $isColumn);
     }
@@ -170,7 +170,7 @@ class Having
      * @param bool $isColumn
      * @return void
      */
-    public function gte($value, bool $isColumn = false): void
+    public function gte(mixed $value, bool $isColumn = false): void
     {
         $this->addCondition($value, '>=', $isColumn);
     }
@@ -180,7 +180,7 @@ class Having
      * @param mixed $value2
      * @return void
      */
-    public function between($value1, $value2): void
+    public function between(mixed $value1, mixed $value2): void
     {
         $this->queryStatement->addHavingBetween(
             $this->aggregate,
@@ -196,7 +196,7 @@ class Having
      * @param mixed $value2
      * @return void
      */
-    public function notBetween($value1, $value2): void
+    public function notBetween(mixed $value1, mixed $value2): void
     {
         $this->queryStatement->addHavingBetween(
             $this->aggregate,
@@ -211,7 +211,7 @@ class Having
      * @param array<int, mixed>|Closure $value
      * @return void
      */
-    public function in($value): void
+    public function in(array|Closure $value): void
     {
         $this->queryStatement->addHavingIn(
             $this->aggregate,
@@ -225,7 +225,7 @@ class Having
      * @param array<int, mixed>|Closure $value
      * @return void
      */
-    public function notIn($value): void
+    public function notIn(array|Closure $value): void
     {
         $this->queryStatement->addHavingIn(
             $this->aggregate,
@@ -238,7 +238,7 @@ class Having
     /**
      * @inheritDoc
      */
-    public function __clone()
+    public function __clone(): void
     {
         if ($this->aggregate instanceof Expression) {
             $this->aggregate = clone $this->aggregate;
@@ -252,7 +252,7 @@ class Having
      * @param bool $isColumn
      * @return void
      */
-    protected function addCondition($value, string $operator, bool $isColumn): void
+    protected function addCondition(mixed $value, string $operator, bool $isColumn): void
     {
         if ($isColumn && is_string($value)) {
             $expr = new Expression();

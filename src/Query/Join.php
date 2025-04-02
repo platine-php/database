@@ -72,10 +72,13 @@ class Join
      * @param string|Expression|Closure $column1
      * @param string|Expression|Closure|bool|null $column2
      * @param string $operator
-     * @return self
+     * @return $this
      */
-    public function on($column1, $column2 = null, string $operator = '='): self
-    {
+    public function on(
+        string|Expression|Closure $column1,
+        string|Expression|Closure|bool|null $column2 = null,
+        string $operator = '='
+    ): self {
         return $this->addJoinCondition($column1, $column2, $operator, 'AND');
     }
 
@@ -83,10 +86,13 @@ class Join
      * @param string|Expression|Closure $column1
      * @param string|Expression|Closure|bool|null $column2
      * @param string $operator
-     * @return self
+     * @return $this
      */
-    public function andOn($column1, $column2 = null, string $operator = '='): self
-    {
+    public function andOn(
+        string|Expression|Closure $column1,
+        string|Expression|Closure|bool|null $column2 = null,
+        string $operator = '='
+    ): self {
         return $this->addJoinCondition($column1, $column2, $operator, 'AND');
     }
 
@@ -94,19 +100,22 @@ class Join
      * @param string|Expression|Closure $column1
      * @param string|Expression|Closure|bool|null $column2
      * @param string $operator
-     * @return self
+     * @return $this
      */
-    public function orOn($column1, $column2 = null, string $operator = '='): self
-    {
+    public function orOn(
+        string|Expression|Closure $column1,
+        string|Expression|Closure|bool|null $column2 = null,
+        string $operator = '='
+    ): self {
         return $this->addJoinCondition($column1, $column2, $operator, 'OR');
     }
 
     /**
      * @param Expression|Closure $expression
      * @param string $separator
-     * @return self
+     * @return $this
      */
-    protected function addJoinExpression($expression, string $separator = 'AND'): self
+    protected function addJoinExpression(Expression|Closure $expression, string $separator = 'AND'): self
     {
         if ($expression instanceof Closure) {
             $expression = Expression::fromClosure($expression);
@@ -126,11 +135,11 @@ class Join
      * @param string|Expression|Closure|bool|null $column2
      * @param string $operator
      * @param string $separator
-     * @return self
+     * @return $this
      */
     protected function addJoinCondition(
-        $column1,
-        $column2,
+        string|Expression|Closure $column1,
+        string|Expression|Closure|bool|null $column2,
         string $operator,
         string $separator = 'AND'
     ): self {

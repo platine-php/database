@@ -82,7 +82,7 @@ class CreateColumn extends BaseColumn
     /**
      * Set the auto increment value
      * @param string|null $name
-     * @return self
+     * @return $this
      */
     public function autoincrement(?string $name = null): self
     {
@@ -94,7 +94,7 @@ class CreateColumn extends BaseColumn
     /**
      * Set the primary key
      * @param string|null $name
-     * @return self
+     * @return $this
      */
     public function primary(?string $name = null): self
     {
@@ -106,7 +106,7 @@ class CreateColumn extends BaseColumn
     /**
      * Set the unique key
      * @param string|null $name
-     * @return self
+     * @return $this
      */
     public function unique(?string $name = null): self
     {
@@ -118,7 +118,7 @@ class CreateColumn extends BaseColumn
     /**
      * Set the index key
      * @param string|null $name
-     * @return self
+     * @return $this
      */
     public function index(?string $name = null): self
     {

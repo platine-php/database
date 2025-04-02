@@ -70,34 +70,34 @@ class Expression
 
     /**
      * @param mixed $value
-     * @return self
+     * @return $this
      */
-    public function column($value): self
+    public function column(mixed $value): self
     {
         return $this->addExpression('column', $value);
     }
 
     /**
      * @param mixed $value
-     * @return self
+     * @return $this
      */
-    public function op($value): self
+    public function op(mixed $value): self
     {
         return $this->addExpression('op', $value);
     }
 
     /**
      * @param mixed $value
-     * @return self
+     * @return $this
      */
-    public function value($value): self
+    public function value(mixed $value): self
     {
         return $this->addExpression('value', $value);
     }
 
     /**
      * @param Closure $closure
-     * @return self
+     * @return $this
      */
     public function group(Closure $closure): self
     {
@@ -111,7 +111,7 @@ class Expression
      * @param string|array<string> $tables
      * @return SelectStatement
      */
-    public function from($tables): SelectStatement
+    public function from(string|array $tables): SelectStatement
     {
         $subQuery = new SubQuery();
         $this->addExpression('subquery', $subQuery);
@@ -122,10 +122,12 @@ class Expression
     /**
      * @param string|array<int, mixed>|Expression|Closure $column
      * @param bool $distinct
-     * @return self
+     * @return $this
      */
-    public function count($column = '*', bool $distinct = false): self
-    {
+    public function count(
+        string|array|Expression|Closure $column = '*',
+        bool $distinct = false
+    ): self {
         if (!is_array($column)) {
             $column = [$column];
         }
@@ -141,9 +143,9 @@ class Expression
     /**
      * @param string|Expression|Closure $column
      * @param bool $distinct
-     * @return self
+     * @return $this
      */
-    public function sum($column, bool $distinct = false): self
+    public function sum(string|Expression|Closure $column, bool $distinct = false): self
     {
         return $this->addFunction(
             'aggregateFunction',
@@ -156,9 +158,9 @@ class Expression
     /**
      * @param string|Expression|Closure $column
      * @param bool $distinct
-     * @return self
+     * @return $this
      */
-    public function avg($column, bool $distinct = false): self
+    public function avg(string|Expression|Closure $column, bool $distinct = false): self
     {
         return $this->addFunction(
             'aggregateFunction',
@@ -171,9 +173,9 @@ class Expression
     /**
      * @param string|Expression|Closure $column
      * @param bool $distinct
-     * @return self
+     * @return $this
      */
-    public function min($column, bool $distinct = false): self
+    public function min(string|Expression|Closure $column, bool $distinct = false): self
     {
         return $this->addFunction(
             'aggregateFunction',
@@ -186,9 +188,9 @@ class Expression
     /**
      * @param string|Expression|Closure $column
      * @param bool $distinct
-     * @return self
+     * @return $this
      */
-    public function max($column, bool $distinct = false): self
+    public function max(string|Expression|Closure $column, bool $distinct = false): self
     {
         return $this->addFunction(
             'aggregateFunction',
@@ -214,9 +216,9 @@ class Expression
      * @param string $type
      * @param mixed $value
      *
-     * @return self
+     * @return $this
      */
-    protected function addExpression(string $type, $value): self
+    protected function addExpression(string $type, mixed $value): self
     {
         $this->expressions[] = [
             'type' => $type,
@@ -231,12 +233,12 @@ class Expression
      * @param string $name
      * @param string|Closure|array<int, mixed>|Expression $column
      * @param array<string, bool> $arguments
-     * @return self
+     * @return $this
      */
     protected function addFunction(
         string $type,
         string $name,
-        $column,
+        string|Closure|array|Expression $column,
         array $arguments = []
     ): self {
         if ($column instanceof Closure) {

@@ -73,10 +73,10 @@ class Pool
      */
     public function __construct(array $config = [])
     {
-        if (!empty($config)) {
+        if (count($config) > 0) {
             if (
-                !empty($config['connections'])
-                && is_array($config['connections'])
+                is_array($config['connections']) &&
+                count($config['connections']) > 0
             ) {
                  /** @var array<string, array<string, mixed>> $connections */
                 $connections = $config['connections'];
@@ -184,7 +184,7 @@ class Pool
      */
     protected function checkConnectionName(string $name): void
     {
-        if (!$this->has($name)) {
+        if ($this->has($name) === false) {
             throw new ConnectionNotFoundException(
                 sprintf('The connection [%s] does not exist', $name)
             );
@@ -214,6 +214,7 @@ class Pool
      */
     protected function createConnection(string $name, ?Logger $logger = null): Connection
     {
+        /** @var array<string, mixed>|null $infos */
         $infos = $this->connections[$name];
 
         if (is_array($infos)) {

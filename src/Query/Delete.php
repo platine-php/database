@@ -66,8 +66,11 @@ class Delete extends DeleteStatement
      * @param string|array<string> $from
      * @param QueryStatement|null $queryStatement
      */
-    public function __construct(Connection $connection, $from, QueryStatement $queryStatement = null)
-    {
+    public function __construct(
+        Connection $connection,
+        string|array $from,
+        ?QueryStatement $queryStatement = null
+    ) {
         parent::__construct($from, $queryStatement);
 
         $this->connection = $connection;
@@ -80,7 +83,7 @@ class Delete extends DeleteStatement
      * @return int
      * @throws QueryException
      */
-    public function delete($tables = []): int
+    public function delete(string|array $tables = []): int
     {
         parent::delete($tables);
         $driver = $this->connection->getDriver();

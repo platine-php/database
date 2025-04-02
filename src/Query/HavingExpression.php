@@ -72,7 +72,7 @@ class HavingExpression
     /**
      * @var string|Expression
      */
-    protected $column;
+    protected string|Expression $column;
 
     /**
      * @var string
@@ -95,7 +95,7 @@ class HavingExpression
      * @param string $separator
      * @return self
      */
-    public function init($column, string $separator): self
+    public function init(string|Expression|Closure $column, string $separator): self
     {
         if ($column instanceof Closure) {
             $column = Expression::fromClosure($column);
@@ -164,7 +164,7 @@ class HavingExpression
     /**
      * @inheritDoc
      */
-    public function __clone()
+    public function __clone(): void
     {
         if ($this->column instanceof Expression) {
             $this->column = clone $this->column;

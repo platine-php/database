@@ -64,7 +64,7 @@ class SelectStatement extends BaseStatement
      * @param string|array<int, string> $tables
      * @param QueryStatement|null $queryStatement
      */
-    public function __construct($tables, QueryStatement $queryStatement = null)
+    public function __construct(string|array $tables, ?QueryStatement $queryStatement = null)
     {
         parent::__construct($queryStatement);
 
@@ -78,7 +78,7 @@ class SelectStatement extends BaseStatement
 
     /**
      * @param string $table
-     * @return self
+     * @return $this
      */
     public function into(string $table): self
     {
@@ -89,7 +89,7 @@ class SelectStatement extends BaseStatement
 
     /**
      * @param bool $value
-     * @return self
+     * @return $this
      */
     public function distinct(bool $value = true): self
     {
@@ -100,9 +100,9 @@ class SelectStatement extends BaseStatement
 
     /**
      * @param string|Expression|Closure|string[]|Expression[]|Closure[] $columns
-     * @return self
+     * @return $this
      */
-    public function groupBy($columns): self
+    public function groupBy(string|Expression|Closure|array $columns): self
     {
         if (!is_array($columns)) {
             $columns = [$columns];
@@ -115,9 +115,9 @@ class SelectStatement extends BaseStatement
     /**
      * @param string|Expression|Closure $column
      * @param Closure|null $closure
-     * @return self
+     * @return $this
      */
-    public function having($column, Closure $closure = null): self
+    public function having(string|Expression|Closure $column, ?Closure $closure = null): self
     {
         $this->havingStatement->having($column, $closure);
 
@@ -127,10 +127,12 @@ class SelectStatement extends BaseStatement
     /**
      * @param string|Expression|Closure $column
      * @param Closure|null $closure
-     * @return self
+     * @return $this
      */
-    public function orHaving($column, Closure $closure = null): self
-    {
+    public function orHaving(
+        string|Expression|Closure $column,
+        ?Closure $closure = null
+    ): self {
         $this->havingStatement->orHaving($column, $closure);
 
         return $this;
@@ -139,10 +141,12 @@ class SelectStatement extends BaseStatement
     /**
      * @param string|Closure|Expression|string[]|Expression[]|Closure[] $columns
      * @param string $order
-     * @return self
+     * @return $this
      */
-    public function orderBy($columns, string $order = 'ASC'): self
-    {
+    public function orderBy(
+        string|Closure|Expression|array $columns,
+        string $order = 'ASC'
+    ): self {
         if (!is_array($columns)) {
             $columns = [$columns];
         }
@@ -154,7 +158,7 @@ class SelectStatement extends BaseStatement
 
     /**
      * @param int $value
-     * @return self
+     * @return $this
      */
     public function limit(int $value): self
     {
@@ -165,7 +169,7 @@ class SelectStatement extends BaseStatement
 
     /**
      * @param int $value
-     * @return self
+     * @return $this
      */
     public function offset(int $value): self
     {
@@ -178,7 +182,7 @@ class SelectStatement extends BaseStatement
      * @param string|Expression|Closure|string[]|Expression[]|Closure[] $columns
      * @return mixed
      */
-    public function select($columns = [])
+    public function select(string|Expression|Closure|array $columns = []): mixed
     {
         $expr = new ColumnExpression($this->queryStatement);
 
@@ -190,15 +194,19 @@ class SelectStatement extends BaseStatement
             }
             $expr->columns($columns);
         }
+
+        return true;
     }
 
     /**
      * @param string|Expression|Closure $name
      * @return mixed
      */
-    public function column($name)
+    public function column(string|Expression|Closure $name): mixed
     {
         (new ColumnExpression($this->queryStatement))->column($name);
+
+        return true;
     }
 
     /**
@@ -206,9 +214,13 @@ class SelectStatement extends BaseStatement
      * @param bool $distinct
      * @return mixed
      */
-    public function count($column = '*', bool $distinct = false)
-    {
+    public function count(
+        string|Expression|Closure $column = '*',
+        bool $distinct = false
+    ): mixed {
         (new ColumnExpression($this->queryStatement))->count($column, null, $distinct);
+
+        return true;
     }
 
     /**
@@ -216,9 +228,13 @@ class SelectStatement extends BaseStatement
      * @param bool $distinct
      * @return mixed
      */
-    public function avg($column, bool $distinct = false)
-    {
+    public function avg(
+        string|Expression|Closure $column,
+        bool $distinct = false
+    ): mixed {
         (new ColumnExpression($this->queryStatement))->avg($column, null, $distinct);
+
+        return true;
     }
 
     /**
@@ -226,9 +242,11 @@ class SelectStatement extends BaseStatement
      * @param bool $distinct
      * @return mixed
      */
-    public function sum($column, bool $distinct = false)
+    public function sum(string|Expression|Closure $column, bool $distinct = false): mixed
     {
         (new ColumnExpression($this->queryStatement))->sum($column, null, $distinct);
+
+        return true;
     }
 
     /**
@@ -236,9 +254,11 @@ class SelectStatement extends BaseStatement
      * @param bool $distinct
      * @return mixed
      */
-    public function min($column, bool $distinct = false)
+    public function min(string|Expression|Closure $column, bool $distinct = false): mixed
     {
         (new ColumnExpression($this->queryStatement))->min($column, null, $distinct);
+
+        return true;
     }
 
     /**
@@ -246,15 +266,17 @@ class SelectStatement extends BaseStatement
      * @param bool $distinct
      * @return mixed
      */
-    public function max($column, bool $distinct = false)
+    public function max(string|Expression|Closure $column, bool $distinct = false): mixed
     {
         (new ColumnExpression($this->queryStatement))->max($column, null, $distinct);
+
+        return true;
     }
 
     /**
      * @inheritDoc
      */
-    public function __clone()
+    public function __clone(): void
     {
         parent::__clone();
         $this->havingStatement = new HavingStatement($this->queryStatement);

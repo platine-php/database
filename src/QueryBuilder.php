@@ -113,7 +113,7 @@ class QueryBuilder
      * @param callable $callback
      * @return mixed
      */
-    public function transaction(callable $callback)
+    public function transaction(callable $callback): mixed
     {
         return $this->connection->transaction($callback, $this);
     }
@@ -123,7 +123,7 @@ class QueryBuilder
      * @param string|array<string> $tables Table name or an array of tables
      * @return QueryCommand
      */
-    public function from($tables): QueryCommand
+    public function from(string|array $tables): QueryCommand
     {
         return new QueryCommand($this->connection, $tables);
     }

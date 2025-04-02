@@ -211,7 +211,7 @@ class Oracle extends Driver
     /**
      * @inheritDoc
      */
-    protected function quoteIdentifier($value): string
+    protected function quoteIdentifier(mixed $value): string
     {
         if ($value instanceof Expression) {
             return $this->getExpressions($value->getExpressions());
@@ -370,7 +370,7 @@ class Oracle extends Driver
     /**
      * @inheritdoc
      */
-    protected function getModifyColumn(AlterTable $schema, $data): string
+    protected function getModifyColumn(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s MODIFY %s',
@@ -382,7 +382,7 @@ class Oracle extends Driver
     /**
      * @inheritdoc
      */
-    protected function getAddColumn(AlterTable $schema, $data): string
+    protected function getAddColumn(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s ADD %s',
@@ -394,7 +394,7 @@ class Oracle extends Driver
     /**
      * @inheritdoc
      */
-    protected function getSetDefaultValue(AlterTable $schema, $data): string
+    protected function getSetDefaultValue(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s MODIFY %s DEFAULT %s',
@@ -407,7 +407,7 @@ class Oracle extends Driver
     /**
      * @inheritdoc
      */
-    protected function getDropDefaultValue(AlterTable $schema, $data): string
+    protected function getDropDefaultValue(AlterTable $schema, mixed $data): string
     {
         return sprintf(
             'ALTER TABLE %s MODIFY %s DEFAULT NULL',

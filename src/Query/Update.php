@@ -96,7 +96,7 @@ class Update extends UpdateStatement
      * @param mixed $value
      * @return int
      */
-    public function increment($column, mixed $value = 1): int
+    public function increment(string|array $column, mixed $value = 1): int
     {
         return $this->incrementOrDecrement('+', $column, $value);
     }
@@ -106,7 +106,7 @@ class Update extends UpdateStatement
      * @param mixed $value
      * @return int
      */
-    public function decrement($column, mixed $value = 1): int
+    public function decrement(string|array $column, mixed $value = 1): int
     {
         return $this->incrementOrDecrement('-', $column, $value);
     }
@@ -117,8 +117,11 @@ class Update extends UpdateStatement
      * @param mixed $value
      * @return int
      */
-    protected function incrementOrDecrement(string $sign, string|array $columns, mixed $value): int
-    {
+    protected function incrementOrDecrement(
+        string $sign,
+        string|array $columns,
+        mixed $value
+    ): int {
         if (!is_array($columns)) {
             $columns = [$columns];
         }

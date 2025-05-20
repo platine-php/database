@@ -64,11 +64,7 @@ class InsertStatement
      */
     public function __construct(?QueryStatement $queryStatement = null)
     {
-        if ($queryStatement === null) {
-            $queryStatement = new QueryStatement();
-        }
-
-        $this->queryStatement = $queryStatement;
+        $this->queryStatement = $queryStatement ?? new QueryStatement();
     }
 
     /**

@@ -72,11 +72,8 @@ class HavingStatement
      */
     public function __construct(?QueryStatement $queryStatement = null)
     {
-        if ($queryStatement === null) {
-            $queryStatement = new QueryStatement();
-        }
-        $this->queryStatement = $queryStatement;
-        $this->expression = new HavingExpression($queryStatement);
+        $this->queryStatement = $queryStatement ?? new QueryStatement();
+        $this->expression = new HavingExpression($this->queryStatement);
     }
 
     /**
@@ -90,7 +87,7 @@ class HavingStatement
     /**
      * @param string|Expression|Closure $column
      * @param Closure|null $value
-     * @return self
+     * @return $this
      */
     public function having(string|Expression|Closure $column, ?Closure $value = null): self
     {
@@ -100,7 +97,7 @@ class HavingStatement
     /**
      * @param string|Expression|Closure $column
      * @param Closure|null $value
-     * @return self
+     * @return $this
      */
     public function orHaving(string|Expression|Closure $column, ?Closure $value = null): self
     {
@@ -120,7 +117,7 @@ class HavingStatement
      * @param string|Expression|Closure $column
      * @param Closure|null $value
      * @param string $separator
-     * @return self
+     * @return $this
      */
     protected function addCondition(
         string|Expression|Closure $column,

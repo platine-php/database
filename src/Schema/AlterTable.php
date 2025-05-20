@@ -53,12 +53,6 @@ namespace Platine\Database\Schema;
 class AlterTable
 {
     /**
-     * The name of table
-     * @var string
-     */
-    protected string $table;
-
-    /**
      * The list of commands
      * @var array<int, array<string, mixed>>
      */
@@ -66,11 +60,10 @@ class AlterTable
 
     /**
      * Class constructor
-     * @param string $table
+     * @param string $table The name of table
      */
-    public function __construct(string $table)
+    public function __construct(protected string $table)
     {
-        $this->table = $table;
     }
 
     /**
@@ -232,7 +225,7 @@ class AlterTable
         return $this->addCommand('setDefaultValue', [
                     'column' => $column,
                     'value' => $value,
-        ]);
+                ]);
     }
 
     /**
@@ -337,7 +330,7 @@ class AlterTable
         array $values
     ): AlterColumn {
         return $this->addColumn($name, 'enum')
-                        ->set('values', $values);
+                    ->set('values', $values);
     }
 
     /**
@@ -566,8 +559,11 @@ class AlterTable
      * @param string|null $name
      * @return $this
      */
-    protected function addKey(string $type, string|array $columns, ?string $name = null): self
-    {
+    protected function addKey(
+        string $type,
+        string|array $columns,
+        ?string $name = null
+    ): self {
         static $maps = [
             'addPrimary' => 'pk',
             'addUnique' => 'uk',
@@ -580,12 +576,17 @@ class AlterTable
         }
 
         if ($name === null) {
-            $name = $this->table . '_' . $maps[$type] . '_' . implode('_', $columns);
+            $name = sprintf(
+                '%s_%s_%s',
+                $this->table,
+                $maps[$type],
+                implode('_', $columns)
+            );
         }
 
         return $this->addCommand($type, [
-                'name' => $name,
-                'columns' => $columns
+            'name' => $name,
+            'columns' => $columns
         ]);
     }
 

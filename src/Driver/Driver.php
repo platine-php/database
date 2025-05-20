@@ -120,18 +120,11 @@ class Driver
     protected array $params = [];
 
     /**
-     * The Connection instance
-     * @var Connection
-     */
-    protected Connection $connection;
-
-    /**
      * @class constructor
      * @param Connection $connection
      */
-    public function __construct(Connection $connection)
+    public function __construct(protected Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**
@@ -538,11 +531,11 @@ class Driver
 
     /**
      * Add quote identifier like "", ``
-     * @param mixed $value
+     * @param string|Expression $value
      *
      * @return string
      */
-    protected function quoteIdentifier(mixed $value): string
+    protected function quoteIdentifier(string|Expression $value): string
     {
         if ($value instanceof Expression) {
             return $this->getExpressions($value->getExpressions());
@@ -879,7 +872,9 @@ class Driver
      */
     protected function getModifierDefault(BaseColumn $column): string
     {
-        return $column->get('default', null) === null ? '' : 'DEFAULT ' . $this->value($column->get('default'));
+        return $column->get('default', null) === null
+                ? ''
+                : 'DEFAULT ' . $this->value($column->get('default'));
     }
 
     /**

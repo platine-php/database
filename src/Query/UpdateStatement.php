@@ -63,8 +63,10 @@ class UpdateStatement extends BaseStatement
      * @param string|array<int, string> $table
      * @param QueryStatement|null $queryStatement
      */
-    public function __construct(string|array $table, ?QueryStatement $queryStatement = null)
-    {
+    public function __construct(
+        string|array $table,
+        ?QueryStatement $queryStatement = null
+    ) {
         parent::__construct($queryStatement);
 
         if (!is_array($table)) {

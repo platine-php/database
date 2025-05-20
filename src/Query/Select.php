@@ -69,7 +69,7 @@ class Select extends SelectStatement
      */
     public function __construct(
         Connection $connection,
-        $tables,
+        string|array $tables,
         ?QueryStatement $queryStatement = null
     ) {
         parent::__construct($tables, $queryStatement);
@@ -124,8 +124,10 @@ class Select extends SelectStatement
      *
      * @return int|float
      */
-    public function avg(string|Expression|Closure $column, bool $distinct = false): int|float
-    {
+    public function avg(
+        string|Expression|Closure $column,
+        bool $distinct = false
+    ): int|float {
         parent::avg($column, $distinct);
         return $this->getColumnResult();
     }
@@ -136,8 +138,10 @@ class Select extends SelectStatement
      *
      * @return int|float
      */
-    public function sum(string|Expression|Closure $column, bool $distinct = false): int|float
-    {
+    public function sum(
+        string|Expression|Closure $column,
+        bool $distinct = false
+    ): int|float {
         parent::sum($column, $distinct);
         return $this->getColumnResult();
     }
@@ -148,8 +152,10 @@ class Select extends SelectStatement
      *
      * @return int|float
      */
-    public function min(string|Expression|Closure $column, bool $distinct = false): int|float
-    {
+    public function min(
+        string|Expression|Closure $column,
+        bool $distinct = false
+    ): int|float {
         parent::min($column, $distinct);
         return $this->getColumnResult();
     }
@@ -160,8 +166,10 @@ class Select extends SelectStatement
      *
      * @return int|float
      */
-    public function max(string|Expression|Closure $column, bool $distinct = false): int|float
-    {
+    public function max(
+        string|Expression|Closure $column,
+        bool $distinct = false
+    ): int|float {
         parent::max($column, $distinct);
         return $this->getColumnResult();
     }

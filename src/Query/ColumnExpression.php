@@ -55,18 +55,11 @@ use Closure;
 class ColumnExpression
 {
     /**
-     * The Query statement instance
-     * @var QueryStatement
-     */
-    protected QueryStatement $queryStatement;
-
-    /**
      * ColumnExpression constructor.
      * @param QueryStatement $queryStatement
      */
-    public function __construct(QueryStatement $queryStatement)
+    public function __construct(protected QueryStatement $queryStatement)
     {
-        $this->queryStatement = $queryStatement;
     }
 
     /**
@@ -112,10 +105,13 @@ class ColumnExpression
      */
     public function count(
         string|array|Expression|Closure $column = '*',
-        string $alias = null,
+        ?string $alias = null,
         bool $distinct = false
     ): self {
-        return $this->column((new Expression())->count($column, $distinct), $alias);
+        return $this->column(
+            (new Expression())->count($column, $distinct),
+            $alias
+        );
     }
 
     /**
@@ -126,7 +122,7 @@ class ColumnExpression
      */
     public function avg(
         string|Expression|Closure $column,
-        string $alias = null,
+        ?string $alias = null,
         bool $distinct = false
     ): self {
         return $this->column((new Expression())->avg($column, $distinct), $alias);
@@ -140,7 +136,7 @@ class ColumnExpression
      */
     public function sum(
         string|Expression|Closure $column,
-        string $alias = null,
+        ?string $alias = null,
         bool $distinct = false
     ): self {
         return $this->column((new Expression())->sum($column, $distinct), $alias);
@@ -154,7 +150,7 @@ class ColumnExpression
      */
     public function min(
         string|Expression|Closure $column,
-        string $alias = null,
+        ?string $alias = null,
         bool $distinct = false
     ): self {
         return $this->column((new Expression())->min($column, $distinct), $alias);
@@ -168,13 +164,13 @@ class ColumnExpression
      */
     public function max(
         string|Expression|Closure $column,
-        string $alias = null,
+        ?string $alias = null,
         bool $distinct = false
     ): self {
         return $this->column((new Expression())->max($column, $distinct), $alias);
     }
 
-    public function __clone()
+    public function __clone(): void
     {
         $this->queryStatement = clone $this->queryStatement;
     }

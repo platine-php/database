@@ -65,18 +65,11 @@ class Having
     protected string $separator;
 
     /**
-     * The Query statement instance
-     * @var QueryStatement
-     */
-    protected QueryStatement $queryStatement;
-
-    /**
      * Having constructor.
      * @param QueryStatement $queryStatement
      */
-    public function __construct(QueryStatement $queryStatement)
+    public function __construct(protected QueryStatement $queryStatement)
     {
-        $this->queryStatement = $queryStatement;
     }
 
     /**

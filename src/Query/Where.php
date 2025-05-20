@@ -65,28 +65,14 @@ class Where
     protected string $separator;
 
     /**
-     * The Query statement instance
-     * @var QueryStatement
-     */
-    protected QueryStatement $queryStatement;
-
-    /**
-     * The Where statement instance
-     * @var WhereStatement
-     */
-    protected WhereStatement $whereStatement;
-
-    /**
      * Where constructor.
      * @param WhereStatement $whereStatement
      * @param QueryStatement $queryStatement
      */
     public function __construct(
-        WhereStatement $whereStatement,
-        QueryStatement $queryStatement
+        protected WhereStatement $whereStatement,
+        protected QueryStatement $queryStatement
     ) {
-        $this->queryStatement = $queryStatement;
-        $this->whereStatement = $whereStatement;
     }
 
     /**
@@ -311,8 +297,11 @@ class Where
      * @param bool $not
      * @return WhereStatement|Select|Delete|update
      */
-    protected function addBetweenCondition(mixed $value1, mixed $value2, bool $not): WhereStatement|Select|Delete|update
-    {
+    protected function addBetweenCondition(
+        mixed $value1,
+        mixed $value2,
+        bool $not
+    ): WhereStatement|Select|Delete|update {
         $this->queryStatement->addWhereBetween(
             $this->column,
             $value1,
@@ -348,7 +337,12 @@ class Where
      */
     protected function addInCondition(mixed $value, bool $not): WhereStatement|Select|Delete|update
     {
-        $this->queryStatement->addWhereIn($this->column, $value, $this->separator, $not);
+        $this->queryStatement->addWhereIn(
+            $this->column,
+            $value,
+            $this->separator,
+            $not
+        );
 
         return $this->whereStatement;
     }
@@ -359,7 +353,11 @@ class Where
      */
     protected function addNullCondition(bool $not): WhereStatement|Select|Delete|Update
     {
-        $this->queryStatement->addWhereNull($this->column, $this->separator, $not);
+        $this->queryStatement->addWhereNull(
+            $this->column,
+            $this->separator,
+            $not
+        );
 
         return $this->whereStatement;
     }

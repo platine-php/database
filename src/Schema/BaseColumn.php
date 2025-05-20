@@ -53,18 +53,6 @@ namespace Platine\Database\Schema;
 class BaseColumn
 {
     /**
-     * The name of the column
-     * @var string
-     */
-    protected string $name;
-
-    /**
-     * The type of column
-     * @var string|null
-     */
-    protected ?string $type = null;
-
-    /**
      * The column properties
      * @var array<string, mixed>
      */
@@ -72,13 +60,11 @@ class BaseColumn
 
     /**
      * Class constructor
-     * @param string $name
-     * @param string|null $type
+     * @param string $name The name of the column
+     * @param string|null $type The type of column
      */
-    public function __construct(string $name, ?string $type = null)
+    public function __construct(protected string $name, protected ?string $type = null)
     {
-        $this->name = $name;
-        $this->type = $type;
     }
 
     /**
@@ -151,7 +137,7 @@ class BaseColumn
      * @param mixed $default
      * @return mixed
      */
-    public function get(string $name, mixed $default = null)
+    public function get(string $name, mixed $default = null): mixed
     {
         return isset($this->properties[$name])
                     ? $this->properties[$name]

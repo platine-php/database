@@ -71,18 +71,11 @@ class ForeignKey
     protected array $actions = [];
 
     /**
-     * The base table columns
-     * @var array<int, string>
-     */
-    protected array $columns = [];
-
-    /**
      * Class constructor
-     * @param array<int, string> $columns
+     * @param array<int, string> $columns The base table columns
      */
-    public function __construct(array $columns)
+    public function __construct(protected array $columns)
     {
-        $this->columns = $columns;
     }
 
     /**

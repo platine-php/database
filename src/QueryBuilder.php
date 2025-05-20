@@ -58,12 +58,6 @@ use Platine\Database\Query\InsertStatement;
 class QueryBuilder
 {
     /**
-     * The Connection instance
-     * @var Connection
-     */
-    protected Connection $connection;
-
-    /**
      * The Schema instance
      * @var Schema
      */
@@ -73,9 +67,8 @@ class QueryBuilder
      * Class constructor
      * @param Connection $connection
      */
-    public function __construct(Connection $connection)
+    public function __construct(protected Connection $connection)
     {
-        $this->connection = $connection;
         $this->schema = $this->connection->getSchema();
     }
 

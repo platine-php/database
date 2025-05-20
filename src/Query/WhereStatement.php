@@ -72,10 +72,7 @@ class WhereStatement
      */
     public function __construct(?QueryStatement $queryStatement = null)
     {
-        if ($queryStatement === null) {
-            $queryStatement = new QueryStatement();
-        }
-        $this->queryStatement = $queryStatement;
+        $this->queryStatement = $queryStatement ?? new QueryStatement();
         $this->where = new Where($this, $this->queryStatement);
     }
 
@@ -106,8 +103,10 @@ class WhereStatement
      *
      * @return WhereStatement|Where|Select|Delete|Update
      */
-    public function orWhere(string|Expression|Closure $column, bool $isExpression = false): WhereStatement|Where|Select|Delete|Update
-    {
+    public function orWhere(
+        string|Expression|Closure $column,
+        bool $isExpression = false
+    ): WhereStatement|Where|Select|Delete|Update {
         return $this->addWhereCondition($column, 'OR', $isExpression);
     }
 

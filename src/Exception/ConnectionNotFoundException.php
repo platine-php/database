@@ -32,12 +32,10 @@ declare(strict_types=1);
 
 namespace Platine\Database\Exception;
 
-use Exception;
-
 /**
  * @class ConnectionNotFoundException
  * @package Platine\Database\Exception
  */
-class ConnectionNotFoundException extends Exception
+class ConnectionNotFoundException extends DatabaseException
 {
 }

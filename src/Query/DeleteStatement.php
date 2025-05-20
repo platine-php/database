@@ -74,11 +74,13 @@ class DeleteStatement extends BaseStatement
      * @param string|array<string> $tables
      * @return mixed
      */
-    public function delete(string|array $tables = [])
+    public function delete(string|array $tables = []): mixed
     {
         if (!is_array($tables)) {
             $tables = [$tables];
         }
         $this->queryStatement->addTables($tables);
+
+        return true;
     }
 }

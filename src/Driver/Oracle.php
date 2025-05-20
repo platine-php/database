@@ -211,7 +211,7 @@ class Oracle extends Driver
     /**
      * @inheritDoc
      */
-    protected function quoteIdentifier(mixed $value): string
+    protected function quoteIdentifier(string|Expression $value): string
     {
         if ($value instanceof Expression) {
             return $this->getExpressions($value->getExpressions());

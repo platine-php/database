@@ -93,7 +93,7 @@ class HavingExpression
     /**
      * @param string|Expression|Closure $column
      * @param string $separator
-     * @return self
+     * @return $this
      */
     public function init(string|Expression|Closure $column, string $separator): self
     {

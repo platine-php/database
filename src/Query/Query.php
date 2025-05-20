@@ -202,7 +202,7 @@ class Query extends BaseStatement
      *
      * @return int
      */
-    public function count($column = '*', bool $distinct = false): int
+    public function count(string|Expression|Closure $column = '*', bool $distinct = false): int
     {
         return $this->buildSelect()->count($column, $distinct);
     }
@@ -213,7 +213,7 @@ class Query extends BaseStatement
      *
      * @return int|float
      */
-    public function avg($column, bool $distinct = false): int|float
+    public function avg(string|Expression|Closure $column, bool $distinct = false): int|float
     {
         return $this->buildSelect()->avg($column, $distinct);
     }
@@ -224,7 +224,7 @@ class Query extends BaseStatement
      *
      * @return int|float
      */
-    public function sum($column, bool $distinct = false): int|float
+    public function sum(string|Expression|Closure $column, bool $distinct = false): int|float
     {
         return $this->buildSelect()->sum($column, $distinct);
     }

@@ -64,8 +64,11 @@ class CreateColumn extends BaseColumn
      * @param string $name
      * @param string|null $type
      */
-    public function __construct(CreateTable $table, string $name, ?string $type = null)
-    {
+    public function __construct(
+        CreateTable $table,
+        string $name,
+        ?string $type = null
+    ) {
         $this->table = $table;
         parent::__construct($name, $type);
     }

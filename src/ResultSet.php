@@ -57,18 +57,11 @@ use PDOStatement;
 class ResultSet
 {
     /**
-     * The PDOStatement instance
-     * @var PDOStatement
-     */
-    protected PDOStatement $statement;
-
-    /**
      * Class constructor
      * @param PDOStatement $statement
      */
-    public function __construct(PDOStatement $statement)
+    public function __construct(protected PDOStatement $statement)
     {
-        $this->statement = $statement;
     }
 
     /**

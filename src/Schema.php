@@ -56,12 +56,6 @@ use Platine\Database\Schema\CreateTable;
 class Schema
 {
     /**
-     * The Connection instance
-     * @var Connection
-     */
-    protected Connection $connection;
-
-    /**
      * The list of tables
      * @var array<string, string>
      */
@@ -89,9 +83,8 @@ class Schema
      * Class constructor
      * @param Connection $connection
      */
-    public function __construct(Connection $connection)
+    public function __construct(protected Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**
@@ -153,13 +146,12 @@ class Schema
             $this->tables = [];
         }
 
-        if (empty($this->tables)) {
+        if (count($this->tables) === 0) {
             $driver = $this->connection->getDriver();
             $databaseName = $this->getDatabaseName();
             $sql = $driver->getTables($databaseName);
 
-            $results = $this->connection
-                                        ->query($sql['sql'], $sql['params'])
+            $results = $this->connection->query($sql['sql'], $sql['params'])
                                         ->fetchNum();
 
             while ($result = $results->next()) {
@@ -181,13 +173,12 @@ class Schema
             $this->views = [];
         }
 
-        if (empty($this->views)) {
+        if (count($this->views) === 0) {
             $driver = $this->connection->getDriver();
             $databaseName = $this->getDatabaseName();
             $sql = $driver->getViews($databaseName);
 
-            $results = $this->connection
-                                        ->query($sql['sql'], $sql['params'])
+            $results = $this->connection->query($sql['sql'], $sql['params'])
                                         ->fetchNum();
 
             while ($result = $results->next()) {
@@ -214,7 +205,7 @@ class Schema
             unset($this->columns[$table]);
         }
 
-        if (!$this->hasTable($table, $skipCache)) {
+        if ($this->hasTable($table, $skipCache) === false) {
             return [];
         }
 
@@ -223,17 +214,13 @@ class Schema
             $databaseName = $this->getDatabaseName();
             $sql = $driver->getColumns($databaseName, $table);
 
-            $results = $this->connection
-                                        ->query($sql['sql'], $sql['params'])
+            $results = $this->connection->query($sql['sql'], $sql['params'])
                                         ->fetchAssoc();
 
             /** @var array<string, array<string, string>> $columns */
             $columns = [];
 
-            while (
-                    /** @var array<string, string>> $col */
-                    $col = $results->next()
-            ) {
+            while (/** @var array<string, string>> $col */ $col = $results->next()) {
                 $columns[$col['name']] = [
                     'name' => $col['name'],
                     'type' => $col['type'],
@@ -243,7 +230,8 @@ class Schema
             $this->columns[$table] = $columns;
         }
 
-        return $names ? array_keys($this->columns[$table]) : $this->columns[$table];
+        return $names ? array_keys($this->columns[$table])
+                : $this->columns[$table];
     }
 
     /**
@@ -262,7 +250,7 @@ class Schema
             unset($this->columns[$view]);
         }
 
-        if (!$this->hasView($view, $skipCache)) {
+        if ($this->hasView($view, $skipCache) === false) {
             return [];
         }
 
@@ -271,17 +259,13 @@ class Schema
             $databaseName = $this->getDatabaseName();
             $sql = $driver->getViewColumns($databaseName, $view);
 
-            $results = $this->connection
-                                        ->query($sql['sql'], $sql['params'])
+            $results = $this->connection->query($sql['sql'], $sql['params'])
                                         ->fetchAssoc();
 
             /** @var array<string, array<string, string>> $columns */
             $columns = [];
 
-            while (
-                    /** @var array<string, string>> $col */
-                    $col = $results->next()
-            ) {
+            while (/** @var array<string, string>> $col */ $col = $results->next()) {
                 $columns[$col['name']] = [
                     'name' => $col['name'],
                     'type' => $col['type'],
@@ -291,7 +275,8 @@ class Schema
             $this->columns[$view] = $columns;
         }
 
-        return $names ? array_keys($this->columns[$view]) : $this->columns[$view];
+        return $names ? array_keys($this->columns[$view])
+                : $this->columns[$view];
     }
 
     /**

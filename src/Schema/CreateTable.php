@@ -83,12 +83,6 @@ class CreateTable
     protected array $foreignKeys = [];
 
     /**
-     * The name of the table
-     * @var string
-     */
-    protected string $table;
-
-    /**
      * The engine for the table
      * @var string|null
      */
@@ -102,11 +96,10 @@ class CreateTable
 
     /**
      * Class constructor
-     * @param string $table
+     * @param string $table The name of the table
      */
-    public function __construct(string $table)
+    public function __construct(protected string $table)
     {
-        $this->table = $table;
     }
 
     /**
@@ -206,7 +199,7 @@ class CreateTable
         }
 
         if ($name === null) {
-            $name = $this->table . '_pk_' . implode('_', $columns);
+            $name = sprintf('%s_pk_%s', $this->table, implode('_', $columns));
         }
 
         $this->primaryKey = [
@@ -230,7 +223,7 @@ class CreateTable
         }
 
         if ($name === null) {
-            $name = $this->table . '_uk_' . implode('_', $columns);
+            $name = sprintf('%s_uk_%s', $this->table, implode('_', $columns));
         }
 
         $this->uniqueKeys[$name] = $columns;
@@ -251,7 +244,7 @@ class CreateTable
         }
 
         if ($name === null) {
-            $name = $this->table . '_ik_' . implode('_', $columns);
+            $name = sprintf('%s_ik_%s', $this->table, implode('_', $columns));
         }
 
         $this->indexes[$name] = $columns;
@@ -272,7 +265,7 @@ class CreateTable
         }
 
         if ($name === null) {
-            $name = $this->table . '_fk_' . implode('_', $columns);
+            $name = sprintf('%s_fk_%s', $this->table, implode('_', $columns));
         }
 
         return $this->foreignKeys[$name] = new ForeignKey($columns);
@@ -340,8 +333,8 @@ class CreateTable
         ?int $precision = null
     ): CreateColumn {
         return $this->addColumn($name, 'decimal')
-                        ->length($length)
-                        ->set('precision', $precision);
+                    ->length($length)
+                    ->set('precision', $precision);
     }
 
     /**
@@ -373,7 +366,7 @@ class CreateTable
     public function string(string $name, int $length = 255): CreateColumn
     {
         return $this->addColumn($name, 'string')
-                        ->length($length);
+                    ->length($length);
     }
 
     /**
@@ -385,7 +378,7 @@ class CreateTable
     public function fixed(string $name, int $length = 255): CreateColumn
     {
         return $this->addColumn($name, 'fixed')
-                        ->length($length);
+                    ->length($length);
     }
 
     /**
@@ -399,7 +392,7 @@ class CreateTable
         array $values
     ): CreateColumn {
         return $this->addColumn($name, 'enum')
-                        ->set('values', $values);
+                    ->set('values', $values);
     }
 
     /**

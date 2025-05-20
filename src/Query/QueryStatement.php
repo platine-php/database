@@ -396,7 +396,7 @@ class QueryStatement
      */
     public function addHavingIn(
         string|Closure|Expression $aggregate,
-        $value,
+        mixed $value,
         string $separator,
         bool $not
     ): void {

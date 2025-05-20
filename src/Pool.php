@@ -139,8 +139,10 @@ class Pool
      * @return Connection
      * @throws ConnectionNotFoundException
      */
-    public function getConnection(?string $name = null, ?Logger $logger = null): Connection
-    {
+    public function getConnection(
+        ?string $name = null,
+        ?Logger $logger = null
+    ): Connection {
         if ($name === null) {
             $name = $this->default;
         }

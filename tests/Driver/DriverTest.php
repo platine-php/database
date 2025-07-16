@@ -1003,7 +1003,7 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
             'getColumns' => ['bar'],
             'getReferenceTable' => 'bazz',
             'getReferenceColumns' => ['foo_bar'],
-            'getActions' => ['ON DELETE' => 'CASCADE'],
+            'getActions' => ['ON DELETE' => 'CASCADE', 'ON UPDATE' => 'SET NULL'],
         ];
 
         $fk = $this->getForeignKeyInstance($fkMockMethodsMaps);
@@ -1141,8 +1141,8 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
         $expectedDropColSql = 'ALTER TABLE "foo" DROP COLUMN "baz_col"';
         $expectedAddPkSql = 'ALTER TABLE "foo" ADD CONSTRAINT "foo_pk_col" PRIMARY KEY ("foo_col")';
         $expectedAddUkSql = 'ALTER TABLE "foo" ADD CONSTRAINT "foo_uk_col" UNIQUE ("foo_col")';
-        $expectedAddFkSql = 'ALTER TABLE "foo" ADD CONSTRAINT "foo_fk_col" '
-                . 'FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar")';
+        $expectedAddFkSql = 'ALTER TABLE "foo" ADD CONSTRAINT "foo_fk_col" FOREIGN KEY ("bar") '
+                . 'REFERENCES "bazz" ("foo_bar") ON DELETE CASCADE ON UPDATE SET NULL';
         $expectedAddIkSql = 'CREATE INDEX "foo_ik_col" ON "foo" ("foo_col")';
 
         $this->assertEquals($expectedSetDefaultIntSql, $infos[0]['sql']);
@@ -1393,8 +1393,8 @@ CONSTRAINT "foo_fk_bar" FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar") ON DEL
         $expectedDropColSql = 'ALTER TABLE "foo" DROP COLUMN "baz_col"';
         $expectedAddPkSql = 'ALTER TABLE "foo" ADD CONSTRAINT "foo_pk_col" PRIMARY KEY ("foo_col")';
         $expectedAddUkSql = 'ALTER TABLE "foo" ADD CONSTRAINT "foo_uk_col" UNIQUE ("foo_col")';
-        $expectedAddFkSql = 'ALTER TABLE "foo" ADD CONSTRAINT "foo_fk_col" '
-                . 'FOREIGN KEY ("bar") REFERENCES "bazz" ("foo_bar")';
+        $expectedAddFkSql = 'ALTER TABLE "foo" ADD CONSTRAINT "foo_fk_col" FOREIGN KEY ("bar") '
+                . 'REFERENCES "bazz" ("foo_bar") ON DELETE CASCADE';
         $expectedAddIkSql = 'CREATE INDEX "foo_ik_col" ON "foo" ("foo_col")';
 
         $this->assertEquals($expectedSql, $infos[0]['sql']);

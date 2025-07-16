@@ -1198,13 +1198,19 @@ class Driver
     {
         /** @var ForeignKey $key */
         $key = $data['foreign'];
+        $actions = '';
+        foreach ($key->getActions() as $actionName => $action) {
+            $actions .= ' ' . $actionName . ' ' . $action;
+        }
+
         return sprintf(
-            'ALTER TABLE %s ADD CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s (%s)',
+            'ALTER TABLE %s ADD CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s (%s)%s',
             $this->quoteIdentifier($schema->getTableName()),
             $this->quoteIdentifier($data['name']),
             $this->quoteIdentifiers($key->getColumns()),
             $this->quoteIdentifier($key->getReferenceTable()),
             $this->quoteIdentifiers($key->getReferenceColumns()),
+            $actions
         );
     }
 

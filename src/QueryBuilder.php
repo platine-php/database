@@ -49,6 +49,7 @@ namespace Platine\Database;
 use Platine\Database\Query\Query as QueryCommand;
 use Platine\Database\Query\Insert as InsertCommand;
 use Platine\Database\Query\Update as UpdateCommand;
+use Platine\Database\Query\Delete as DeleteCommand;
 use Platine\Database\Query\InsertStatement;
 
 /**
@@ -139,5 +140,15 @@ class QueryBuilder
     public function update(string $table): UpdateCommand
     {
         return new UpdateCommand($this->connection, $table);
+    }
+
+    /**
+     * Delete records.
+     * @param string $table
+     * @return DeleteCommand
+     */
+    public function delete(string $table): DeleteCommand
+    {
+        return new DeleteCommand($this->connection, $table);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Platine\Test\Database;
 
+use Platine\Database\Query\DeleteStatement;
 use Platine\Database\Query\InsertStatement;
 use Platine\Database\Query\Query;
 use Platine\Database\Query\UpdateStatement;
@@ -69,6 +70,16 @@ class QueryBuilderTest extends PlatineTestCase
 
         $res = $e->update('foo');
         $this->assertInstanceOf(UpdateStatement::class, $res);
+    }
+
+    public function testDelete(): void
+    {
+        $cnx = new Connection('SQLite');
+
+        $e = new QueryBuilder($cnx);
+
+        $res = $e->delete('foo');
+        $this->assertInstanceOf(DeleteStatement::class, $res);
     }
 
     public function testTransaction(): void

@@ -143,7 +143,8 @@ class Connection
 
         $this->logger = $logger ?? new Logger();
         if ($this->logger instanceof Logger) {
-            $this->logger->setChannel('db');
+            $channel = sprintf('db:%s', $config->getName());
+            $this->logger->setChannel($channel);
         }
 
         $this->createDriver();

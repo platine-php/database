@@ -167,11 +167,12 @@ class WhereStatement
         string $separator = 'AND',
         bool $isExpression = false
     ): WhereStatement|Where {
-        if (($column instanceof Closure) && !$isExpression) {
+        if (($column instanceof Closure) && $isExpression === false) {
             $this->queryStatement->addWhereGroup($column, $separator);
 
             return $this;
         }
+
         return $this->where->init($column, $separator);
     }
 

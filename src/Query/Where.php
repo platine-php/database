@@ -92,6 +92,20 @@ class Where
     }
 
     /**
+     * @param string $literal
+     * @param mixed $value
+     * @param bool $isColumn
+     * @return WhereStatement|Select|Delete|Update
+     */
+    public function literal(
+        string $literal,
+        mixed $value,
+        bool $isColumn = false
+    ): WhereStatement|Select|Delete|Update {
+        return $this->addCondition($value, $literal, $isColumn);
+    }
+
+    /**
      * @param mixed $value
      * @param bool $isColumn
      * @return WhereStatement|Select|Delete|Update

@@ -146,6 +146,15 @@ class WhereTest extends PlatineTestCase
         $this->comparaisonTests('is', $column, $value, $operator);
     }
 
+    public function testLiteral(): void
+    {
+        $column = 'foo';
+        $value = 1;
+        $operator = 'MATCH';
+
+        $this->comparaisonTests('literal', $column, $value, $operator);
+    }
+
     public function testEq(): void
     {
         $column = 'foo';
@@ -478,7 +487,11 @@ class WhereTest extends PlatineTestCase
 
         $e = new Where($ws, $qs);
         $e->init($column, $separator);
-        $o = $e->{$method}($value, true);
+        if ($method === 'literal') {
+            $o = $e->{$method}('MATCH', $value, true);
+        } else {
+            $o = $e->{$method}($value, true);
+        }
         $this->assertInstanceOf(WhereStatement::class, $o);
     }
 }

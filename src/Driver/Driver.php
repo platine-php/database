@@ -487,6 +487,42 @@ class Driver
             'params' => []
         ];
     }
+    
+    /**
+     * Add quote identifier like "", ``
+     * @param string|Expression $value
+     *
+     * @return string
+     */
+    public function quoteIdentifier(string|Expression $value): string
+    {
+        if ($value instanceof Expression) {
+            return $this->getExpressions($value->getExpressions());
+        }
+
+        $identifiers = [];
+
+        foreach (explode('.', $value) as $segment) {
+            if ($segment === '*') {
+                $identifiers[] = $segment;
+            } else {
+                $identifiers[] = sprintf($this->identifier, $segment);
+            }
+        }
+
+        return implode('.', $identifiers);
+    }
+
+    /**
+     *
+     * @param array<mixed> $values
+     * @param string $separator
+     * @return string
+     */
+    public function quoteIdentifiers(array $values, string $separator = ', '): string
+    {
+        return implode($separator, array_map([$this, 'quoteIdentifier'], $values));
+    }
 
     /**
      * @param mixed $value
@@ -527,42 +563,6 @@ class Driver
         }
 
         return 'NULL';
-    }
-
-    /**
-     * Add quote identifier like "", ``
-     * @param string|Expression $value
-     *
-     * @return string
-     */
-    protected function quoteIdentifier(string|Expression $value): string
-    {
-        if ($value instanceof Expression) {
-            return $this->getExpressions($value->getExpressions());
-        }
-
-        $identifiers = [];
-
-        foreach (explode('.', $value) as $segment) {
-            if ($segment === '*') {
-                $identifiers[] = $segment;
-            } else {
-                $identifiers[] = sprintf($this->identifier, $segment);
-            }
-        }
-
-        return implode('.', $identifiers);
-    }
-
-    /**
-     *
-     * @param array<mixed> $values
-     * @param string $separator
-     * @return string
-     */
-    protected function quoteIdentifiers(array $values, string $separator = ', '): string
-    {
-        return implode($separator, array_map([$this, 'quoteIdentifier'], $values));
     }
 
     /**

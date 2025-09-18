@@ -67,7 +67,7 @@ class ColumnExpression
      * @param string|null $alias
      * @return $this
      */
-    public function column(string|Expression|Closure $name, string $alias = null): self
+    public function column(string|Expression|Closure $name, ?string $alias = null): self
     {
         $this->queryStatement->addColumn($name, $alias);
 

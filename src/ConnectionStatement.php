@@ -81,7 +81,7 @@ class ConnectionStatement extends PDOStatement
     /**
      * {@inheritdoc}
      */
-    public function fetchColumn(int $column = null): mixed
+    public function fetchColumn(?int $column = null): mixed
     {
         return false;
     }

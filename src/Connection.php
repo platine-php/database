@@ -657,12 +657,12 @@ class Connection
             $start = microtime(true);
             $result = $prepared['statement']->execute();
             $executionTime = microtime(true) - $start;
-            $sqlLog['time'] = number_format($executionTime, 6);
+            $sqlLog['time'] = (int)($executionTime * 1000); // millisecond
 
             $this->logs[] = $sqlLog;
 
             $this->logger->info(
-                'Execute Query: [{query}], parameters: [{parameters}], time: [{time}]',
+                'Execute Query: [{query}], parameters: [{parameters}], time: {time}ms',
                 $sqlLog
             );
 
@@ -670,7 +670,7 @@ class Connection
 
             if ($executionTime >= $slowQueryTime) {
                 $this->logger->warning(
-                    'Query: [{query}], parameters: [{parameters}] cost too much time: [{time}]',
+                    'Query: [{query}], parameters: [{parameters}] cost too much time: {time}ms',
                     $sqlLog
                 );
             }

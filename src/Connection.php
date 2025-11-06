@@ -657,7 +657,7 @@ class Connection
             $start = microtime(true);
             $result = $prepared['statement']->execute();
             $executionTime = microtime(true) - $start;
-            $sqlLog['time'] = (int)($executionTime * 1000); // millisecond
+            $sqlLog['time'] = round($executionTime * 1000, 2); // millisecond
 
             $this->logs[] = $sqlLog;
 

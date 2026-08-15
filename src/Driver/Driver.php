@@ -1210,7 +1210,7 @@ class Driver
         foreach ($key->getActions() as $actionName => $action) {
             $actions .= ' ' . $actionName . ' ' . $action;
         }
-        
+
         return sprintf(
             'ALTER TABLE %s ADD CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s (%s)%s',
             $this->quoteIdentifier($schema->getTableName()),

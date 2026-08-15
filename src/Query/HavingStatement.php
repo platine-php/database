@@ -70,7 +70,7 @@ class HavingStatement
      * HavingStatement constructor.
      * @param QueryStatement|null $queryStatement
      */
-    public function __construct(QueryStatement $queryStatement = null)
+    public function __construct(?QueryStatement $queryStatement = null)
     {
         if ($queryStatement === null) {
             $queryStatement = new QueryStatement();
@@ -92,7 +92,7 @@ class HavingStatement
      * @param Closure|null $value
      * @return self
      */
-    public function having($column, Closure $value = null): self
+    public function having($column, ?Closure $value = null): self
     {
         return $this->addCondition($column, $value, 'AND');
     }
@@ -102,7 +102,7 @@ class HavingStatement
      * @param Closure|null $value
      * @return self
      */
-    public function orHaving($column, Closure $value = null): self
+    public function orHaving($column, ?Closure $value = null): self
     {
         return $this->addCondition($column, $value, 'OR');
     }
@@ -122,7 +122,7 @@ class HavingStatement
      * @param string $separator
      * @return self
      */
-    protected function addCondition($column, Closure $value = null, string $separator = 'AND'): self
+    protected function addCondition($column, ?Closure $value = null, string $separator = 'AND'): self
     {
         if (($column instanceof Closure) && $value === null) {
             $this->queryStatement->addHavingGroup($column, $separator);

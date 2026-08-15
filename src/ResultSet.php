@@ -91,11 +91,11 @@ class ResultSet
 
     /**
      * Fetch all record
-     * @param callable $callable
+     * @param callable|null $callable
      * @param int $fetchStyle the PDO fetch style
      * @return array<int, mixed>|false
      */
-    public function all(callable $callable = null, int $fetchStyle = 0)
+    public function all(?callable $callable = null, int $fetchStyle = 0)
     {
         if ($callable === null) {
             return $this->statement->fetchAll($fetchStyle);
@@ -106,10 +106,10 @@ class ResultSet
     /**
      * Fetch all record per group
      * @param bool $uniq
-     * @param callable $callable
+     * @param callable|null $callable
      * @return array<int, mixed>|false
      */
-    public function allGroup(bool $uniq = false, callable $callable = null)
+    public function allGroup(bool $uniq = false, ?callable $callable = null)
     {
         $fetchStyle = PDO::FETCH_GROUP | ($uniq ? PDO::FETCH_UNIQUE : 0);
 
@@ -121,10 +121,10 @@ class ResultSet
 
     /**
      * Fetch one record
-     * @param callable $callable
+     * @param callable|null $callable
      * @return mixed
      */
-    public function get(callable $callable = null)
+    public function get(?callable $callable = null)
     {
         $result = $this->statement->fetch();
         $this->statement->closeCursor();

@@ -57,7 +57,7 @@ class DeleteStatement extends BaseStatement
      * @param string|array<string> $from
      * @param QueryStatement|null $queryStatement
      */
-    public function __construct($from, QueryStatement $queryStatement = null)
+    public function __construct($from, ?QueryStatement $queryStatement = null)
     {
         parent::__construct($queryStatement);
 

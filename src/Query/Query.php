@@ -75,7 +75,7 @@ class Query extends BaseStatement
     public function __construct(
         Connection $connection,
         $tables,
-        QueryStatement $queryStatement = null
+        ?QueryStatement $queryStatement = null
     ) {
         parent::__construct($queryStatement);
 

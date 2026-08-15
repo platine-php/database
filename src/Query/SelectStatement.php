@@ -64,7 +64,7 @@ class SelectStatement extends BaseStatement
      * @param string|array<int, string> $tables
      * @param QueryStatement|null $queryStatement
      */
-    public function __construct($tables, QueryStatement $queryStatement = null)
+    public function __construct($tables, ?QueryStatement $queryStatement = null)
     {
         parent::__construct($queryStatement);
 
@@ -117,7 +117,7 @@ class SelectStatement extends BaseStatement
      * @param Closure|null $closure
      * @return self
      */
-    public function having($column, Closure $closure = null): self
+    public function having($column, ?Closure $closure = null): self
     {
         $this->havingStatement->having($column, $closure);
 
@@ -129,7 +129,7 @@ class SelectStatement extends BaseStatement
      * @param Closure|null $closure
      * @return self
      */
-    public function orHaving($column, Closure $closure = null): self
+    public function orHaving($column, ?Closure $closure = null): self
     {
         $this->havingStatement->orHaving($column, $closure);
 

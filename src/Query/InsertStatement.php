@@ -62,7 +62,7 @@ class InsertStatement
      * InsertStatement constructor.
      * @param QueryStatement|null $queryStatement
      */
-    public function __construct(QueryStatement $queryStatement = null)
+    public function __construct(?QueryStatement $queryStatement = null)
     {
         if ($queryStatement === null) {
             $queryStatement = new QueryStatement();

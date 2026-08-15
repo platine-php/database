@@ -70,7 +70,7 @@ class Select extends SelectStatement
     public function __construct(
         Connection $connection,
         $tables,
-        QueryStatement $queryStatement = null
+        ?QueryStatement $queryStatement = null
     ) {
         parent::__construct($tables, $queryStatement);
         $this->connection = $connection;

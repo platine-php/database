@@ -74,7 +74,7 @@ class ColumnExpression
      * @param string|null $alias
      * @return self
      */
-    public function column($name, string $alias = null): self
+    public function column($name, ?string $alias = null): self
     {
         $this->queryStatement->addColumn($name, $alias);
 
@@ -110,7 +110,7 @@ class ColumnExpression
      * @param bool $distinct
      * @return self
      */
-    public function count($column = '*', string $alias = null, bool $distinct = false): self
+    public function count($column = '*', ?string $alias = null, bool $distinct = false): self
     {
         return $this->column((new Expression())->count($column, $distinct), $alias);
     }
@@ -121,7 +121,7 @@ class ColumnExpression
      * @param bool $distinct
      * @return self
      */
-    public function avg($column, string $alias = null, bool $distinct = false): self
+    public function avg($column, ?string $alias = null, bool $distinct = false): self
     {
         return $this->column((new Expression())->avg($column, $distinct), $alias);
     }
@@ -132,7 +132,7 @@ class ColumnExpression
      * @param bool $distinct
      * @return self
      */
-    public function sum($column, string $alias = null, bool $distinct = false): self
+    public function sum($column, ?string $alias = null, bool $distinct = false): self
     {
         return $this->column((new Expression())->sum($column, $distinct), $alias);
     }
@@ -143,7 +143,7 @@ class ColumnExpression
      * @param bool $distinct
      * @return self
      */
-    public function min($column, string $alias = null, bool $distinct = false): self
+    public function min($column, ?string $alias = null, bool $distinct = false): self
     {
         return $this->column((new Expression())->min($column, $distinct), $alias);
     }
@@ -154,7 +154,7 @@ class ColumnExpression
      * @param bool $distinct
      * @return self
      */
-    public function max($column, string $alias = null, bool $distinct = false): self
+    public function max($column, ?string $alias = null, bool $distinct = false): self
     {
         return $this->column((new Expression())->max($column, $distinct), $alias);
     }

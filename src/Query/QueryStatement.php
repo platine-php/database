@@ -285,7 +285,7 @@ class QueryStatement
      * @param string|array<int, string>|Closure $table
      * @param Closure|null $closure
      */
-    public function addJoinClause(string $type, $table, Closure $closure = null): void
+    public function addJoinClause(string $type, $table, ?Closure $closure = null): void
     {
         $join = null;
         if ($closure !== null) {

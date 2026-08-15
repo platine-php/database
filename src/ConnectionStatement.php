@@ -65,6 +65,7 @@ class ConnectionStatement extends PDOStatement
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function execute($input_parameters = null): bool
     {
         return false;
@@ -81,6 +82,7 @@ class ConnectionStatement extends PDOStatement
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function fetchColumn($column = null)
     {
         return false;

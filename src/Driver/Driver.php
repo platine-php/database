@@ -632,7 +632,7 @@ class Driver
      */
     protected function getColumnList(array $columns): string
     {
-        if (empty($columns)) {
+        if (count($columns) === 0) {
             return '*';
         }
         $sql = [];
@@ -880,7 +880,9 @@ class Driver
      */
     protected function getModifierDefault(BaseColumn $column): string
     {
-        return $column->get('default', null) === null ? '' : 'DEFAULT ' . $this->value($column->get('default'));
+        return $column->get('default', null) === null
+                ? ''
+                : 'DEFAULT ' . $this->value($column->get('default'));
     }
 
     /**
@@ -890,7 +892,8 @@ class Driver
      */
     protected function getModifierDescription(BaseColumn $column): string
     {
-        return $column->get('description', null) === null ? '' : 'COMMENT ' . $this->value($column->get('description'));
+        return $column->get('description', null) === null ? '' : 'COMMENT '
+                . $this->value($column->get('description'));
     }
 
     /**
@@ -900,7 +903,8 @@ class Driver
      */
     protected function getModifierAfter(BaseColumn $column): string
     {
-        return $column->get('after', null) === null ? '' : 'AFTER ' . $this->quoteIdentifier($column->get('after'));
+        return $column->get('after', null) === null ? '' : 'AFTER '
+                . $this->quoteIdentifier($column->get('after'));
     }
 
     /**
@@ -927,7 +931,7 @@ class Driver
     protected function getPrimaryKey(CreateTable $schema): string
     {
         $primaryKey = $schema->getPrimaryKey();
-        if (empty($primaryKey)) {
+        if (count($primaryKey) === 0) {
             return '';
         }
 
@@ -944,7 +948,7 @@ class Driver
     {
         $indexes = $schema->getUniqueKeys();
 
-        if (empty($indexes)) {
+        if (count($indexes) === 0) {
             return '';
         }
 
@@ -967,7 +971,7 @@ class Driver
     {
         $indexes = $schema->getIndexes();
 
-        if (empty($indexes)) {
+        if (count($indexes) === 0) {
             return [];
         }
 
@@ -991,7 +995,7 @@ class Driver
     {
         $keys = $schema->getForeignKeys();
 
-        if (empty($keys)) {
+        if (count($keys) === 0) {
             return '';
         }
 
@@ -1202,13 +1206,19 @@ class Driver
     {
         /** @var ForeignKey $key */
         $key = $data['foreign'];
+        $actions = '';
+        foreach ($key->getActions() as $actionName => $action) {
+            $actions .= ' ' . $actionName . ' ' . $action;
+        }
+        
         return sprintf(
-            'ALTER TABLE %s ADD CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s (%s)',
+            'ALTER TABLE %s ADD CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s (%s)%s',
             $this->quoteIdentifier($schema->getTableName()),
             $this->quoteIdentifier($data['name']),
             $this->quoteIdentifiers($key->getColumns()),
             $this->quoteIdentifier($key->getReferenceTable()),
             $this->quoteIdentifiers($key->getReferenceColumns()),
+            $actions
         );
     }
 
@@ -1266,7 +1276,7 @@ class Driver
      */
     protected function getTableList(array $tables): string
     {
-        if (empty($tables)) {
+        if (count($tables) === 0) {
             return '';
         }
         $sql = [];
@@ -1289,7 +1299,7 @@ class Driver
      */
     protected function getJoins(array $joins): string
     {
-        if (empty($joins)) {
+        if (count($joins) === 0) {
             return '';
         }
         $sql = [];
@@ -1319,7 +1329,7 @@ class Driver
      */
     protected function getJoinConditions(array $conditions): string
     {
-        if (empty($conditions)) {
+        if (count($conditions) === 0) {
             return '';
         }
 
@@ -1329,7 +1339,8 @@ class Driver
 
         $count = count($conditions);
         for ($i = 1; $i < $count; $i++) {
-            $sql[] = $conditions[$i]['separator'] . ' ' . $this->{$conditions[$i]['type']}($conditions[$i]);
+            $sql[] = $conditions[$i]['separator'] . ' '
+                    . $this->{$conditions[$i]['type']}($conditions[$i]);
         }
 
         return implode(' ', $sql);
@@ -1343,7 +1354,7 @@ class Driver
      */
     protected function getGroupBy(array $groupBy): string
     {
-        return empty($groupBy) ? '' : ' GROUP BY ' . $this->columns($groupBy);
+        return count($groupBy) === 0 ? '' : ' GROUP BY ' . $this->columns($groupBy);
     }
 
     /**
@@ -1353,7 +1364,7 @@ class Driver
      */
     protected function getOrders(array $orders): string
     {
-        if (empty($orders)) {
+        if (count($orders) === 0) {
             return '';
         }
         $sql = [];
@@ -1371,7 +1382,7 @@ class Driver
      */
     protected function getSetColumns(array $columns): string
     {
-        if (empty($columns)) {
+        if (count($columns) === 0) {
             return '';
         }
         $sql = [];
@@ -1422,7 +1433,7 @@ class Driver
      */
     protected function getWheresHaving(array $values): string
     {
-        if (empty($values)) {
+        if (count($values) === 0) {
             return '';
         }
         $sql = [];

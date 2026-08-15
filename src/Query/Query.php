@@ -109,7 +109,7 @@ class Query extends BaseStatement
      *
      * @return Select|SelectStatement
      */
-    public function having($column, Closure $value = null)
+    public function having($column, ?Closure $value = null)
     {
         return $this->buildSelect()->having($column, $value);
     }
@@ -120,7 +120,7 @@ class Query extends BaseStatement
      *
      * @return Select|SelectStatement
      */
-    public function orHaving($column, Closure $value = null)
+    public function orHaving($column, ?Closure $value = null)
     {
         return $this->buildSelect()->orHaving($column, $value);
     }

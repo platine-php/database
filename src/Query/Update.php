@@ -65,7 +65,7 @@ class Update extends UpdateStatement
      * @param string|array<int, string> $table
      * @param QueryStatement|null $queryStatement
      */
-    public function __construct(Connection $connection, $table, QueryStatement $queryStatement = null)
+    public function __construct(Connection $connection, $table, ?QueryStatement $queryStatement = null)
     {
         parent::__construct($table, $queryStatement);
 

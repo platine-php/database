@@ -66,7 +66,7 @@ class Delete extends DeleteStatement
      * @param string|array<string> $from
      * @param QueryStatement|null $queryStatement
      */
-    public function __construct(Connection $connection, $from, QueryStatement $queryStatement = null)
+    public function __construct(Connection $connection, $from, ?QueryStatement $queryStatement = null)
     {
         parent::__construct($from, $queryStatement);
 
